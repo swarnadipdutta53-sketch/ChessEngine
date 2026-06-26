@@ -22,7 +22,7 @@ void Board::initialize(){
         
     }
 
-
+    
     for(int i=0;i<8;i++){ board[6][i]='p';}
     board[7][0]='r';
     board[7][1]='n';
@@ -47,8 +47,29 @@ void Board::print(){
     
 }
 
+void Board::parser(string inp,int &fc,int &fr,int &tc,int &tr){
+        fc=inp[0]-'a';
+        fr='8'-inp[1];
+
+        tc=inp[3]-'a';
+        tr='8'-inp[4];
+
+        cout<<fc<<fr<<"to"<<tc<<tr;
+}
+
+void Board::movepiece(int fc,int fr,int tc,int tr){
+    board[tr][tc]=board[fr][fc];
+    board[fr][fc]='.';
+}
 int main(){
     Board b;
     b.initialize();
+    b.print();
+
+    int fc,fr,tc,tr;
+    string inp;
+    getline(cin,inp);
+    b.parser(inp,fc,fr,tc,tr);
+    b.movepiece(fc,fr,tc,tr);
     b.print();
 }
