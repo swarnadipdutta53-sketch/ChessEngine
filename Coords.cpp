@@ -17,10 +17,10 @@ Coords encoder(char* move)
     {
         
         if(i == 0)
-            out.x = mapx[i];
+            out.x = mapx[i+1];
         else if(i == 1)
-            out.y = mapy[i];
-        else if(i > 1 || ((i == 0)&&(mapx[i] != move[i])) || ((i == 0)&&(mapy[i] != move[i]))) // handling overflow in input stream
+            out.y = mapy[i+1];
+        else if(i > 1 || ((i == 0)&&(mapx[i+1] != move[i])) || ((i == 0)&&(mapy[i+1] != move[i]))) // INVALID CHAR AND OVERFLOW
         {
             out.x = 0; 
             out.y = 0;
@@ -29,9 +29,12 @@ Coords encoder(char* move)
     return out;
 }
 
-char* decoder(Coords)
+char* decoder(Coords coords)
 {
     int map[8] = {1, 2, 3, 4, 5, 6, 7, 8};
-    char* out;
-
+    char out[3];
+    out[0] = map[coords.x - 1];
+    out[1] = map[coords.y - 1];
+    out[2] = '\0';
+    return out;
 }
