@@ -17,4 +17,9 @@ public:
         void print();
         bool parser(string,cell&,cell&);
         void movepiece(cell,cell);
+        
+        
+        bool isEmpty(cell);
+        bool isWhite(char);
+        bool isBlack(char);
 };
