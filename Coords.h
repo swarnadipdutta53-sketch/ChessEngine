@@ -11,5 +11,4 @@ typedef struct Coords
 
 Coords encoder(char*);
 char* decoder(Coords);
-
 #endif
