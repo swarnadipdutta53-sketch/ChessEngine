@@ -47,29 +47,42 @@ void Board::print(){
     
 }
 
-void Board::parser(string inp,int &fc,int &fr,int &tc,int &tr){
-        fc=inp[0]-'a';
-        fr='8'-inp[1];
+bool Board::parser(string inp,cell &from,cell& to){
+        inp[0]=tolower(inp[0]);
+        inp[3]=tolower(inp[3]);
+        if(inp.length()!=5)return false;
+        if(inp[2]!=' ')return false;
+        if(inp[0]<'a'||inp[0]>'h')return false;
+        if(inp[3]<'a'||inp[3]>'h')return false;
+        if(inp[1]<'1'||inp[1]>'8')return false;
+        if(inp[4]<'1'||inp[4]>'8')return false;
 
-        tc=inp[3]-'a';
-        tr='8'-inp[4];
+        from.col=inp[0]-'a';
+        from.row='8'-inp[1];
 
-        cout<<fc<<fr<<"to"<<tc<<tr;
+        to.col=inp[3]-'a';
+        to.row='8'-inp[4];
+
+        cout<<from.col<<from.row<<"to"<<to.col<<to.row<<endl;
+        return true;
 }
 
-void Board::movepiece(int fc,int fr,int tc,int tr){
-    board[tr][tc]=board[fr][fc];
-    board[fr][fc]='.';
+
+
+void Board::movepiece(cell from,cell to){
+    board[to.row][to.col]=board[from.row][from.col];
+    board[from.row][from.col]='.';
 }
 int main(){
     Board b;
     b.initialize();
     b.print();
 
-    int fc,fr,tc,tr;
+    cell from,to;
+    bool p;
     string inp;
     getline(cin,inp);
-    b.parser(inp,fc,fr,tc,tr);
-    b.movepiece(fc,fr,tc,tr);
+    if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
+    else b.movepiece(from,to);
     b.print();
 }

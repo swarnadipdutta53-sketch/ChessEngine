@@ -1,5 +1,11 @@
-#include<iostream>
+#include<string>
 using namespace std;
+typedef struct cell
+{
+        int col;
+        int row;
+}cell;
+
 class Board
 {
 private:
@@ -9,6 +15,6 @@ private:
 public:
         void initialize();
         void print();
-        void parser(string,int&,int&,int&,int&);
-        void movepiece(int,int,int,int);
+        bool parser(string,cell&,cell&);
+        void movepiece(cell,cell);
 };
