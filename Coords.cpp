@@ -1,11 +1,4 @@
-#include <stdio.h>
 #include "Coords.h"
-
-typedef struct Coords
-{
-    int x;
-    int y;
-}Coords;
 
 Coords encoder(char* move)
 {
