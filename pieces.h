@@ -4,15 +4,9 @@
 class Pieces
 {
     private:
+    public:
     Coords coords;
     char type;
     char team;
-
-    public:
-    char getType();
-    char setType();
-    char getTeam();
-    Coords getCoords();
-    Coords setCoords(Coords);
 };
 #endif
