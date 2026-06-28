@@ -67,12 +67,26 @@ bool Board::parser(string inp,cell &from,cell& to){
         return true;
 }
 
-
-
 void Board::movepiece(cell from,cell to){
     board[to.row][to.col]=board[from.row][from.col];
     board[from.row][from.col]='.';
 }
+
+bool Board::isEmpty(cell sq){
+    if(board[row][col]=='.')return true;
+    return false;
+}
+
+bool Board::isBlack(char c){
+    if (c!='.'&&isupper(c))return true;
+    return false;
+}
+
+bool Board::isWhite(char c){
+    if (c!='.'&&islower(c))return true;
+    return false;
+}
+
 int main(){
     Board b;
     b.initialize();
