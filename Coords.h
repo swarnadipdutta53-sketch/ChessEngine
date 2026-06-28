@@ -1,4 +1,3 @@
-#include "stdiodef.h"
 #ifndef t_COORDS
 #define t_COORDS
 
