@@ -196,11 +196,9 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
     case 'r': // white rook
     case 'R': // black rook
         return moveValidationRook(x, y, c2, obj);
-        break;
     case 'b': // white bishop
     case 'B': // black bishop
         return moveValidationBishop(x, y, c2, obj);
-        break;
     case 'q': // white queen
     case 'Q': // black queen
         return (moveValidationBishop(x, y, c2, obj) || moveValidationRook(x,y,c2, obj));
