@@ -21,6 +21,7 @@ public:
         char getTeam(cell);
         
         bool isEmpty(cell);
+        Pieces* getpiece(int,int);
         // bool isWhite(char);
         // bool isBlack(char);
 };
