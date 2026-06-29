@@ -89,6 +89,18 @@ bool Board::parser(string inp,cell &from,cell& to){
 }
 
 void Board::movepiece(cell from,cell to){
+    moves m;
+    m.from=from;
+    m.to=to;
+    m.movedpiece=board[from.row][from.col];
+    m.capturedpiece=nullptr;
+    if(!isEmpty(to)){
+        cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
+        capturedpieces.push_back(board[to.row][to.col]);
+        m.capturedpiece=board[to.row][to.col];
+    }
+    movehistory.push_back(m);
+
     board[to.row][to.col]=board[from.row][from.col];
     board[from.row][from.col]=nullptr;
 
@@ -118,6 +130,10 @@ char Board::getTeam(cell sq){
     return board[sq.row][sq.col]->team;  
 }
 
+void Board::printcapt(){
+    for(Pieces* p:capturedpieces){cout<<p->team<<" "<<p->type<<endl;}
+}
+
 int main(){
     Board b;
     b.initialize();
@@ -130,11 +146,18 @@ int main(){
      
         getline(cin,inp);
         if(inp=="0")exit;
+        if (inp=="1")
+        {
+            b.printcapt();
+        }
+        
         if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
+
         else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='W'){
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
+
         else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='B'){
             b.movepiece(from,to);
             whiteturn=!whiteturn;
@@ -142,6 +165,8 @@ int main(){
         else cout<<"Cannot move other colours piece\n";
         b.print();
         cout<<endl<<endl;
+
+
     }
 }
    
