@@ -69,9 +69,9 @@ void Board::print(){
 }
 
 bool Board::parser(string inp,cell &from,cell& to){
+        if(inp.length()!=5)return false;
         inp[0]=tolower(inp[0]);
         inp[3]=tolower(inp[3]);
-        if(inp.length()!=5)return false;
         if(inp[2]!=' ')return false;
         if(inp[0]<'a'||inp[0]>'h')return false;
         if(inp[3]<'a'||inp[3]>'h')return false;
@@ -100,6 +100,9 @@ bool Board::isEmpty(cell sq){
     return false;
 }
 
+Pieces* Board::getpiece(int x,int y){
+    return board[x][y];
+}
 // bool Board::isBlack(char c){
 //     if (c!='.'&&isupper(c))return true;
 //     return false;
