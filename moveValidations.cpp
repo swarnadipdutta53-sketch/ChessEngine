@@ -24,7 +24,6 @@ bool moveValidationRook(int x, int y, Coords c2, Board& obj)
                     return false; // obstruction faced
                 i++;
             }
-            
         }
         else if (c2.y == y) // sideways
         {
