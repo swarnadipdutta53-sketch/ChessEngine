@@ -3,7 +3,7 @@
 #include "Board.h"
 #define t_MOVVALID
 #ifdef t_MOVVALID
-bool MoveValidation(Pieces, Coords, Board&);
+bool moveValidation(Pieces, Coords, Board&);
 bool moveValidationRook(int, int, Coords, Board&);
 bool moveValidationBishop(int, int, Coords, Board&);
 bool moveValidationKnight(int, int, Coords, Board&, Pieces);
