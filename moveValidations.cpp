@@ -207,7 +207,7 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
     case 'k': // white king
     case 'K': // black king
         
-    default:
+    default: 
     break;
     }
 }

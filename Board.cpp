@@ -153,12 +153,12 @@ int main(){
         // } 
         if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
 
-        else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='w'&&moveValidation(*(b.getpiece(from.row,from.col)),{from.row,from.col},b)){
+        else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='w'&&moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
 
-        else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='b'&&moveValidation(*(b.getpiece(from.row,from.col)),{from.row,from.col},b)){
+        else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='b'&&moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
