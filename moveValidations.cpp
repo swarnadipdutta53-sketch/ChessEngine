@@ -1,8 +1,7 @@
 #include "moveValidations.h"
 #include "Board.h"
 /*
-    forwards and backwards are regarded here with respect to white side,
-    this has its effect only on the backend, not in the frontend at all
+    
 */
 bool moveValidationRook(int x, int y, Coords c2, Board& obj)
 {
@@ -20,7 +19,7 @@ bool moveValidationRook(int x, int y, Coords c2, Board& obj)
                 }
                 if(i == c2.y)
                     return true; // valid
-                if (obj.getpiece(x,i) != NULL)
+                if (obj.getpiece(x,i) != nullptr)
                     return false; // obstruction faced
                 i++;
             }
@@ -36,7 +35,7 @@ bool moveValidationRook(int x, int y, Coords c2, Board& obj)
                 }
                 if(i == c2.x)
                     return true; // valid
-                if (obj.getpiece(i,y) != NULL)
+                if (obj.getpiece(i,y) != nullptr)
                     return false; // obstruction faced
                 i++;
             }
@@ -57,7 +56,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
     {
         if((c2.x == xi) && (c2.y == yi))
             return true; // valid 
-        if(obj.getpiece(xi,yi) != NULL)
+        if(obj.getpiece(xi,yi) != nullptr)
             return false; // obstruction faced
         xi++;
         yi++;
@@ -68,7 +67,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
     {
         if((c2.x == xi) && (c2.y == yi))
             return true; // valid
-        if(obj.getpiece(xi,yi) != NULL)
+        if(obj.getpiece(xi,yi) != nullptr)
             return false; // obstruction faced
         xi--;
         yi--;
@@ -79,7 +78,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
     {
         if((c2.x == xi) && (c2.y == yi))
             return true; // valid 
-        if(obj.getpiece(xi,yi) != NULL)
+        if(obj.getpiece(xi,yi) != nullptr)
             return false; // obstruction faced
         xi--;
         yi++;
@@ -90,7 +89,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
     {
         if((c2.x == xi) && (c2.y == yi))
             return true; // valid 
-        if(obj.getpiece(xi,yi) != NULL)
+        if(obj.getpiece(xi,yi) != nullptr)
             return false; // obstruction faced
         xi++;
         yi--;
@@ -101,28 +100,28 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
 bool moveValidationKnight(int x, int y, Coords c2, Board &obj, Pieces piece)
 {
     // forward right
-    if(c2.x == x + 1 && c2.y == y + 2 && obj.getpiece(x+1, y+2)->team != piece.team)
+    if(c2.x == x + 1 && c2.y == y + 2 && ((obj.getpiece(x+1, y+2)->team != piece.team) || (obj.getpiece(x,y) != nullptr)))
         return true;
     // forward left
-    else if(c2.x == x - 1 && c2.y == y + 2 && obj.getpiece(x-1, y+2)->team != piece.team)
+    else if(c2.x == x - 1 && c2.y == y + 2 && ((obj.getpiece(x-1, y+2)->team != piece.team )|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // backward right
-    else if(c2.x == x + 1 && c2.y == y - 2 && obj.getpiece(x+1, y-2)->team != piece.team)
+    else if(c2.x == x + 1 && c2.y == y - 2 && ((obj.getpiece(x+1, y-2)->team != piece.team)|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // backward left
-    else if(c2.x == x - 1 && c2.y == y - 2 && obj.getpiece(x-1, y-2)->team != piece.team)
+    else if(c2.x == x - 1 && c2.y == y - 2 && ((obj.getpiece(x-1, y-2)->team != piece.team)|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // leftward up
-    else if(c2.x == x - 2 && c2.y == y + 1 && obj.getpiece(x-2,y+1)->team != piece.team)
+    else if(c2.x == x - 2 && c2.y == y + 1 && ((obj.getpiece(x-2,y+1)->team != piece.team)|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // leftward down
-    else if(c2.x == x - 2 && c2.y == y - 1 && obj.getpiece(x-2,y-1)->team != piece.team)
+    else if(c2.x == x - 2 && c2.y == y - 1 && ((obj.getpiece(x-2,y-1)->team != piece.team)|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // rightward up
-    else if(c2.x == x + 2 && c2.y == y + 1 && obj.getpiece(x+2,y+1)->team != piece.team)
+    else if(c2.x == x + 2 && c2.y == y + 1 && ((obj.getpiece(x+2,y+1)->team != piece.team)|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // rightward down
-    else if(c2.x == x + 2 && c2.y == y - 1 && obj.getpiece(x+2,y-1)->team != piece.team)
+    else if(c2.x == x + 2 && c2.y == y - 1 && ((obj.getpiece(x+2,y-1)->team != piece.team)|| (obj.getpiece(x,y) != nullptr)))
         return true;
     // invalid
     else
@@ -140,24 +139,24 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
 
     switch (piece.type)
     {
-    case 'p':  // white pawn
+    case 'P':  // black Pawn
         if ((c2.x == x) && (c2.y == y + 1) && (y + 1 < 8)) // forward move
         {
-            if (obj.getpiece(x,y + 1) == NULL)
+            if (obj.getpiece(x,y + 1) == nullptr)
                 return true;
             else
                 return false;
         }
         else if ((c2.x == x + 1) && (c2.y == y + 1) && (y + 1 < 8) && (x + 1 < 8)) // right diagonal forward
         {
-            if ((obj.getpiece(x+1,y+1) != NULL) && (obj.getpiece(x + 1,y + 1)->type == 'b'))
+            if ((obj.getpiece(x+1,y+1) != nullptr) && (obj.getpiece(x + 1,y + 1)->team != obj.getpiece(x,y)->team))
                 return true;
             else
                 return false;
         }
         else if ((c2.x == x - 1) && (c2.y == y + 1) && (y + 1 < 8) & (x - 1 >= 0)) // left diagonal forward
         {
-            if ((obj.getpiece(x - 1,y + 1) != NULL) && (obj.getpiece(x - 1,y + 1)->type == 'b'))
+            if ((obj.getpiece(x - 1,y + 1) != nullptr) && (obj.getpiece(x - 1,y + 1)->team != obj.getpiece(x,y)->team))
                 return true;
             else
                 return false;
@@ -166,24 +165,24 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
             return false;
         break;
 
-    case 'P':  // black pawn
+    case 'p':  // white Pawn
         if ((c2.x == x) && (c2.y == y - 1) && ((y - 1) >= 0)) // forward move
         {
-            if (obj.getpiece(x,y - 1) == NULL)
+            if (obj.getpiece(x,y - 1) == nullptr)
                 return true;
             else
                 return false;
         }
         else if ((c2.x == x + 1) && (c2.y == y - 1) && (y - 1 >= 0) & (x + 1 < 8)) // right diagonal forward
         {
-            if ((obj.getpiece(x + 1,y - 1) != NULL) && (obj.getpiece(x + 1,y - 1)->type == 'b'))
+            if ((obj.getpiece(x + 1,y - 1) != nullptr) && (obj.getpiece(x + 1,y - 1)->team == obj.getpiece(x,y)->team))
                 return true;
             else
                 return false;
         }
         else if ((c2.x == x - 1) && (c2.y == y - 1) && (y - 1 >= 0) && (x - 1 >= 0)) // left diagonal forward
         {
-            if ((obj.getpiece(x - 1,y - 1) != NULL) && (obj.getpiece(x - 1,y - 1)->type == 'b'))
+            if ((obj.getpiece(x - 1,y - 1) != nullptr) && (obj.getpiece(x - 1,y - 1)->team == obj.getpiece(x,y)->team))
                 return true;
             else
                 return false;
