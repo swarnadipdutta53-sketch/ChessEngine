@@ -165,8 +165,6 @@ int main(){
         else cout<<"Cannot move other colours piece\n";
         b.print();
         cout<<endl<<endl;
-
-
     }
 }
    
