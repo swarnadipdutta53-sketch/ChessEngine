@@ -1,24 +1,25 @@
 #include <iostream>
 #include "Board.h"
+#include "moveValidations.h"
 using namespace std;
 void Board::initialize(){
-    pieces[0]={{0,0},'R','B'}; pieces[8]={{1,0},'P','B'};
-    pieces[1]={{0,1},'N','B'}; pieces[9]={{1,1},'P','B'};
-    pieces[2]={{0,2},'B','B'}; pieces[10]={{1,2},'P','B'};
-    pieces[3]={{0,3},'Q','B'}; pieces[11]={{1,3},'P','B'};
-    pieces[4]={{0,4},'K','B'}; pieces[12]={{1,4},'P','B'};
-    pieces[5]={{0,5},'B','B'}; pieces[13]={{1,5},'P','B'};
-    pieces[6]={{0,6},'N','B'}; pieces[14]={{1,6},'P','B'};
-    pieces[7]={{0,7},'R','B'}; pieces[15]={{1,7},'P','B'};
+    pieces[0]={{0,0},'R','b'}; pieces[8]={{1,0},'P','b'};
+    pieces[1]={{0,1},'N','b'}; pieces[9]={{1,1},'P','b'};
+    pieces[2]={{0,2},'B','b'}; pieces[10]={{1,2},'P','b'};
+    pieces[3]={{0,3},'Q','b'}; pieces[11]={{1,3},'P','b'};
+    pieces[4]={{0,4},'K','b'}; pieces[12]={{1,4},'P','b'};
+    pieces[5]={{0,5},'B','b'}; pieces[13]={{1,5},'P','b'};
+    pieces[6]={{0,6},'N','b'}; pieces[14]={{1,6},'P','b'};
+    pieces[7]={{0,7},'R','b'}; pieces[15]={{1,7},'P','b'};
 
-    pieces[16]={{7,0},'r','W'}; pieces[24]={{6,0},'p','W'};
-    pieces[17]={{7,1},'n','W'}; pieces[25]={{6,1},'p','W'};
-    pieces[18]={{7,2},'b','W'}; pieces[26]={{6,2},'p','W'};
-    pieces[19]={{7,3},'q','W'}; pieces[27]={{6,3},'p','W'};
-    pieces[20]={{7,4},'k','W'}; pieces[28]={{6,4},'p','W'};
-    pieces[21]={{7,5},'b','W'}; pieces[29]={{6,5},'p','W'};
-    pieces[22]={{7,6},'n','W'}; pieces[30]={{6,6},'p','W'};
-    pieces[23]={{7,7},'r','W'}; pieces[31]={{6,7},'p','W'};
+    pieces[16]={{7,0},'r','w'}; pieces[24]={{6,0},'p','w'};
+    pieces[17]={{7,1},'n','w'}; pieces[25]={{6,1},'p','w'};
+    pieces[18]={{7,2},'b','w'}; pieces[26]={{6,2},'p','w'};
+    pieces[19]={{7,3},'q','w'}; pieces[27]={{6,3},'p','w'};
+    pieces[20]={{7,4},'k','w'}; pieces[28]={{6,4},'p','w'};
+    pieces[21]={{7,5},'b','w'}; pieces[29]={{6,5},'p','w'};
+    pieces[22]={{7,6},'n','w'}; pieces[30]={{6,6},'p','w'};
+    pieces[23]={{7,7},'r','w'}; pieces[31]={{6,7},'p','w'};
 
     board[0][0]=&pieces[0]; board[7][0]=&pieces[16]; 
     board[0][1]=&pieces[1]; board[7][1]=&pieces[17]; 
@@ -130,9 +131,9 @@ char Board::getTeam(cell sq){
     return board[sq.row][sq.col]->team;  
 }
 
-void Board::printcapt(){
-    for(Pieces* p:capturedpieces){cout<<p->team<<" "<<p->type<<endl;}
-}
+// void Board::printcapt(){
+//     for(Pieces* p:capturedpieces){cout<<p->team<<" "<<p->type<<endl;}
+// }
 
 int main(){
     Board b;
@@ -146,19 +147,18 @@ int main(){
      
         getline(cin,inp);
         if(inp=="0")exit;
-        if (inp=="1")
-        {
-            b.printcapt();
-        }
-        
+        // if (inp=="1")
+        // {
+        //     b.printcapt();
+        // } 
         if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
 
-        else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='W'){
+        else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='w'&&moveValidation(*(b.getpiece(from.row,from.col)),{from.row,from.col},b)){
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
 
-        else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='B'){
+        else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='b'&&moveValidation(*(b.getpiece(from.row,from.col)),{from.row,from.col},b)){
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }

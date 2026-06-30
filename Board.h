@@ -1,3 +1,6 @@
+#ifndef BOARD_H
+#define BOARD_H
+
 #include<string>
 #include "pieces.h"
 #include<vector>
@@ -22,13 +25,10 @@ class Board
 private:
         Pieces pieces[32];
         Pieces* board[8][8];
-<<<<<<< HEAD
 
         vector<Pieces*> capturedpieces;
         vector<moves> movehistory;
 
-=======
->>>>>>> origin/move-validation
 public:
         
         void initialize();
@@ -43,3 +43,5 @@ public:
         // bool isWhite(char);
         // bool isBlack(char);
 };
+
+#endif
