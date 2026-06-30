@@ -63,7 +63,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
         yi++;
     }
     // right diagonal movement(backwards)
-    int xi = x - 1, yi = y - 1;
+    xi = x - 1, yi = y - 1;
     while(xi >= 0 && yi >= 0)
     {
         if((c2.x == xi) && (c2.y == yi))
@@ -74,7 +74,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
         yi--;
     }
     // left diagonal movement(forwards)
-    int xi = x-1, yi = y+1;
+    xi = x-1, yi = y+1;
     while(xi >= 0 && yi < 8)
     {
         if((c2.x == xi) && (c2.y == yi))
@@ -85,7 +85,7 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
         yi++;
     }
     // left diagonal movement(backwards)
-    int xi = x+1, yi = y-1;
+    xi = x+1, yi = y-1;
     while(xi < 8 && yi >= 0)
     {
         if((c2.x == xi) && (c2.y == yi))
@@ -207,6 +207,7 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
     case 'k': // white king
     case 'K': // black king
         
-    default:
+    default: 
+    break;
     }
 }
