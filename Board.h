@@ -7,8 +7,8 @@
 using namespace std;
 typedef struct cell
 {
-        int col;
         int row;
+        int col;
 }cell;
 
 typedef struct moves

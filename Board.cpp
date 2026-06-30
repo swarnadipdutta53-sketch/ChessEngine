@@ -139,32 +139,29 @@ int main(){
     Board b;
     b.initialize();
     b.print();
-
+    
     cell from,to;
     bool p,whiteturn=true;
     string inp;
     while(true){
      
         getline(cin,inp);
-        if(inp=="0")exit;
+        if(inp=="0")exit(0);
         // if (inp=="1")
         // {
         //     b.printcapt();
         // } 
+
         if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
-
-        else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='w'&&moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){
+        else if(b.isEmpty(from)){ cout << "No piece selected\n";}
+        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
+        else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
+        else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
+        else{
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
-
-        else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='b'&&moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){
-            b.movepiece(from,to);
-            whiteturn=!whiteturn;
-        }
-        else cout<<"Cannot move other colours piece\n";
         b.print();
         cout<<endl<<endl;
     }
 }
-   
