@@ -22,11 +22,15 @@ class Board
 private:
         Pieces pieces[32];
         Pieces* board[8][8];
+<<<<<<< HEAD
 
         vector<Pieces*> capturedpieces;
         vector<moves> movehistory;
 
+=======
+>>>>>>> origin/move-validation
 public:
+        
         void initialize();
         void print();
         bool parser(string,cell&,cell&);
