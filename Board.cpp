@@ -144,7 +144,7 @@ int main(){
     bool p,whiteturn=true;
     string inp;
     while(true){
-     
+        cout<<b.getpiece(6,4)->coords.x<<b.getpiece(6,4)->coords.y<<b.getpiece(6,4)->type;
         getline(cin,inp);
         if(inp=="0")exit(0);
         // if (inp=="1")
@@ -156,10 +156,11 @@ int main(){
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
         else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
-        else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
+        // else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
         else{
             b.movepiece(from,to);
             whiteturn=!whiteturn;
+            cout<<b.getpiece(4,4)->coords.x<<b.getpiece(4,4)->coords.y<<b.getpiece(4,4)->type;
         }
         b.print();
         cout<<endl<<endl;
