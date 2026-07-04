@@ -1,3 +1,5 @@
+//TODO: ENPASSANT LAST MOVED PIECE CHECK AND REMOVING THE CAPTURED PAWN FROM THE BOARD
+
 #include "moveValidations.h"
 #include "Board.h"
 #include "stdiodef.h"
@@ -87,7 +89,8 @@ bool moveValidationKnight(int row, int column, Coords c2, Board &obj)
 
 bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
 {
-    int dx, dy;
+    Pieces* lastPiece;
+    int dx, dy, step;
     dx = c2.x - row;
     dy = c2.y - column;
     // direction validation
@@ -95,18 +98,33 @@ bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
         return false;
     else if(dx < 0 && obj.getpiece(row, column)-> team == 'P')
         return false;
-    // 
+    // double forward
+    if(!(obj.getpiece(row, column)->hasMoved) && abs(dx) == 2 && dy == 0 && obj.getpiece(c2.x,c2.y) == nullptr)
+    {
+        step = (c2.x > row) ? 1 : -1;
+        if(!(obj.getpiece(row + step, column))) // no obstruction in the intermediate square
+            return true;
+    }
     // forwards
-    if((abs(dx) == 1 && dy == 0))
+    else if((abs(dx) == 1 && dy == 0))
     {
         if(obj.getpiece(c2.x, c2.y) == nullptr)
             return true;
-        else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
-            return false;
     }
     // diagonal capture
     else if((abs(dx) == 1 && abs(dy) == 1))
     {
+        // enpassant diagonal capture
+        if(obj.getpiece(row, column + dy) != nullptr && lastPiece != nullptr)
+        {
+            if(obj.getpiece(row, column + dy)->team != obj.getpiece(row,column)->team && !(obj.getpiece(row, column + dy) -> hasMoved
+                                                            && obj.getpiece(row,column + dy)-> type == obj.getpiece(row,column)-> type)
+                                                            && lastPiece -> team != obj.getpiece(row,column)-> team)
+            {
+                return true;
+            }
+        }
+        // diagonal capture
         if(obj.getpiece(c2.x, c2.y) == nullptr)
             return false;
         else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
@@ -114,6 +132,22 @@ bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
     }
     // invalidity
     return false;
+}
+
+bool moveValidationKing(int row, int column, Coords c2, Board &obj)
+{
+    //***Threat Check not applied***
+    int dx, dy;
+    dx = c2.x - row;
+    dy = c2.y - column;
+    if(abs(dx) > 1 || abs(dy) > 1) // since 0 is applicable for parallel moves
+        return false;
+    if(obj.getpiece(row + dx, column + dy)==nullptr)
+        return true;
+    else if(obj.getpiece(row + dx, column + dy)->team != obj.getpiece(row,column)->team)
+        return true;
+    else
+        return false;
 }
 
 bool moveValidation(Pieces piece, Coords c2, Board &obj)
@@ -137,13 +171,13 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         return moveValidationBishop(row, column, c2, obj);
     case 'q': // white queen
     case 'Q': // black queen
-        return (moveValidationBishop(row, column, c2, obj)|| moveValidationRook(row,column,c2, obj));
+        return (moveValidationBishop(row, column, c2, obj)||moveValidationRook(row,column,c2, obj));
     case 'n': // white knight
     case 'N': // black knight
-        return moveValidationKnight(row,column,c2,obj);
+        return moveValidationKnight(row,column, c2, obj);
     case 'k': // white king
     case 'K': // black king
-        
+        return moveValidationKing(row,column, c2, obj);
     default:
     printf("Error: moveValidations.invalidTeam");
     return false;
