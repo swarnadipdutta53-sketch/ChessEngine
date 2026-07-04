@@ -3,23 +3,23 @@
 #include "moveValidations.h"
 using namespace std;
 void Board::initialize(){
-    pieces[0]={{0,0},'R','b'}; pieces[8]={{1,0},'P','b'};
-    pieces[1]={{0,1},'N','b'}; pieces[9]={{1,1},'P','b'};
-    pieces[2]={{0,2},'B','b'}; pieces[10]={{1,2},'P','b'};
-    pieces[3]={{0,3},'Q','b'}; pieces[11]={{1,3},'P','b'};
-    pieces[4]={{0,4},'K','b'}; pieces[12]={{1,4},'P','b'};
-    pieces[5]={{0,5},'B','b'}; pieces[13]={{1,5},'P','b'};
-    pieces[6]={{0,6},'N','b'}; pieces[14]={{1,6},'P','b'};
-    pieces[7]={{0,7},'R','b'}; pieces[15]={{1,7},'P','b'};
+    pieces[0]={{0,0},'R','b',false}; pieces[8]={{1,0},'P','b',false};
+    pieces[1]={{0,1},'N','b',false}; pieces[9]={{1,1},'P','b',false};
+    pieces[2]={{0,2},'B','b',false}; pieces[10]={{1,2},'P','b',false};
+    pieces[3]={{0,3},'Q','b',false}; pieces[11]={{1,3},'P','b',false};
+    pieces[4]={{0,4},'K','b',false}; pieces[12]={{1,4},'P','b',false};
+    pieces[5]={{0,5},'B','b',false}; pieces[13]={{1,5},'P','b',false};
+    pieces[6]={{0,6},'N','b',false}; pieces[14]={{1,6},'P','b',false};
+    pieces[7]={{0,7},'R','b',false}; pieces[15]={{1,7},'P','b',false};
 
-    pieces[16]={{7,0},'r','w'}; pieces[24]={{6,0},'p','w'};
-    pieces[17]={{7,1},'n','w'}; pieces[25]={{6,1},'p','w'};
-    pieces[18]={{7,2},'b','w'}; pieces[26]={{6,2},'p','w'};
-    pieces[19]={{7,3},'q','w'}; pieces[27]={{6,3},'p','w'};
-    pieces[20]={{7,4},'k','w'}; pieces[28]={{6,4},'p','w'};
-    pieces[21]={{7,5},'b','w'}; pieces[29]={{6,5},'p','w'};
-    pieces[22]={{7,6},'n','w'}; pieces[30]={{6,6},'p','w'};
-    pieces[23]={{7,7},'r','w'}; pieces[31]={{6,7},'p','w'};
+    pieces[16]={{7,0},'r','w',false}; pieces[24]={{6,0},'p','w',false};
+    pieces[17]={{7,1},'n','w',false}; pieces[25]={{6,1},'p','w',false};
+    pieces[18]={{7,2},'b','w',false}; pieces[26]={{6,2},'p','w',false};
+    pieces[19]={{7,3},'q','w',false}; pieces[27]={{6,3},'p','w',false};
+    pieces[20]={{7,4},'k','w',false}; pieces[28]={{6,4},'p','w',false};
+    pieces[21]={{7,5},'b','w',false}; pieces[29]={{6,5},'p','w',false};
+    pieces[22]={{7,6},'n','w',false}; pieces[30]={{6,6},'p','w',false};
+    pieces[23]={{7,7},'r','w',false}; pieces[31]={{6,7},'p','w',false};
 
     board[0][0]=&pieces[0]; board[7][0]=&pieces[16]; 
     board[0][1]=&pieces[1]; board[7][1]=&pieces[17]; 
@@ -55,19 +55,22 @@ void Board::initialize(){
     board[3][6]=nullptr; board[5][6]=nullptr; 
     board[3][7]=nullptr; board[5][7]=nullptr; 
 }
-
-void Board::print(){
+void Board::printBoard(){
+    cout<<"\n    a b c d e f g h \n";
+    cout<<"  +-----------------+\n";
     for (int i = 0; i < 8; i++)
-    {
+    {   cout<<8-i<<" | ";
         for (int j = 0; j < 8; j++)
         {
             if (board[i][j]==nullptr){cout<<'.'<<' ';}
             else {cout<<board[i][j]->type<<' ';}
         }
-        cout<<endl;
+        cout<<'|'<<endl;
     }
-    
+    cout<<"  +-----------------+\n";
+    cout<<"    a b c d e f g h \n";
 }
+
 
 bool Board::parser(string inp,cell &from,cell& to){
         if(inp.length()!=5)return false;
@@ -95,10 +98,12 @@ void Board::movepiece(cell from,cell to){
     m.to=to;
     m.movedpiece=board[from.row][from.col];
     m.capturedpiece=nullptr;
+    m.capt=false;
     if(!isEmpty(to)){
         cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
         capturedpieces.push_back(board[to.row][to.col]);
         m.capturedpiece=board[to.row][to.col];
+        m.capt=true;
     }
     movehistory.push_back(m);
 
@@ -106,6 +111,7 @@ void Board::movepiece(cell from,cell to){
     board[from.row][from.col]=nullptr;
 
     board[to.row][to.col]->coords={to.row,to.col};
+    board[to.row][to.col]->hasMoved=true;
 }
 
 bool Board::isEmpty(cell sq){
@@ -131,42 +137,62 @@ char Board::getTeam(cell sq){
     return board[sq.row][sq.col]->team;  
 }
 
-// void Board::printcapt(){
-//     for(Pieces* p:capturedpieces){cout<<p->team<<" "<<p->type<<endl;}
-// }
+void Board::printcapt(){
+    cout<<"White pieces captured : ";
+    for(Pieces* p:capturedpieces){if(p->team=='w')cout<<string(1,p->type)+" ";}
+    cout<<"\n\nBlack pieces captured : ";
+    for(Pieces* p:capturedpieces){if(p->team=='b')cout<<string(1,p->type)+" ";}
+}
+
+bool Board::undoMove(){
+    if(movehistory.empty())return false;
+    else{
+        int r,c;
+        r=movehistory.back().from.row;
+        c=movehistory.back().from.col;
+        board[r][c]=board[movehistory.back().to.row][movehistory.back().to.col];
+        board[r][c]->coords={r,c};
+        board[r][c]->hasMoved=false;
+
+        if(movehistory.back().capt){
+        board[movehistory.back().to.row][movehistory.back().to.col]=capturedpieces.back();
+        capturedpieces.pop_back();
+       }
+       else board[movehistory.back().to.row][movehistory.back().to.col]=nullptr;
+       movehistory.pop_back();
+       for(moves m:movehistory){if(m.movedpiece==board[r][c]) board[r][c]->hasMoved=true;}
+    }
+   return true;
+}
 
 int main(){
     Board b;
     b.initialize();
-    b.print();
-
+    b.printBoard();
+    
     cell from,to;
     bool p,whiteturn=true;
     string inp;
     while(true){
-     
         getline(cin,inp);
-        if(inp=="0")exit;
-        // if (inp=="1")
-        // {
-        //     b.printcapt();
-        // } 
+        if(inp=="0")exit(0);
+        if(inp=="1")b.printcapt();
+        if(inp=="2"){
+            if(b.undoMove())whiteturn=!whiteturn;
+            else cout<<"No moves yet\n";
+        }
+
+
         if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
-
-        else if(whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='w'&&moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){
+        else if(b.isEmpty(from)){ cout << "No piece selected\n";}
+        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
+        else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
+         else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
+        else{
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
-
-        else if(!whiteturn&&!b.isEmpty(from)&&b.getTeam(from)=='b'&&moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){
-            b.movepiece(from,to);
-            whiteturn=!whiteturn;
-        }
-        else cout<<"Cannot move other colours piece\n";
-        b.print();
+        b.printBoard();
         cout<<endl<<endl;
-
-
     }
 }
-   
