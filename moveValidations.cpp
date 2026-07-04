@@ -1,4 +1,4 @@
-//TODO: ENPASSANT LAST MOVED PIECE CHECK AND REMOVING THE CAPTURED PAWN FROM THE BOARD
+//TODO: REMOVING THE CAPTURED PAWN FROM THE BOARD(implementation of enum in return values)
 
 #include "moveValidations.h"
 #include "Board.h"
