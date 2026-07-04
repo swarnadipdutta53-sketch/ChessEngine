@@ -6,8 +6,6 @@
 */
 bool moveValidationRook(int x, int y, Coords c2, Board& obj)
 {
-    printf("Rook called\n");
-    return true;
     if (c2.x < 8 && c2.x >= 0 && c2.y < 8 && c2.x >= 0)
     {
         int i = 0;
@@ -51,9 +49,6 @@ bool moveValidationRook(int x, int y, Coords c2, Board& obj)
 
 bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
 {
-    printf("bishop called\n");
-    return true;
-
     int found = 0;
     
     // right diagonal movement(forwards)
@@ -105,9 +100,6 @@ bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
 
 bool moveValidationKnight(int x, int y, Coords c2, Board &obj, Pieces piece)
 {
-    printf("Rook called\n");
-    return true;
-
     // forward right
     if(c2.x == x + 1 && c2.y == y + 2 && ((obj.getpiece(x+1, y+2)->team != piece.team) || (obj.getpiece(x,y) != nullptr)))
         return true;
@@ -139,7 +131,6 @@ bool moveValidationKnight(int x, int y, Coords c2, Board &obj, Pieces piece)
 
 bool moveValidation(Pieces piece, Coords c2, Board &obj)
 {
-    printf("here\n");
     bool result;
     int row = piece.coords.x;
     int column = piece.coords.y;
@@ -153,43 +144,23 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         {
             if (obj.getpiece(row + 1, column) == nullptr)
                 return true;
-            else
-            {
-                printf("invalid input for c1");
-                return false;
-            }
         }
         else if ((c2.x == row + 1) && (c2.y == column + 1) && (column + 1 < 8) && (row + 1 < 8)) // left diagonal forward
         {
-            if ((obj.getpiece(row+1,column+1) != nullptr))
-            { 
-                if(obj.getpiece(row + 1, column + 1)->team != obj.getpiece(row,column)->team)
+            if ((obj.getpiece(row+1,column+1) == nullptr))  
                 return true;
-            }
-            else
-            {
-                printf("invalid input for c2");
-                return false;
-            }
+            else if(obj.getpiece(row + 1, column + 1)->team != obj.getpiece(row,column)->team)
+                return true;
         }
         else if ((c2.y == column - 1) && (c2.x == row + 1) && (row + 1 < 8) & (column - 1 >= 0)) // right diagonal forward
         {
             if ((obj.getpiece(row + 1, column - 1) != nullptr))
-            {
-                if(obj.getpiece(row + 1, column - 1)->team != obj.getpiece(row, column)->team)
                 return true;
-            }
-            else
-            {
-                printf("invalid input for c3");
-                return false;
-            }
+            else if(obj.getpiece(row + 1, column - 1)->team != obj.getpiece(row, column)->team)
+                return true;
         }
-        else // invalid input for c2
-        {
-            printf("invalid input for c4");
+        else
             return false;
-        }
         break;
 
     case 'p':  // white Pawn
@@ -197,43 +168,23 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         {
             if (obj.getpiece(row-1,column) == nullptr)
                 return true;
-            else
-            {
-                printf("invalid input1");
-                return false;
-            }
         }
         else if ((c2.x == row-1) && (c2.y == column+1) && (row - 1 >= 0) & (column + 1 < 8)) // right diagonal forward
         {
-            if ((obj.getpiece(row - 1,column + 1) != nullptr))
-            {
-                if(obj.getpiece(row - 1, column + 1)->team != obj.getpiece(row,column)->team)
+            if ((obj.getpiece(row - 1,column + 1) == nullptr))
                 return true;
-            }
-            else
-            {
-                printf("invalid input2");
-                return false;
-            }
+            else if(obj.getpiece(row - 1, column + 1)->team != obj.getpiece(row,column)->team)
+                return true;
         }
         else if ((c2.x == row - 1) && (c2.y == column - 1) && (row - 1 >= 0) && (column - 1 >= 0)) // left diagonal forward
         {
-            if ((obj.getpiece(row - 1,column - 1) != nullptr))
-            {
-                if(obj.getpiece(row - 1,column - 1)->team != obj.getpiece(row,column)->team)
+            if ((obj.getpiece(row - 1,column - 1) == nullptr))
                 return true;
-            }
-            else
-            {
-                printf("invalid input3");
-                return false;  
-            }
+            else if(obj.getpiece(row - 1,column - 1)->team != obj.getpiece(row,column)->team)
+                return true;
         }
         else // invalid input for c2
-        {
-            printf("invalid input4");
             return false;
-        }
         break;
 
     case 'r': // white rook
@@ -251,7 +202,7 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
     case 'k': // white king
     case 'K': // black king
         
-    default: return false;
+    default: 
     break;
     }
 }
