@@ -18,6 +18,7 @@ typedef struct moves
 
         Pieces* movedpiece;
         Pieces* capturedpiece;
+        bool capt;
 }moves;
 
 class Board
@@ -32,7 +33,7 @@ private:
 public:
         
         void initialize();
-        void print();
+        void printBoard();
         bool parser(string,cell&,cell&);
         void movepiece(cell,cell);
         char getTeam(cell);
@@ -40,6 +41,7 @@ public:
         bool isEmpty(cell);
         Pieces* getpiece(int,int);
         void printcapt();
+        bool undoMove();
         // bool isWhite(char);
         // bool isBlack(char);
 };
