@@ -1,4 +1,4 @@
-//TODO: REMOVING THE CAPTURED PAWN FROM THE BOARD(implementation of enum in return values)
+//TODO: REMOVING THE CAPTURED PAWN FROM THE BOARD(implementation of enum in return values) & THREAT CHECKS
 
 #include "moveValidations.h"
 #include "Board.h"
