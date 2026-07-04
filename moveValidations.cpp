@@ -89,7 +89,7 @@ bool moveValidationKnight(int row, int column, Coords c2, Board &obj)
 
 bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
 {
-    Pieces* lastPiece;
+    Pieces* lastPiece = obj.getlastmovedpiece();
     int dx, dy, step;
     dx = c2.x - row;
     dy = c2.y - column;
@@ -114,15 +114,15 @@ bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
     // diagonal capture
     else if((abs(dx) == 1 && abs(dy) == 1))
     {
-        // enpassant diagonal capture
-        if(obj.getpiece(row, column + dy) != nullptr && lastPiece != nullptr)
+        // en passant diagonal capture
+        Pieces* adjacent = obj.getpiece(row, column + dy);
+        Pieces* lastPiece = obj.getlastmovedpiece();
+        if (adjacent != nullptr && lastPiece != nullptr)
         {
-            if(obj.getpiece(row, column + dy)->team != obj.getpiece(row,column)->team && !(obj.getpiece(row, column + dy) -> hasMoved
-                                                            && obj.getpiece(row,column + dy)-> type == obj.getpiece(row,column)-> type)
-                                                            && lastPiece -> team != obj.getpiece(row,column)-> team)
-            {
+            if (adjacent == lastPiece &&
+                adjacent->team != obj.getpiece(row, column)->team &&
+                adjacent->type != obj.getpiece(row, column)->type)
                 return true;
-            }
         }
         // diagonal capture
         if(obj.getpiece(c2.x, c2.y) == nullptr)
