@@ -55,7 +55,7 @@ void Board::initialize(){
     board[3][6]=nullptr; board[5][6]=nullptr; 
     board[3][7]=nullptr; board[5][7]=nullptr; 
 }
-void Board::printBoard(){
+void Board::printBoard(bool t){
     cout<<"\n    a b c d e f g h \n";
     cout<<"  +-----------------+\n";
     for (int i = 0; i < 8; i++)
@@ -65,7 +65,12 @@ void Board::printBoard(){
             if (board[i][j]==nullptr){cout<<'.'<<' ';}
             else {cout<<board[i][j]->type<<' ';}
         }
-        cout<<'|'<<endl;
+        cout<<'|';
+        if(i==0){cout<<("  White captured :"+printcaptW())<<endl;}
+        else if(i==2){cout<<("  Black captured :"+printcaptB())<<endl;}
+        else if(i==4){cout <<"  Turn: "<<(t ? "White" : "Black")<<endl;}
+        else if(i==6){cout<<("  Last Move: "+getlastmove())<<endl;}
+        else cout<<endl;
     }
     cout<<"  +-----------------+\n";
     cout<<"    a b c d e f g h \n";
@@ -88,7 +93,7 @@ bool Board::parser(string inp,cell &from,cell& to){
         to.col=inp[3]-'a';
         to.row='8'-inp[4];
 
-        // cout<<from.col<<from.row<<"to"<<to.col<<to.row<<endl;
+
         return true;
 }
 
@@ -119,8 +124,13 @@ bool Board::isEmpty(cell sq){
     return false;
 }
 
-Pieces* Board::getpiece(int x,int y){
-    return board[x][y];
+Pieces* Board::getpiece(int r,int c){
+    return board[r][c];
+}
+
+Pieces* Board::getlastmovedpiece(){
+    if(movehistory.empty())return nullptr;
+    return movehistory.back().movedpiece;
 }
 // bool Board::isBlack(char c){
 //     if (c!='.'&&isupper(c))return true;
@@ -137,11 +147,28 @@ char Board::getTeam(cell sq){
     return board[sq.row][sq.col]->team;  
 }
 
-void Board::printcapt(){
-    cout<<"White pieces captured : ";
-    for(Pieces* p:capturedpieces){if(p->team=='w')cout<<string(1,p->type)+" ";}
-    cout<<"\n\nBlack pieces captured : ";
-    for(Pieces* p:capturedpieces){if(p->team=='b')cout<<string(1,p->type)+" ";}
+string Board::printcaptW(){
+    string s=" ";
+    for(Pieces* p:capturedpieces){
+        if(p->team=='w'){
+            s+=p->type;
+            s+=' ';
+        }
+    }
+     if(s==" ")return "None";
+     return s;
+}
+
+string Board::printcaptB(){
+    string s=" ";
+    for(Pieces* p:capturedpieces){
+        if(p->team=='b'){
+            s+=p->type;
+            s+=' ';
+        }
+    }
+    if(s==" ")return "None";
+    return s;
 }
 
 bool Board::undoMove(){
@@ -165,10 +192,21 @@ bool Board::undoMove(){
    return true;
 }
 
+string Board::getlastmove(){
+    string s="";
+    if(movehistory.empty())return "None";
+    s+=char('a'+movehistory.back().from.col);
+    s+=char('8'-movehistory.back().from.row);
+    s+=" --> ";
+    s+=char('a'+movehistory.back().to.col);
+    s+=char('8'-movehistory.back().from.row);
+    return s;
+}
+
 int main(){
     Board b;
     b.initialize();
-    b.printBoard();
+    b.printBoard(true);
     
     cell from,to;
     bool p,whiteturn=true;
@@ -176,7 +214,7 @@ int main(){
     while(true){
         getline(cin,inp);
         if(inp=="0")exit(0);
-        if(inp=="1")b.printcapt();
+        // if(inp=="1")b.printcapt();
         if(inp=="2"){
             if(b.undoMove())whiteturn=!whiteturn;
             else cout<<"No moves yet\n";
@@ -187,12 +225,13 @@ int main(){
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
         else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
-         else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
+        else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
         else{
             b.movepiece(from,to);
             whiteturn=!whiteturn;
         }
-        b.printBoard();
-        cout<<endl<<endl;
+        system("cls");
+        b.printBoard(whiteturn);
+
     }
 }

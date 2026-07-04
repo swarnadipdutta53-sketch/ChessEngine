@@ -33,15 +33,18 @@ private:
 public:
         
         void initialize();
-        void printBoard();
+        void printBoard(bool);
         bool parser(string,cell&,cell&);
         void movepiece(cell,cell);
         char getTeam(cell);
         
         bool isEmpty(cell);
         Pieces* getpiece(int,int);
-        void printcapt();
+        string printcaptW();
+        string printcaptB();
         bool undoMove();
+        string getlastmove();
+        Pieces* getlastmovedpiece();
         // bool isWhite(char);
         // bool isBlack(char);
 };
