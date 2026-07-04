@@ -1,50 +1,42 @@
 #include "moveValidations.h"
 #include "Board.h"
 #include "stdiodef.h"
-/*
-    
-*/
-bool moveValidationRook(int x, int y, Coords c2, Board& obj)
+
+
+bool moveValidationRook(int row, int column, Coords c2, Board& obj)
 {
-    if (c2.x < 8 && c2.x >= 0 && c2.y < 8 && c2.x >= 0)
+    // if valid
+    if(row == c2.x || column == c2.y)
     {
-        int i = 0;
-        if (c2.x == x) // forward and backwards
-        {
-            while (i < 8)
-            {
-                if (i == y)
-                {
-                    i++;
-                    continue;
-                }
-                if(i == c2.y)
-                    return true; // valid
-                if (obj.getpiece(x,i) != nullptr)
-                    return false; // obstruction faced
-                i++;
-            }
-        }
-        else if (c2.y == y) // sideways
-        {
-            while (i < 8)
-            {
-                if (i == x)
-                {
-                    i++;
-                    continue;
-                }
-                if(i == c2.x)
-                    return true; // valid
-                if (obj.getpiece(i,y) != nullptr)
-                    return false; // obstruction faced
-                i++;
-            }
-            return true; // no obstruction faced
-        }
+        int dx,dy,xi,yi;
+        if(c2.x != row)
+            dx = (c2.x > row) ? 1 : -1;
         else
-            return false;
+            dx = 0;
+        if(c2.y != column)
+            dy = (c2.y > column) ? 1 : -1;
+        else
+            dy = 0;
+        xi = row + dx;
+        yi = column + dy;
+        while(xi != c2.x || yi != c2.y)
+        {
+            if(obj.getpiece(xi, yi) != nullptr)
+            {
+                return false; // obstruction faced
+            }
+            xi += dx;
+            yi += dy;
+        }
+        if(obj.getpiece(c2.x, c2.y) == nullptr)
+            return true;
+        else if(obj.getpiece(c2.x,c2.y)->team != obj.getpiece(row,column) -> team)
+            return true; // capture case
+        else
+            return false; // destination is obstruction itself
     }
+    else
+        return false;
 }
 
 bool moveValidationBishop(int x, int y, Coords c2, Board& obj)
@@ -202,7 +194,7 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
     case 'k': // white king
     case 'K': // black king
         
-    default: 
+    default:
     break;
     }
 }
