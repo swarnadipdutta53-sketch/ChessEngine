@@ -144,43 +144,23 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         {
             if (obj.getpiece(row + 1, column) == nullptr)
                 return true;
-            else
-            {
-                printf("invalid input for c1");
-                return false;
-            }
         }
         else if ((c2.x == row + 1) && (c2.y == column + 1) && (column + 1 < 8) && (row + 1 < 8)) // left diagonal forward
         {
-            if ((obj.getpiece(row+1,column+1) != nullptr))
-            { 
-                if(obj.getpiece(row + 1, column + 1)->team != obj.getpiece(row,column)->team)
+            if ((obj.getpiece(row+1,column+1) == nullptr))  
                 return true;
-            }
-            else
-            {
-                printf("invalid input for c2");
-                return false;
-            }
+            else if(obj.getpiece(row + 1, column + 1)->team != obj.getpiece(row,column)->team)
+                return true;
         }
         else if ((c2.y == column - 1) && (c2.x == row + 1) && (row + 1 < 8) & (column - 1 >= 0)) // right diagonal forward
         {
             if ((obj.getpiece(row + 1, column - 1) != nullptr))
-            {
-                if(obj.getpiece(row + 1, column - 1)->team != obj.getpiece(row, column)->team)
                 return true;
-            }
-            else
-            {
-                printf("invalid input for c3");
-                return false;
-            }
+            else if(obj.getpiece(row + 1, column - 1)->team != obj.getpiece(row, column)->team)
+                return true;
         }
-        else // invalid input for c2
-        {
-            printf("invalid input for c4");
+        else
             return false;
-        }
         break;
 
     case 'p':  // white Pawn
@@ -188,43 +168,23 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         {
             if (obj.getpiece(row-1,column) == nullptr)
                 return true;
-            else
-            {
-                printf("invalid input1");
-                return false;
-            }
         }
         else if ((c2.x == row-1) && (c2.y == column+1) && (row - 1 >= 0) & (column + 1 < 8)) // right diagonal forward
         {
-            if ((obj.getpiece(row - 1,column + 1) != nullptr))
-            {
-                if(obj.getpiece(row - 1, column + 1)->team != obj.getpiece(row,column)->team)
+            if ((obj.getpiece(row - 1,column + 1) == nullptr))
                 return true;
-            }
-            else
-            {
-                printf("invalid input2");
-                return false;
-            }
+            else if(obj.getpiece(row - 1, column + 1)->team != obj.getpiece(row,column)->team)
+                return true;
         }
         else if ((c2.x == row - 1) && (c2.y == column - 1) && (row - 1 >= 0) && (column - 1 >= 0)) // left diagonal forward
         {
-            if ((obj.getpiece(row - 1,column - 1) != nullptr))
-            {
-                if(obj.getpiece(row - 1,column - 1)->team != obj.getpiece(row,column)->team)
+            if ((obj.getpiece(row - 1,column - 1) == nullptr))
                 return true;
-            }
-            else
-            {
-                printf("invalid input3");
-                return false;  
-            }
+            else if(obj.getpiece(row - 1,column - 1)->team != obj.getpiece(row,column)->team)
+                return true;
         }
         else // invalid input for c2
-        {
-            printf("invalid input4");
             return false;
-        }
         break;
 
     case 'r': // white rook
