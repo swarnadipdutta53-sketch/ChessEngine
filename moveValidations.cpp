@@ -148,14 +148,14 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         else if ((c2.x == row + 1) && (c2.y == column + 1) && (column + 1 < 8) && (row + 1 < 8)) // left diagonal forward
         {
             if ((obj.getpiece(row+1,column+1) == nullptr))  
-                return true;
+                return false;
             else if(obj.getpiece(row + 1, column + 1)->team != obj.getpiece(row,column)->team)
                 return true;
         }
         else if ((c2.y == column - 1) && (c2.x == row + 1) && (row + 1 < 8) & (column - 1 >= 0)) // right diagonal forward
         {
-            if ((obj.getpiece(row + 1, column - 1) != nullptr))
-                return true;
+            if ((obj.getpiece(row + 1, column - 1) == nullptr))
+                return false;
             else if(obj.getpiece(row + 1, column - 1)->team != obj.getpiece(row, column)->team)
                 return true;
         }
@@ -172,14 +172,14 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         else if ((c2.x == row-1) && (c2.y == column+1) && (row - 1 >= 0) & (column + 1 < 8)) // right diagonal forward
         {
             if ((obj.getpiece(row - 1,column + 1) == nullptr))
-                return true;
+                return false;
             else if(obj.getpiece(row - 1, column + 1)->team != obj.getpiece(row,column)->team)
                 return true;
         }
         else if ((c2.x == row - 1) && (c2.y == column - 1) && (row - 1 >= 0) && (column - 1 >= 0)) // left diagonal forward
         {
             if ((obj.getpiece(row - 1,column - 1) == nullptr))
-                return true;
+                return false;
             else if(obj.getpiece(row - 1,column - 1)->team != obj.getpiece(row,column)->team)
                 return true;
         }
