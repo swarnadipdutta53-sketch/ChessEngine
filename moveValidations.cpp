@@ -1,5 +1,6 @@
 #include "moveValidations.h"
 #include "Board.h"
+#include "stdiodef.h"
 
 bool moveValidationRook(int row, int column, Coords c2, Board& obj)
 {
@@ -94,6 +95,7 @@ bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
         return false;
     else if(dx < 0 && obj.getpiece(row, column)-> team == 'P')
         return false;
+    // 
     // forwards
     if((abs(dx) == 1 && dy == 0))
     {
@@ -102,7 +104,7 @@ bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
         else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
             return false;
     }
-    // diagonals
+    // diagonal capture
     else if((abs(dx) == 1 && abs(dy) == 1))
     {
         if(obj.getpiece(c2.x, c2.y) == nullptr)
@@ -110,7 +112,7 @@ bool moveValidationPawn(int row, int column, Coords c2, Board &obj)
         else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
             return true;
     }
-
+    // invalidity
     return false;
 }
 
@@ -135,7 +137,7 @@ bool moveValidation(Pieces piece, Coords c2, Board &obj)
         return moveValidationBishop(row, column, c2, obj);
     case 'q': // white queen
     case 'Q': // black queen
-            return (moveValidationBishop(row, column, c2, obj)|| moveValidationRook(row,column,c2, obj));
+        return (moveValidationBishop(row, column, c2, obj)|| moveValidationRook(row,column,c2, obj));
     case 'n': // white knight
     case 'N': // black knight
         return moveValidationKnight(row,column,c2,obj);
