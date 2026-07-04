@@ -8,5 +8,6 @@ typedef struct Pieces
     Coords coords;
     char type;
     char team; 
+    bool hasMoved;
 }Pieces;
 #endif
