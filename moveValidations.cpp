@@ -90,6 +90,7 @@ ReturnType moveValidationKnight(int row, int column, Coords c2, Board &obj)
 ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
 {
     Pieces* lastPiece = obj.getlastmovedpiece();
+    ReturnType ret = ReturnType::invalid;
     int dx, dy, step;
     dx = c2.x - row;
     dy = c2.y - column;
@@ -103,13 +104,13 @@ ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
     {
         step = (c2.x > row) ? 1 : -1;
         if(!(obj.getpiece(row + step, column))) // no obstruction in the intermediate square
-            return ReturnType::gen_valid;
+            ret = ReturnType::gen_valid;
     }
     // forwards
     else if((abs(dx) == 1 && dy == 0))
     {
         if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return ReturnType::gen_valid;
+            ret = ReturnType::gen_valid;
     }
     // diagonal capture
     else if((abs(dx) == 1 && abs(dy) == 1))
@@ -121,16 +122,23 @@ ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
             if (adjacent == lastPiece &&
                 adjacent->team != obj.getpiece(row, column)->team &&
                 adjacent->type != obj.getpiece(row, column)->type)
-                return ReturnType::en_valid;
+                ret = ReturnType::en_valid;
         }
         // diagonal capture
-        if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return ReturnType::invalid;
-        else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
-            return ReturnType::gen_valid;
+        if(ret != ReturnType::en_valid)
+        {
+            if(obj.getpiece(c2.x, c2.y) == nullptr)
+                ret = ReturnType::invalid;
+            else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
+                ret = ReturnType::gen_valid;
+        }
     }
+    else
     // invalidity
-    return ReturnType::invalid;
+        ret = ReturnType::invalid;
+    if(ret != ReturnType::invalid && ((c2.x == 0 && obj.getpiece(row, column)-> team == 'p') || (c2.x == 7 && obj.getpiece(row, column)-> team == 'P')))
+        ret = ReturnType::prom_valid;
+    return ret;
 }
 
 ReturnType moveValidationKing(int row, int column, Coords c2, Board &obj)

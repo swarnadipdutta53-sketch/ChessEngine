@@ -8,6 +8,7 @@ enum class ReturnType
     en_valid, // enpassant
     cas_valid, // castling
     gen_valid, // general valid
+    prom_valid, // promotion valid
     invalid // not valid
 };
 ReturnType moveValidation(Pieces, Coords, Board&);
