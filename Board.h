@@ -22,7 +22,7 @@ typedef struct moves
 }moves;
 
 enum class ReturnType
- {
+{
      en_valid, // enpassant
      cas_valid, // castling
      gen_valid, // general valid

@@ -9,5 +9,6 @@ typedef struct Pieces
     char type;
     char team; 
     bool hasMoved;
+    
 }Pieces;
 #endif
