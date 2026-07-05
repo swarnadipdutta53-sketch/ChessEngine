@@ -21,6 +21,14 @@ typedef struct moves
         bool capt;
 }moves;
 
+enum class ReturnType
+ {
+     en_valid, // enpassant
+     cas_valid, // castling
+     gen_valid, // general valid
+     invalid // not valid
+};
+
 class Board
 {
 private:
@@ -35,7 +43,7 @@ public:
         void initialize();
         void printBoard(bool);
         bool parser(string,cell&,cell&);
-        void movepiece(cell,cell);
+        void movepiece(cell,cell,ReturnType);
         char getTeam(cell);
         
         bool isEmpty(cell);
