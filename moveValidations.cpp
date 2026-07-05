@@ -24,20 +24,20 @@ ReturnType moveValidationRook(int row, int column, Coords c2, Board& obj)
         {
             if(obj.getpiece(xi, yi) != nullptr)
             {
-                return invalid; // obstruction faced
+                return ReturnType::invalid; // obstruction faced
             }
             xi += dx;
             yi += dy;
         }
         if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return gen_valid;
+            return ReturnType::gen_valid;
         else if(obj.getpiece(c2.x,c2.y)->team != obj.getpiece(row,column) -> team)
-            return gen_valid; // capture case
+            return ReturnType::gen_valid; // capture case
         else
-            return invalid; // destination is obstruction itself
+            return ReturnType::invalid; // destination is obstruction itself
     }
     else
-        return invalid; // destination is not parallel
+        return ReturnType::invalid; // destination is not parallel
 }
 
 ReturnType moveValidationBishop(int row, int column, Coords c2, Board& obj)
@@ -56,19 +56,19 @@ ReturnType moveValidationBishop(int row, int column, Coords c2, Board& obj)
         while(c2.x != xi || c2.y != yi)
         {
             if(obj.getpiece(xi,yi) != nullptr)
-                return invalid; // obstruction faced
+                return ReturnType::invalid; // obstruction faced
             xi += dx;
             yi += dy;
         }
         if(obj.getpiece(c2.x,c2.y) == nullptr)
-            return gen_valid;
+            return ReturnType::gen_valid;
         else if(obj.getpiece(c2.x,c2.y)-> team != obj.getpiece(row, column) -> team)
-            return gen_valid; // capture case
+            return ReturnType::gen_valid; // capture case
         else
-            return invalid; // destination is obstruction itself
+            return ReturnType::invalid; // destination is obstruction itself
     }
     else
-        return invalid; // destination is not diagonal
+        return ReturnType::invalid; // destination is not diagonal
 }
 
 ReturnType moveValidationKnight(int row, int column, Coords c2, Board &obj)
@@ -80,11 +80,11 @@ ReturnType moveValidationKnight(int row, int column, Coords c2, Board &obj)
     if((abs(dx) == 2 && abs(dy) == 1) || (abs(dx) == 1 && abs(dy) == 2))
     {
         if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return gen_valid;
+            return ReturnType::gen_valid;
         else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
-            return gen_valid;
+            return ReturnType::gen_valid;
     }
-    return invalid; // invalidated
+    return ReturnType::invalid; // invalidated
 }
 
 ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
@@ -95,21 +95,21 @@ ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
     dy = c2.y - column;
     // direction validation
     if(dx > 0 && obj.getpiece(row, column)-> team == 'p')
-        return invalid;
+        return ReturnType::invalid;
     else if(dx < 0 && obj.getpiece(row, column)-> team == 'P')
-        return invalid;
+        return ReturnType::invalid;
     // double forward
     if(!(obj.getpiece(row, column)->hasMoved) && abs(dx) == 2 && dy == 0 && obj.getpiece(c2.x,c2.y) == nullptr)
     {
         step = (c2.x > row) ? 1 : -1;
         if(!(obj.getpiece(row + step, column))) // no obstruction in the intermediate square
-            return gen_valid;
+            return ReturnType::gen_valid;
     }
     // forwards
     else if((abs(dx) == 1 && dy == 0))
     {
         if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return gen_valid;
+            return ReturnType::gen_valid;
     }
     // diagonal capture
     else if((abs(dx) == 1 && abs(dy) == 1))
@@ -121,16 +121,16 @@ ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
             if (adjacent == lastPiece &&
                 adjacent->team != obj.getpiece(row, column)->team &&
                 adjacent->type != obj.getpiece(row, column)->type)
-                return en_valid;
+                return ReturnType::en_valid;
         }
         // diagonal capture
         if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return invalid;
+            return ReturnType::invalid;
         else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
-            return gen_valid;
+            return ReturnType::gen_valid;
     }
     // invalidity
-    return invalid;
+    return ReturnType::invalid;
 }
 
 ReturnType moveValidationKing(int row, int column, Coords c2, Board &obj)
@@ -140,13 +140,13 @@ ReturnType moveValidationKing(int row, int column, Coords c2, Board &obj)
     dx = c2.x - row;
     dy = c2.y - column;
     if(abs(dx) > 1 || abs(dy) > 1) // since 0 is applicable for parallel moves
-        return invalid;
+        return ReturnType::invalid;
     if(obj.getpiece(row + dx, column + dy)==nullptr)
-        return gen_valid;
+        return ReturnType::gen_valid;
     else if(obj.getpiece(row + dx, column + dy)->team != obj.getpiece(row,column)->team)
-        return gen_valid;
+        return ReturnType::gen_valid;
     else
-        return invalid;
+        return ReturnType::invalid;
 }
 
 ReturnType moveValidation(Pieces piece, Coords c2, Board &obj)
@@ -154,7 +154,7 @@ ReturnType moveValidation(Pieces piece, Coords c2, Board &obj)
     int row = piece.coords.x;
     int column = piece.coords.y;
     if (c2.x == row && c2.y == column) // current coords of the piece
-        return invalid;
+        return ReturnType::invalid;
 
     switch (piece.type)
     {
@@ -169,10 +169,10 @@ ReturnType moveValidation(Pieces piece, Coords c2, Board &obj)
         return moveValidationBishop(row, column, c2, obj);
     case 'q': // white queen
     case 'Q': // black queen
-        if(moveValidationBishop(row, column, c2, obj) != invalid||moveValidationRook(row,column,c2, obj)!=invalid)
-            return gen_valid;
+        if(moveValidationBishop(row, column, c2, obj) != ReturnType::invalid||moveValidationRook(row,column,c2, obj)!=ReturnType::invalid)
+            return ReturnType::gen_valid;
         else
-            return invalid;
+            return ReturnType::invalid;
     case 'n': // white knight
     case 'N': // black knight
         return moveValidationKnight(row,column, c2, obj);
@@ -181,6 +181,6 @@ ReturnType moveValidation(Pieces piece, Coords c2, Board &obj)
         return moveValidationKing(row,column, c2, obj);
     default:
     printf("Error: moveValidations.invalidTeam");
-    return invalid;
+    return ReturnType::invalid;
     }
 }
