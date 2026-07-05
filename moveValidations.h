@@ -1,5 +1,4 @@
 #include "stdiodef.h"
-#include "pieces.h"
 #include "Board.h"
 #define t_MOVVALID
 #ifdef t_MOVVALID
