@@ -3,23 +3,23 @@
 #include "moveValidations.h"
 using namespace std;
 void Board::initialize(){
-    pieces[0]={{0,0},'R','b',false}; pieces[8]={{1,0},'P','b',false};
-    pieces[1]={{0,1},'N','b',false}; pieces[9]={{1,1},'P','b',false};
-    pieces[2]={{0,2},'B','b',false}; pieces[10]={{1,2},'P','b',false};
-    pieces[3]={{0,3},'Q','b',false}; pieces[11]={{1,3},'P','b',false};
-    pieces[4]={{0,4},'K','b',false}; pieces[12]={{1,4},'P','b',false};
-    pieces[5]={{0,5},'B','b',false}; pieces[13]={{1,5},'P','b',false};
-    pieces[6]={{0,6},'N','b',false}; pieces[14]={{1,6},'P','b',false};
-    pieces[7]={{0,7},'R','b',false}; pieces[15]={{1,7},'P','b',false};
+    pieces[0]={{0,0},'R','b',false,true}; pieces[8]={{1,0},'P','b',false,true};
+    pieces[1]={{0,1},'N','b',false,true}; pieces[9]={{1,1},'P','b',false,true};
+    pieces[2]={{0,2},'B','b',false,true}; pieces[10]={{1,2},'P','b',false,true};
+    pieces[3]={{0,3},'Q','b',false,true}; pieces[11]={{1,3},'P','b',false,true};
+    pieces[4]={{0,4},'K','b',false,true}; pieces[12]={{1,4},'P','b',false,true};
+    pieces[5]={{0,5},'B','b',false,true}; pieces[13]={{1,5},'P','b',false,true};
+    pieces[6]={{0,6},'N','b',false,true}; pieces[14]={{1,6},'P','b',false,true};
+    pieces[7]={{0,7},'R','b',false,true}; pieces[15]={{1,7},'P','b',false,true};
 
-    pieces[16]={{7,0},'r','w',false}; pieces[24]={{6,0},'p','w',false};
-    pieces[17]={{7,1},'n','w',false}; pieces[25]={{6,1},'p','w',false};
-    pieces[18]={{7,2},'b','w',false}; pieces[26]={{6,2},'p','w',false};
-    pieces[19]={{7,3},'q','w',false}; pieces[27]={{6,3},'p','w',false};
-    pieces[20]={{7,4},'k','w',false}; pieces[28]={{6,4},'p','w',false};
-    pieces[21]={{7,5},'b','w',false}; pieces[29]={{6,5},'p','w',false};
-    pieces[22]={{7,6},'n','w',false}; pieces[30]={{6,6},'p','w',false};
-    pieces[23]={{7,7},'r','w',false}; pieces[31]={{6,7},'p','w',false};
+    pieces[16]={{7,0},'r','w',false,true}; pieces[24]={{6,0},'p','w',false,true};
+    pieces[17]={{7,1},'n','w',false,true}; pieces[25]={{6,1},'p','w',false,true};
+    pieces[18]={{7,2},'b','w',false,true}; pieces[26]={{6,2},'p','w',false,true};
+    pieces[19]={{7,3},'q','w',false,true}; pieces[27]={{6,3},'p','w',false,true};
+    pieces[20]={{7,4},'k','w',false,true}; pieces[28]={{6,4},'p','w',false,true};
+    pieces[21]={{7,5},'b','w',false,true}; pieces[29]={{6,5},'p','w',false,true};
+    pieces[22]={{7,6},'n','w',false,true}; pieces[30]={{6,6},'p','w',false,true};
+    pieces[23]={{7,7},'r','w',false,true}; pieces[31]={{6,7},'p','w',false,true};
 
     board[0][0]=&pieces[0]; board[7][0]=&pieces[16]; 
     board[0][1]=&pieces[1]; board[7][1]=&pieces[17]; 
@@ -37,6 +37,16 @@ void Board::initialize(){
     board[1][5]=&pieces[13]; board[6][5]=&pieces[29]; 
     board[1][6]=&pieces[14]; board[6][6]=&pieces[30]; 
     board[1][7]=&pieces[15]; board[6][7]=&pieces[31]; 
+
+    for(int i=0;i<16;i++){
+        blackpieces.push_back(&pieces[i]);
+    }
+    for(int i=16;i<32;i++){
+        whitepieces.push_back(&pieces[i]);
+    }
+
+    Whiteking=&pieces[20];
+    Blackking=&pieces[4];
 
     board[2][0]=nullptr; board[4][0]=nullptr; 
     board[2][1]=nullptr; board[4][1]=nullptr; 
@@ -77,7 +87,7 @@ void Board::printBoard(bool t){
 }
 
 
-bool Board::parser(string inp,cell &from,cell& to){
+bool Board::parser(string inp,square &from,square& to){
         if(inp.length()!=5)return false;
         inp[0]=tolower(inp[0]);
         inp[3]=tolower(inp[3]);
@@ -97,7 +107,7 @@ bool Board::parser(string inp,cell &from,cell& to){
         return true;
 }
 
-void Board::movepiece(cell from,cell to, ReturnType t){
+void Board::movepiece(square from,square to, ReturnType t){
     moves m;
     m.from=from;
     m.to=to;
@@ -111,6 +121,7 @@ void Board::movepiece(cell from,cell to, ReturnType t){
         if(!isEmpty(to)){
             cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
             capturedpieces.push_back(board[to.row][to.col]);
+            board[to.row][to.col]->alive=false;
             m.capturedpiece=board[to.row][to.col];
             m.capt=true;
         }
@@ -135,6 +146,7 @@ void Board::movepiece(cell from,cell to, ReturnType t){
             capturedpieces.push_back(board[to.row+1][to.col]);
             m.capturedpiece=board[to.row+1][to.col];
             m.capt=true;
+            board[to.row+1][to.col]->alive=false;
             board[to.row+1][to.col]=nullptr;
         }
         else{
@@ -142,6 +154,7 @@ void Board::movepiece(cell from,cell to, ReturnType t){
             capturedpieces.push_back(board[to.row-1][to.col]);
             m.capturedpiece=board[to.row-1][to.col];
             m.capt=true;
+            board[to.row-1][to.col]->alive=false;
             board[to.row-1][to.col]=nullptr;
         }
         movehistory.push_back(m);
@@ -151,7 +164,7 @@ void Board::movepiece(cell from,cell to, ReturnType t){
     }
 }
 
-bool Board::isEmpty(cell sq){
+bool Board::isEmpty(square sq){
     if(board[sq.row][sq.col]==nullptr)return true;
     return false;
 }
@@ -164,17 +177,9 @@ Pieces* Board::getlastmovedpiece(){
     if(movehistory.empty())return nullptr;
     return movehistory.back().movedpiece;
 }
-// bool Board::isBlack(char c){
-//     if (c!='.'&&isupper(c))return true;
-//     return false;
-// }
 
-// bool Board::isWhite(char c){
-//     if (c!='.'&&islower(c))return true;
-//     return false;
-// }
 
-char Board::getTeam(cell sq){
+char Board::getTeam(square sq){
     if(board[sq.row][sq.col]==nullptr)return 'E';
     return board[sq.row][sq.col]->team;  
 }
@@ -240,7 +245,7 @@ int main(){
     b.initialize();
     b.printBoard(true);
     
-    cell from,to;
+    square from,to;
     bool p,whiteturn=true;
     string inp;
     while(true){
