@@ -97,26 +97,58 @@ bool Board::parser(string inp,cell &from,cell& to){
         return true;
 }
 
-void Board::movepiece(cell from,cell to){
+void Board::movepiece(cell from,cell to, ReturnType t){
     moves m;
     m.from=from;
     m.to=to;
     m.movedpiece=board[from.row][from.col];
     m.capturedpiece=nullptr;
     m.capt=false;
-    if(!isEmpty(to)){
-        cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
-        capturedpieces.push_back(board[to.row][to.col]);
-        m.capturedpiece=board[to.row][to.col];
-        m.capt=true;
+   
+    switch (t)
+    {
+    case ReturnType::gen_valid:
+        if(!isEmpty(to)){
+            cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.row][to.col]);
+            m.capturedpiece=board[to.row][to.col];
+            m.capt=true;
+        }
+        movehistory.push_back(m);
+
+        board[to.row][to.col]=board[from.row][from.col];
+        board[from.row][from.col]=nullptr;
+
+        board[to.row][to.col]->coords={to.row,to.col};
+        board[to.row][to.col]->hasMoved=true;
+        break;
+
+    case ReturnType::en_valid:
+        board[to.row][to.col]=board[from.row][from.col];
+        board[from.row][from.col]=nullptr;
+
+        board[to.row][to.col]->coords={to.row,to.col};
+        board[to.row][to.col]->hasMoved=true;
+
+        if(m.movedpiece->team=='w'){
+            cout<<board[to.row+1][to.col]->type<<" of team "<<board[to.row+1][to.col]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.row+1][to.col]);
+            m.capturedpiece=board[to.row+1][to.col];
+            m.capt=true;
+            board[to.row+1][to.col]=nullptr;
+        }
+        else{
+            cout<<board[to.row-1][to.col]->type<<" of team "<<board[to.row-1][to.col]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.row-1][to.col]);
+            m.capturedpiece=board[to.row-1][to.col];
+            m.capt=true;
+            board[to.row-1][to.col]=nullptr;
+        }
+        movehistory.push_back(m);
+        break;
+    default:
+        break;
     }
-    movehistory.push_back(m);
-
-    board[to.row][to.col]=board[from.row][from.col];
-    board[from.row][from.col]=nullptr;
-
-    board[to.row][to.col]->coords={to.row,to.col};
-    board[to.row][to.col]->hasMoved=true;
 }
 
 bool Board::isEmpty(cell sq){
@@ -224,9 +256,9 @@ int main(){
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
         else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
-        else if(!moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)){ cout << "That piece can't move like that\n";}
+        else if(moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)==ReturnType::invalid){ cout << "That piece can't move like that\n";}
         else{
-            b.movepiece(from,to);
+            b.movepiece(from,to,moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b));
             whiteturn=!whiteturn;
         }
         
