@@ -87,7 +87,7 @@ void Board::printBoard(bool t){
 }
 
 
-bool Board::parser(string inp,square &from,square& to){
+bool Board::parser(string inp,Coords &from,Coords& to){
         if(inp.length()!=5)return false;
         inp[0]=tolower(inp[0]);
         inp[3]=tolower(inp[3]);
@@ -97,21 +97,21 @@ bool Board::parser(string inp,square &from,square& to){
         if(inp[1]<'1'||inp[1]>'8')return false;
         if(inp[4]<'1'||inp[4]>'8')return false;
 
-        from.col=inp[0]-'a';
-        from.row='8'-inp[1];
+        from.y=inp[0]-'a';
+        from.x='8'-inp[1];
 
-        to.col=inp[3]-'a';
-        to.row='8'-inp[4];
+        to.y=inp[3]-'a';
+        to.x='8'-inp[4];
 
 
         return true;
 }
 
-void Board::movepiece(square from,square to, MoveType t){
+void Board::movepiece(Coords from,Coords to, MoveType t){
     moves m;
     m.from=from;
     m.to=to;
-    m.movedpiece=board[from.row][from.col];
+    m.movedpiece=board[from.x][from.y];
     m.capturedpiece=nullptr;
     m.capt=false;
    
@@ -119,43 +119,43 @@ void Board::movepiece(square from,square to, MoveType t){
     {
     case MoveType::GENERAL:
         if(!isEmpty(to)){
-            cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[to.row][to.col]);
-            board[to.row][to.col]->alive=false;
-            m.capturedpiece=board[to.row][to.col];
+            cout<<board[to.x][to.y]->type<<" of team "<<board[to.x][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.x][to.y]);
+            board[to.x][to.y]->alive=false;
+            m.capturedpiece=board[to.x][to.y];
             m.capt=true;
         }
         movehistory.push_back(m);
 
-        board[to.row][to.col]=board[from.row][from.col];
-        board[from.row][from.col]=nullptr;
+        board[to.x][to.y]=board[from.x][from.y];
+        board[from.x][from.y]=nullptr;
 
-        board[to.row][to.col]->coords={to.row,to.col};
-        board[to.row][to.col]->hasMoved=true;
+        board[to.x][to.y]->coords={to.x,to.y};
+        board[to.x][to.y]->hasMoved=true;
         break;
 
     case MoveType::EN_PASSANT:
-        board[to.row][to.col]=board[from.row][from.col];
-        board[from.row][from.col]=nullptr;
+        board[to.x][to.y]=board[from.x][from.y];
+        board[from.x][from.y]=nullptr;
 
-        board[to.row][to.col]->coords={to.row,to.col};
-        board[to.row][to.col]->hasMoved=true;
+        board[to.x][to.y]->coords={to.x,to.y};
+        board[to.x][to.y]->hasMoved=true;
 
         if(m.movedpiece->team=='w'){
-            cout<<board[to.row+1][to.col]->type<<" of team "<<board[to.row+1][to.col]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[to.row+1][to.col]);
-            m.capturedpiece=board[to.row+1][to.col];
+            cout<<board[to.x+1][to.y]->type<<" of team "<<board[to.x+1][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.x+1][to.y]);
+            m.capturedpiece=board[to.x+1][to.y];
             m.capt=true;
-            board[to.row+1][to.col]->alive=false;
-            board[to.row+1][to.col]=nullptr;
+            board[to.x+1][to.y]->alive=false;
+            board[to.x+1][to.y]=nullptr;
         }
         else{
-            cout<<board[to.row-1][to.col]->type<<" of team "<<board[to.row-1][to.col]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[to.row-1][to.col]);
-            m.capturedpiece=board[to.row-1][to.col];
+            cout<<board[to.x-1][to.y]->type<<" of team "<<board[to.x-1][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.x-1][to.y]);
+            m.capturedpiece=board[to.x-1][to.y];
             m.capt=true;
-            board[to.row-1][to.col]->alive=false;
-            board[to.row-1][to.col]=nullptr;
+            board[to.x-1][to.y]->alive=false;
+            board[to.x-1][to.y]=nullptr;
         }
         movehistory.push_back(m);
         break;
@@ -164,8 +164,8 @@ void Board::movepiece(square from,square to, MoveType t){
     }
 }
 
-bool Board::isEmpty(square sq){
-    if(board[sq.row][sq.col]==nullptr)return true;
+bool Board::isEmpty(Coords sq){
+    if(board[sq.x][sq.y]==nullptr)return true;
     return false;
 }
 
@@ -179,9 +179,9 @@ Pieces* Board::getlastmovedpiece(){
 }
 
 
-char Board::getTeam(square sq){
-    if(board[sq.row][sq.col]==nullptr)return 'E';
-    return board[sq.row][sq.col]->team;  
+char Board::getTeam(Coords sq){
+    if(board[sq.x][sq.y]==nullptr)return 'E';
+    return board[sq.x][sq.y]->team;  
 }
 
 string Board::printcaptW(){
@@ -212,17 +212,17 @@ bool Board::undoMove(){
     if(movehistory.empty())return false;
     else{
         int r,c;
-        r=movehistory.back().from.row;
-        c=movehistory.back().from.col;
-        board[r][c]=board[movehistory.back().to.row][movehistory.back().to.col];
+        r=movehistory.back().from.x;
+        c=movehistory.back().from.y;
+        board[r][c]=board[movehistory.back().to.x][movehistory.back().to.y];
         board[r][c]->coords={r,c};
         board[r][c]->hasMoved=false;
 
         if(movehistory.back().capt){
-        board[movehistory.back().to.row][movehistory.back().to.col]=capturedpieces.back();
+        board[movehistory.back().to.x][movehistory.back().to.y]=capturedpieces.back();
         capturedpieces.pop_back();
        }
-       else board[movehistory.back().to.row][movehistory.back().to.col]=nullptr;
+       else board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;
        movehistory.pop_back();
        for(moves m:movehistory){if(m.movedpiece==board[r][c]) board[r][c]->hasMoved=true;}
     }
@@ -232,11 +232,11 @@ bool Board::undoMove(){
 string Board::getlastmove(){
     string s="";
     if(movehistory.empty())return "None";
-    s+=char('a'+movehistory.back().from.col);
-    s+=char('8'-movehistory.back().from.row);
+    s+=char('a'+movehistory.back().from.y);
+    s+=char('8'-movehistory.back().from.x);
     s+=" --> ";
-    s+=char('a'+movehistory.back().to.col);
-    s+=char('8'-movehistory.back().to.row);
+    s+=char('a'+movehistory.back().to.y);
+    s+=char('8'-movehistory.back().to.x);
     return s;
 }
 
@@ -245,7 +245,7 @@ int main(){
     b.initialize();
     b.printBoard(true);
     
-    square from,to;
+    Coords from,to;
     bool p,whiteturn=true;
     string inp;
     while(true){
