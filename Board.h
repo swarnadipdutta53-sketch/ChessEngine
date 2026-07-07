@@ -11,6 +11,12 @@ typedef struct square
         int col;
 }square;
 
+typedef struct Coords
+{
+    int x;
+    int y;
+}Coords;
+
 typedef struct Pieces
 {
     Coords coords;

@@ -192,3 +192,4 @@ ReturnType moveValidation(Pieces piece, Coords c2, Board &obj)
     return ReturnType::invalid;
     }
 }
+
