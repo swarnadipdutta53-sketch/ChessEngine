@@ -26,6 +26,14 @@ typedef struct Pieces
     bool alive;
 }Pieces;
 
+enum class MoveType
+ {
+     EN_PASSANT, // enpassant
+     CASTLING, // castling
+     GENERAL, // general valid
+     PROMOTION, // not valid
+};
+
 typedef struct moves
 {
         square from;
@@ -34,6 +42,7 @@ typedef struct moves
         Pieces* movedpiece;
         Pieces* capturedpiece;
         bool capt;
+        MoveType t;
 }moves;
 
 enum class ReturnType
@@ -44,6 +53,7 @@ enum class ReturnType
      prom_valid,
      invalid // not valid
 };
+
 
 class Board
 {
@@ -63,7 +73,7 @@ public:
         void initialize();
         void printBoard(bool);
         bool parser(string,square&,square&);
-        void movepiece(square,square,ReturnType);
+        void movepiece(square,square,MoveType);
         char getTeam(square);
         
         bool isEmpty(square);

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Board.h"
-#include "moveValidations.h"
+// #include "moveValidations.h"
 using namespace std;
 void Board::initialize(){
     pieces[0]={{0,0},'R','b',false,true}; pieces[8]={{1,0},'P','b',false,true};
@@ -107,7 +107,7 @@ bool Board::parser(string inp,square &from,square& to){
         return true;
 }
 
-void Board::movepiece(square from,square to, ReturnType t){
+void Board::movepiece(square from,square to, MoveType t){
     moves m;
     m.from=from;
     m.to=to;
@@ -117,7 +117,7 @@ void Board::movepiece(square from,square to, ReturnType t){
    
     switch (t)
     {
-    case ReturnType::gen_valid:
+    case MoveType::GENERAL:
         if(!isEmpty(to)){
             cout<<board[to.row][to.col]->type<<" of team "<<board[to.row][to.col]->team<<" has been captured!!\n";
             capturedpieces.push_back(board[to.row][to.col]);
@@ -134,7 +134,7 @@ void Board::movepiece(square from,square to, ReturnType t){
         board[to.row][to.col]->hasMoved=true;
         break;
 
-    case ReturnType::en_valid:
+    case MoveType::EN_PASSANT:
         board[to.row][to.col]=board[from.row][from.col];
         board[from.row][from.col]=nullptr;
 
@@ -261,9 +261,8 @@ int main(){
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
         else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
-        else if(moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b)==ReturnType::invalid){ cout << "That piece can't move like that\n";}
         else{
-            b.movepiece(from,to,moveValidation(*(b.getpiece(from.row,from.col)),{to.row,to.col},b));
+            b.movepiece(from,to,MoveType::GENERAL);
             whiteturn=!whiteturn;
         }
         
