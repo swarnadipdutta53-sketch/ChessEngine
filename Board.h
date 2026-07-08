@@ -41,7 +41,6 @@ typedef struct moves
 
         Pieces* movedpiece;
         Pieces* capturedpiece;
-        bool capt;
         MoveType t;
 }moves;
 
@@ -84,6 +83,9 @@ public:
         string getlastmove();
         Pieces* getlastmovedpiece();
 
+        vector<moves>generatePseudoLegalMovesRook(Pieces* piece);
+        vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece);
+        vector<moves> Board::generatePseudoLegalMoves(Pieces* piece);
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
         vector<moves> generatePseudoLegalMoves(Pieces*); 

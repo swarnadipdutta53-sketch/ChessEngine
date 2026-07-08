@@ -7,7 +7,5 @@ typedef struct Coords
     int x;
     int y;
 }Coords;
-
-Coords encoder(char*);
 char* decoder(Coords);
 #endif
