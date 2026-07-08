@@ -30,7 +30,7 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
     int len = 0; // dy = 0(forward) , 1 , -1
     moves p_moves[4];
     Coords currPos = {piece -> coords.x, piece -> coords.y};
-    dx = (piece -> team != 'p') ? -1 : 1;
+    dx = (piece -> team == 'p') ? -1 : 1;
     // checking if adjacent pawn is enabling enpassant, if yes then assigning it to the adjascent
     if(board[currPos.x][currPos.y-1] != nullptr) // left side
     {
