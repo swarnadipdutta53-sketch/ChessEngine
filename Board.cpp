@@ -122,7 +122,7 @@ void Board::movepiece(moves l){
         board[l.from.x][l.from.y]=nullptr;
 
         board[l.to.x][l.to.y]->coords={l.to.x,l.to.y};
-        board[l.to.x][l.to.y]->hasMoved=true;
+        board[l.to.x][l.to.y]->hasMoved++;
         break;
 
     case MoveType::EN_PASSANT:
@@ -130,7 +130,7 @@ void Board::movepiece(moves l){
         board[l.from.x][l.from.y]=nullptr;
 
         board[l.to.x][l.to.y]->coords={l.to.x,l.to.y};
-        board[l.to.x][l.to.y]->hasMoved=true;
+        board[l.to.x][l.to.y]->hasMoved++;
 
         if(l.movedpiece->team=='w'){
             // cout<<board[to.x+1][to.y]->type<<" of team "<<board[to.x+1][to.y]->team<<" has been captured!!\n";
@@ -165,6 +165,10 @@ Pieces* Board::getlastmovedpiece(){
     return movehistory.back().movedpiece;
 }
 
+Pieces* Board::getking(char t){
+    if(t=='w')return Whiteking;
+    return Blackking;
+}
 
 char Board::getTeam(Coords sq){
     if(board[sq.x][sq.y]==nullptr)return 'E';
@@ -203,7 +207,7 @@ bool Board::undoMove(){
         c=movehistory.back().from.y;
         board[r][c]=board[movehistory.back().to.x][movehistory.back().to.y];
         board[r][c]->coords={r,c};
-        board[r][c]->hasMoved=movehistory.back().prevHasMoved;
+        board[r][c]->hasMoved--;
 
         if(movehistory.back().capturedpiece!=nullptr){
             board[capturedpieces.back()->coords.x][capturedpieces.back()->coords.y]=capturedpieces.back();
@@ -261,8 +265,6 @@ int main(){
             }    
            if(!val){cout<<"That Piece cant move like that\n";}       
         }
-        
         b.printBoard(whiteturn);
-
     }
 }

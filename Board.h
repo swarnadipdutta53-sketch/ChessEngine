@@ -16,7 +16,7 @@ typedef struct Pieces
     Coords coords;
     char type;
     char team; 
-    bool hasMoved;
+    int hasMoved;
     bool alive;
 }Pieces;
 
@@ -36,7 +36,6 @@ typedef struct moves
         Pieces* movedpiece;
         Pieces* capturedpiece;
         MoveType movetype;
-        bool prevHasMoved;
 }moves;
 
 
