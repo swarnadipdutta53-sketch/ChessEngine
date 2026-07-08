@@ -1,195 +1,270 @@
-//TODO: THREAT CHECKS
-
-#include "moveValidations.h"
+#include <iostream>
 #include "Board.h"
-#include "stdiodef.h"
+// #include "moveValidations.h"
+using namespace std;
+void Board::initialize(){
+    pieces[0]={{0,0},'R','b',false,true}; pieces[8]={{1,0},'P','b',false,true};
+    pieces[1]={{0,1},'N','b',false,true}; pieces[9]={{1,1},'P','b',false,true};
+    pieces[2]={{0,2},'B','b',false,true}; pieces[10]={{1,2},'P','b',false,true};
+    pieces[3]={{0,3},'Q','b',false,true}; pieces[11]={{1,3},'P','b',false,true};
+    pieces[4]={{0,4},'K','b',false,true}; pieces[12]={{1,4},'P','b',false,true};
+    pieces[5]={{0,5},'B','b',false,true}; pieces[13]={{1,5},'P','b',false,true};
+    pieces[6]={{0,6},'N','b',false,true}; pieces[14]={{1,6},'P','b',false,true};
+    pieces[7]={{0,7},'R','b',false,true}; pieces[15]={{1,7},'P','b',false,true};
 
-ReturnType moveValidationRook(int row, int column, Coords c2, Board& obj)
-{
-    // if valid
-    if(row == c2.x || column == c2.y)
-    {
-        int dx,dy,xi,yi;
-        if(c2.x != row)
-            dx = (c2.x > row) ? 1 : -1;
-        else
-            dx = 0;
-        if(c2.y != column)
-            dy = (c2.y > column) ? 1 : -1;
-        else
-            dy = 0;
-        xi = row + dx;
-        yi = column + dy;
-        while(xi != c2.x || yi != c2.y)
+    pieces[16]={{7,0},'r','w',false,true}; pieces[24]={{6,0},'p','w',false,true};
+    pieces[17]={{7,1},'n','w',false,true}; pieces[25]={{6,1},'p','w',false,true};
+    pieces[18]={{7,2},'b','w',false,true}; pieces[26]={{6,2},'p','w',false,true};
+    pieces[19]={{7,3},'q','w',false,true}; pieces[27]={{6,3},'p','w',false,true};
+    pieces[20]={{7,4},'k','w',false,true}; pieces[28]={{6,4},'p','w',false,true};
+    pieces[21]={{7,5},'b','w',false,true}; pieces[29]={{6,5},'p','w',false,true};
+    pieces[22]={{7,6},'n','w',false,true}; pieces[30]={{6,6},'p','w',false,true};
+    pieces[23]={{7,7},'r','w',false,true}; pieces[31]={{6,7},'p','w',false,true};
+
+    board[0][0]=&pieces[0]; board[7][0]=&pieces[16]; 
+    board[0][1]=&pieces[1]; board[7][1]=&pieces[17]; 
+    board[0][2]=&pieces[2]; board[7][2]=&pieces[18]; 
+    board[0][3]=&pieces[3]; board[7][3]=&pieces[19]; 
+    board[0][4]=&pieces[4]; board[7][4]=&pieces[20]; 
+    board[0][5]=&pieces[5]; board[7][5]=&pieces[21]; 
+    board[0][6]=&pieces[6]; board[7][6]=&pieces[22]; 
+    board[0][7]=&pieces[7]; board[7][7]=&pieces[23]; 
+    board[1][0]=&pieces[8]; board[6][0]=&pieces[24]; 
+    board[1][1]=&pieces[9]; board[6][1]=&pieces[25]; 
+    board[1][2]=&pieces[10]; board[6][2]=&pieces[26]; 
+    board[1][3]=&pieces[11]; board[6][3]=&pieces[27]; 
+    board[1][4]=&pieces[12]; board[6][4]=&pieces[28]; 
+    board[1][5]=&pieces[13]; board[6][5]=&pieces[29]; 
+    board[1][6]=&pieces[14]; board[6][6]=&pieces[30]; 
+    board[1][7]=&pieces[15]; board[6][7]=&pieces[31]; 
+
+    for(int i=0;i<16;i++){
+        blackpieces.push_back(&pieces[i]);
+    }
+    for(int i=16;i<32;i++){
+        whitepieces.push_back(&pieces[i]);
+    }
+
+    Whiteking=&pieces[20];
+    Blackking=&pieces[4];
+
+    board[2][0]=nullptr; board[4][0]=nullptr; 
+    board[2][1]=nullptr; board[4][1]=nullptr; 
+    board[2][2]=nullptr; board[4][2]=nullptr; 
+    board[2][3]=nullptr; board[4][3]=nullptr; 
+    board[2][4]=nullptr; board[4][4]=nullptr; 
+    board[2][5]=nullptr; board[4][5]=nullptr; 
+    board[2][6]=nullptr; board[4][6]=nullptr; 
+    board[2][7]=nullptr; board[4][7]=nullptr; 
+    board[3][0]=nullptr; board[5][0]=nullptr; 
+    board[3][1]=nullptr; board[5][1]=nullptr; 
+    board[3][2]=nullptr; board[5][2]=nullptr; 
+    board[3][3]=nullptr; board[5][3]=nullptr; 
+    board[3][4]=nullptr; board[5][4]=nullptr; 
+    board[3][5]=nullptr; board[5][5]=nullptr; 
+    board[3][6]=nullptr; board[5][6]=nullptr; 
+    board[3][7]=nullptr; board[5][7]=nullptr; 
+}
+void Board::printBoard(bool t){
+    cout<<"\n    a b c d e f g h \n";
+    cout<<"  +-----------------+\n";
+    for (int i = 0; i < 8; i++)
+    {   cout<<8-i<<" | ";
+        for (int j = 0; j < 8; j++)
         {
-            if(obj.getpiece(xi, yi) != nullptr)
-            {
-                return ReturnType::invalid; // obstruction faced
-            }
-            xi += dx;
-            yi += dy;
+            if (board[i][j]==nullptr){cout<<'.'<<' ';}
+            else {cout<<board[i][j]->type<<' ';}
         }
-        if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return ReturnType::gen_valid;
-        else if(obj.getpiece(c2.x,c2.y)->team != obj.getpiece(row,column) -> team)
-            return ReturnType::gen_valid; // capture case
-        else
-            return ReturnType::invalid; // destination is obstruction itself
+        cout<<'|';
+        if(i==0){cout<<("  White captured :"+printcaptW())<<endl;}
+        else if(i==2){cout<<("  Black captured :"+printcaptB())<<endl;}
+        else if(i==4){cout <<"  Turn: "<<(t ? "White" : "Black")<<endl;}
+        else if(i==6){cout<<("  Last Move: "+getlastmove())<<endl;}
+        else cout<<endl;
     }
-    else
-        return ReturnType::invalid; // destination is not parallel
+    cout<<"  +-----------------+\n";
+    cout<<"    a b c d e f g h \n";
 }
 
-ReturnType moveValidationBishop(int row, int column, Coords c2, Board& obj)
-{
-    // if valid
-    /*
-        absolute difference between x1 and x2 is equal to the difference between y1 and y2 for diagonal condition
-    */
-    if((abs(c2.y - column) == abs(c2.x - row)))
+
+bool Board::parser(string inp,Coords &from,Coords& to){
+        if(inp.length()!=5)return false;
+        inp[0]=tolower(inp[0]);
+        inp[3]=tolower(inp[3]);
+        if(inp[2]!=' ')return false;
+        if(inp[0]<'a'||inp[0]>'h')return false;
+        if(inp[3]<'a'||inp[3]>'h')return false;
+        if(inp[1]<'1'||inp[1]>'8')return false;
+        if(inp[4]<'1'||inp[4]>'8')return false;
+
+        from.y=inp[0]-'a';
+        from.x='8'-inp[1];
+
+        to.y=inp[3]-'a';
+        to.x='8'-inp[4];
+
+
+        return true;
+}
+
+void Board::movepiece(Coords from,Coords to, MoveType t){
+    moves m;
+    m.from=from;
+    m.to=to;
+    m.movedpiece=board[from.x][from.y];
+    m.capturedpiece=nullptr;
+   
+    switch (t)
     {
-        int dx,dy,xi,yi;
-        dx = (row > c2.x) ? -1 : 1;
-        dy = (column > c2.y) ? -1 : 1;
-        xi = row + dx;
-        yi = column + dy;
-        while(c2.x != xi || c2.y != yi)
-        {
-            if(obj.getpiece(xi,yi) != nullptr)
-                return ReturnType::invalid; // obstruction faced
-            xi += dx;
-            yi += dy;
+    case MoveType::GENERAL:
+        if(!isEmpty(to)){
+            cout<<board[to.x][to.y]->type<<" of team "<<board[to.x][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.x][to.y]);
+            board[to.x][to.y]->alive=false;
+            m.capturedpiece=board[to.x][to.y];
         }
-        if(obj.getpiece(c2.x,c2.y) == nullptr)
-            return ReturnType::gen_valid;
-        else if(obj.getpiece(c2.x,c2.y)-> team != obj.getpiece(row, column) -> team)
-            return ReturnType::gen_valid; // capture case
-        else
-            return ReturnType::invalid; // destination is obstruction itself
-    }
-    else
-        return ReturnType::invalid; // destination is not diagonal
-}
+        movehistory.push_back(m);
 
-ReturnType moveValidationKnight(int row, int column, Coords c2, Board &obj)
-{
-    int dx, dy;
-    dx = c2.x - row;
-    dy = c2.y - column;
-    // forwards and backwards(first layer check: general validation)
-    if((abs(dx) == 2 && abs(dy) == 1) || (abs(dx) == 1 && abs(dy) == 2))
-    {
-        if(obj.getpiece(c2.x, c2.y) == nullptr)
-            return ReturnType::gen_valid;
-        else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
-            return ReturnType::gen_valid;
-    }
-    return ReturnType::invalid; // invalidated
-}
+        board[to.x][to.y]=board[from.x][from.y];
+        board[from.x][from.y]=nullptr;
 
-ReturnType moveValidationPawn(int row, int column, Coords c2, Board &obj)
-{
-    Pieces* lastPiece = obj.getlastmovedpiece();
-    ReturnType ret = ReturnType::invalid;
-    int dx, dy, step;
-    dx = c2.x - row;
-    dy = c2.y - column;
-    // direction validation
-    if(dx > 0 && obj.getpiece(row, column)-> team == 'p')
-        return ReturnType::invalid;
-    else if(dx < 0 && obj.getpiece(row, column)-> team == 'P')
-        return ReturnType::invalid;
-    // double forward
-    if(!(obj.getpiece(row, column)->hasMoved) && abs(dx) == 2 && dy == 0 && obj.getpiece(c2.x,c2.y) == nullptr)
-    {
-        step = (c2.x > row) ? 1 : -1;
-        if(!(obj.getpiece(row + step, column))) // no obstruction in the intermediate square
-            ret = ReturnType::gen_valid;
-    }
-    // forwards
-    else if((abs(dx) == 1 && dy == 0))
-    {
-        if(obj.getpiece(c2.x, c2.y) == nullptr)
-            ret = ReturnType::gen_valid;
-    }
-    // diagonal capture
-    else if((abs(dx) == 1 && abs(dy) == 1))
-    {
-        // en passant diagonal capture
-        Pieces* adjacent = obj.getpiece(row, column + dy);
-        if (adjacent != nullptr && lastPiece != nullptr)
-        {
-            if (adjacent == lastPiece &&
-                adjacent->team != obj.getpiece(row, column)->team &&
-                adjacent->type != obj.getpiece(row, column)->type)
-                ret = ReturnType::en_valid;
+        board[to.x][to.y]->coords={to.x,to.y};
+        board[to.x][to.y]->hasMoved=true;
+        break;
+
+    case MoveType::EN_PASSANT:
+        board[to.x][to.y]=board[from.x][from.y];
+        board[from.x][from.y]=nullptr;
+
+        board[to.x][to.y]->coords={to.x,to.y};
+        board[to.x][to.y]->hasMoved=true;
+
+        if(m.movedpiece->team=='w'){
+            cout<<board[to.x+1][to.y]->type<<" of team "<<board[to.x+1][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.x+1][to.y]);
+            m.capturedpiece=board[to.x+1][to.y];
+            m.capt=true;
+            board[to.x+1][to.y]->alive=false;
+            board[to.x+1][to.y]=nullptr;
         }
-        // diagonal capture
-        if(ret != ReturnType::en_valid)
-        {
-            if(obj.getpiece(c2.x, c2.y) == nullptr)
-                ret = ReturnType::invalid;
-            else if(obj.getpiece(c2.x, c2.y)-> team != obj.getpiece(row, column)-> team)
-                ret = ReturnType::gen_valid;
+        else{
+            cout<<board[to.x-1][to.y]->type<<" of team "<<board[to.x-1][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[to.x-1][to.y]);
+            m.capturedpiece=board[to.x-1][to.y];
+            m.capt=true;
+            board[to.x-1][to.y]->alive=false;
+            board[to.x-1][to.y]=nullptr;
         }
-    }
-    else
-    // invalidity
-        ret = ReturnType::invalid;
-    if(ret != ReturnType::invalid && ((c2.x == 0 && obj.getpiece(row, column)-> team == 'p') || (c2.x == 7 && obj.getpiece(row, column)-> team == 'P')))
-        ret = ReturnType::prom_valid;
-    return ret;
-}
-
-ReturnType moveValidationKing(int row, int column, Coords c2, Board &obj)
-{
-    //***Threat Check not applied***
-    int dx, dy;
-    dx = c2.x - row;
-    dy = c2.y - column;
-    if(abs(dx) > 1 || abs(dy) > 1) // since 0 is applicable for parallel moves
-        return ReturnType::invalid;
-    if(obj.getpiece(row + dx, column + dy)==nullptr)
-        return ReturnType::gen_valid;
-    else if(obj.getpiece(row + dx, column + dy)->team != obj.getpiece(row,column)->team)
-        return ReturnType::gen_valid;
-    else
-        return ReturnType::invalid;
-}
-
-ReturnType moveValidation(Pieces piece, Coords c2, Board &obj)
-{
-    int row = piece.coords.x;
-    int column = piece.coords.y;
-    if (c2.x == row && c2.y == column) // current coords of the piece
-        return ReturnType::invalid;
-
-    switch (piece.type)
-    {
-    case 'P':  //black pawn
-    case 'p':  // white Pawn
-        return moveValidationPawn(row, column, c2, obj);
-    case 'r': // white rook
-    case 'R': // black rook
-        return moveValidationRook(row, column, c2, obj);
-    case 'b': // white bishop
-    case 'B': // black bishop
-        return moveValidationBishop(row, column, c2, obj);
-    case 'q': // white queen
-    case 'Q': // black queen
-        if(moveValidationBishop(row, column, c2, obj) != ReturnType::invalid||moveValidationRook(row,column,c2, obj)!=ReturnType::invalid)
-            return ReturnType::gen_valid;
-        else
-            return ReturnType::invalid;
-    case 'n': // white knight
-    case 'N': // black knight
-        return moveValidationKnight(row,column, c2, obj);
-    case 'k': // white king
-    case 'K': // black king
-        return moveValidationKing(row,column, c2, obj);
+        movehistory.push_back(m);
+        break;
     default:
-    printf("Error: moveValidations.invalidTeam");
-    return ReturnType::invalid;
+        break;
     }
 }
 
+bool Board::isEmpty(Coords sq){
+    if(board[sq.x][sq.y]==nullptr)return true;
+    return false;
+}
+
+Pieces* Board::getpiece(int r,int c){
+    return board[r][c];
+}
+
+Pieces* Board::getlastmovedpiece(){
+    if(movehistory.empty())return nullptr;
+    return movehistory.back().movedpiece;
+}
+
+
+char Board::getTeam(Coords sq){
+    if(board[sq.x][sq.y]==nullptr)return 'E';
+    return board[sq.x][sq.y]->team;  
+}
+
+string Board::printcaptW(){
+    string s=" ";
+    for(Pieces* p:capturedpieces){
+        if(p->team=='w'){
+            s+=p->type;
+            s+=' ';
+        }
+    }
+     if(s==" ")return "None";
+     return s;
+}
+
+string Board::printcaptB(){
+    string s=" ";
+    for(Pieces* p:capturedpieces){
+        if(p->team=='b'){
+            s+=p->type;
+            s+=' ';
+        }
+    }
+    if(s==" ")return "None";
+    return s;
+}
+
+bool Board::undoMove(){
+    if(movehistory.empty())return false;
+    else{
+        int r,c;
+        r=movehistory.back().from.x;
+        c=movehistory.back().from.y;
+        board[r][c]=board[movehistory.back().to.x][movehistory.back().to.y];
+        board[r][c]->coords={r,c};
+        board[r][c]->hasMoved=false;
+
+        if(movehistory.back().capt){
+        board[movehistory.back().to.x][movehistory.back().to.y]=capturedpieces.back();
+        capturedpieces.pop_back();
+       }
+       else board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;
+       movehistory.pop_back();
+       for(moves m:movehistory){if(m.movedpiece==board[r][c]) board[r][c]->hasMoved=true;}
+    }
+   return true;
+}
+
+string Board::getlastmove(){
+    string s="";
+    if(movehistory.empty())return "None";
+    s+=char('a'+movehistory.back().from.y);
+    s+=char('8'-movehistory.back().from.x);
+    s+=" --> ";
+    s+=char('a'+movehistory.back().to.y);
+    s+=char('8'-movehistory.back().to.x);
+    return s;
+}
+
+int main(){
+    Board b;
+    b.initialize();
+    b.printBoard(true);
+    
+    Coords from,to;
+    bool p,whiteturn=true;
+    string inp;
+    while(true){
+        getline(cin,inp);
+        system("cls");
+        if(inp=="0")exit(0);
+        // if(inp=="1")b.printcapt();
+        if(inp=="2"){
+            if(b.undoMove())whiteturn=!whiteturn;
+            else cout<<"No moves yet\n";
+        }
+        if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
+        else if(b.isEmpty(from)){ cout << "No piece selected\n";}
+        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
+        else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
+        else{
+            b.movepiece(from,to,MoveType::GENERAL);
+            whiteturn=!whiteturn;
+        }
+        
+        b.printBoard(whiteturn);
+
+    }
+}
