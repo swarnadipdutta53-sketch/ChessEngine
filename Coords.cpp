@@ -1,4 +1,4 @@
-#include "Coords.h"
+#include "Board.h"
 
 Coords encoder(char* move)
 {

@@ -4,11 +4,6 @@
 #include<string>
 #include<vector>
 using namespace std;
-typedef struct Coords
-{
-    int x;
-    int y;
-}Coords;
 
 typedef struct Coords
 {
@@ -21,7 +16,7 @@ typedef struct Pieces
     Coords coords;
     char type;
     char team; 
-    bool hasMoved;
+    int hasMoved;
     bool alive;
 }Pieces;
 
@@ -40,17 +35,8 @@ typedef struct moves
 
         Pieces* movedpiece;
         Pieces* capturedpiece;
-        MoveType t;
+        MoveType movetype;
 }moves;
-
-enum class ReturnType
-{
-     en_valid, // enpassant
-     cas_valid, // castling
-     gen_valid, // general valid
-     prom_valid,
-     invalid // not valid
-};
 
 
 class Board
@@ -71,7 +57,7 @@ public:
         void initialize();
         void printBoard(bool);
         bool parser(string,Coords&,Coords&);
-        void movepiece(Coords,Coords,MoveType);
+        void movepiece(moves);
         char getTeam(Coords);
         
         bool isEmpty(Coords);
@@ -90,6 +76,7 @@ public:
         vector<moves> generatePseudoLegalMoves(Pieces*); 
         bool isattacked(Coords,char);
         bool canattack(Coords,Pieces*);
+        Pieces* getking(char);
 };
 
 #endif
