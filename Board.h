@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 using namespace std;
+
 typedef struct Coords
 {
     int x;
@@ -34,10 +35,9 @@ typedef struct moves
 
         Pieces* movedpiece;
         Pieces* capturedpiece;
-        bool capt;
-        MoveType t;
+        MoveType movetype;
+        bool prevHasMoved;
 }moves;
-
 
 
 class Board
@@ -58,7 +58,7 @@ public:
         void initialize();
         void printBoard(bool);
         bool parser(string,Coords&,Coords&);
-        void movepiece(Coords,Coords,MoveType);
+        void movepiece(moves);
         char getTeam(Coords);
         
         bool isEmpty(Coords);
@@ -74,6 +74,7 @@ public:
         vector<moves> generatePseudoLegalMoves(Pieces*); 
         bool isattacked(Coords,char);
         bool canattack(Coords,Pieces*);
+        Pieces* getking(char);
 };
 
 #endif

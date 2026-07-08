@@ -107,57 +107,44 @@ bool Board::parser(string inp,Coords &from,Coords& to){
         return true;
 }
 
-void Board::movepiece(Coords from,Coords to, MoveType t){
-    moves m;
-    m.from=from;
-    m.to=to;
-    m.movedpiece=board[from.x][from.y];
-    m.capturedpiece=nullptr;
-    m.capt=false;
-   
-    switch (t)
+void Board::movepiece(moves l){
+    
+    switch (l.movetype)
     {
     case MoveType::GENERAL:
-        if(!isEmpty(to)){
-            cout<<board[to.x][to.y]->type<<" of team "<<board[to.x][to.y]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[to.x][to.y]);
-            board[to.x][to.y]->alive=false;
-            m.capturedpiece=board[to.x][to.y];
-            m.capt=true;
+        if(!isEmpty(l.to)){
+            capturedpieces.push_back(board[l.to.x][l.to.y]);
+            board[l.to.x][l.to.y]->alive=false;
         }
-        movehistory.push_back(m);
+        movehistory.push_back(l);
 
-        board[to.x][to.y]=board[from.x][from.y];
-        board[from.x][from.y]=nullptr;
+        board[l.to.x][l.to.y]=board[l.from.x][l.from.y];
+        board[l.from.x][l.from.y]=nullptr;
 
-        board[to.x][to.y]->coords={to.x,to.y};
-        board[to.x][to.y]->hasMoved=true;
+        board[l.to.x][l.to.y]->coords={l.to.x,l.to.y};
+        board[l.to.x][l.to.y]->hasMoved=true;
         break;
 
     case MoveType::EN_PASSANT:
-        board[to.x][to.y]=board[from.x][from.y];
-        board[from.x][from.y]=nullptr;
+        board[l.to.x][l.to.y]=board[l.from.x][l.from.y];
+        board[l.from.x][l.from.y]=nullptr;
 
-        board[to.x][to.y]->coords={to.x,to.y};
-        board[to.x][to.y]->hasMoved=true;
+        board[l.to.x][l.to.y]->coords={l.to.x,l.to.y};
+        board[l.to.x][l.to.y]->hasMoved=true;
 
-        if(m.movedpiece->team=='w'){
-            cout<<board[to.x+1][to.y]->type<<" of team "<<board[to.x+1][to.y]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[to.x+1][to.y]);
-            m.capturedpiece=board[to.x+1][to.y];
-            m.capt=true;
-            board[to.x+1][to.y]->alive=false;
-            board[to.x+1][to.y]=nullptr;
+        if(l.movedpiece->team=='w'){
+            // cout<<board[to.x+1][to.y]->type<<" of team "<<board[to.x+1][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[l.to.x+1][l.to.y]);
+            board[l.to.x+1][l.to.y]->alive=false;
+            board[l.to.x+1][l.to.y]=nullptr;
         }
         else{
-            cout<<board[to.x-1][to.y]->type<<" of team "<<board[to.x-1][to.y]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[to.x-1][to.y]);
-            m.capturedpiece=board[to.x-1][to.y];
-            m.capt=true;
-            board[to.x-1][to.y]->alive=false;
-            board[to.x-1][to.y]=nullptr;
+            // cout<<board[l.to.x-1][l.to.y]->type<<" of team "<<board[to.x-1][to.y]->team<<" has been captured!!\n";
+            capturedpieces.push_back(board[l.to.x-1][l.to.y]);
+            board[l.to.x-1][l.to.y]->alive=false;
+            board[l.to.x-1][l.to.y]=nullptr;
         }
-        movehistory.push_back(m);
+        movehistory.push_back(l);
         break;
     default:
         break;
@@ -216,15 +203,15 @@ bool Board::undoMove(){
         c=movehistory.back().from.y;
         board[r][c]=board[movehistory.back().to.x][movehistory.back().to.y];
         board[r][c]->coords={r,c};
-        board[r][c]->hasMoved=false;
+        board[r][c]->hasMoved=movehistory.back().prevHasMoved;
 
-        if(movehistory.back().capt){
-        board[movehistory.back().to.x][movehistory.back().to.y]=capturedpieces.back();
-        capturedpieces.pop_back();
+        if(movehistory.back().capturedpiece!=nullptr){
+            board[capturedpieces.back()->coords.x][capturedpieces.back()->coords.y]=capturedpieces.back();
+            capturedpieces.pop_back();
+            if(movehistory.back().movetype==MoveType::EN_PASSANT){board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;}
        }
        else board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;
        movehistory.pop_back();
-       for(moves m:movehistory){if(m.movedpiece==board[r][c]) board[r][c]->hasMoved=true;}
     }
    return true;
 }
@@ -262,8 +249,17 @@ int main(){
         else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
         else{
-            b.movepiece(from,to,MoveType::GENERAL);
-            whiteturn=!whiteturn;
+            bool val=false;
+            vector<moves> m=b.generateLegalMoves(b.getpiece(from.x,from.y));
+            for(auto l:m){
+                if(l.from.x==from.x&&l.from.y==from.y&&l.to.x==to.x&&l.to.y==to.y){
+                    b.movepiece(l);
+                    whiteturn=!whiteturn;
+                    val=true;
+                    break;
+                }
+            }    
+           if(!val){cout<<"That Piece cant move like that\n";}       
         }
         
         b.printBoard(whiteturn);
