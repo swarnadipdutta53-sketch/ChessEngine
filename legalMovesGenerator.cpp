@@ -11,7 +11,7 @@ typedef struct moves
 
         Pieces* movedpiece;
         Pieces* capturedpiece;
-        bool capt;
+
         MoveType t;
 }moves;
 */
@@ -20,7 +20,7 @@ generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> c
 */
 vector<moves> Board::generatePseudoLegalMovesRook(Pieces* piece)
 {
-
+    return{};
 }
 vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
 {
@@ -44,7 +44,7 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
                                              && getlastmovedpiece() == board[currPos.x][currPos.y+1] && getlastmovedpiece()->hasMoved == 1)
             adjascent2 = board[currPos.x][currPos.y + 1];
     }
-    if(!(piece -> hasMoved) && board[currPos.x + dx*2][currPos.y+0] == nullptr && board[currPos.x + dx][currPos.y] == 0) // double forward
+    if(!(piece -> hasMoved) && board[currPos.x + dx*2][currPos.y+0] == nullptr && board[currPos.x + dx][currPos.y] == nullptr) // double forward
     {
         p_moves[len] = {{currPos.x, currPos.y}, {2*dx+currPos.x, currPos.y+0}, piece, nullptr, MoveType::GENERAL};
         ret.push_back(p_moves[len++]);
@@ -59,9 +59,9 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
         if(!CHECKTEAM(dx+currPos.x,currPos.y-1,currPos.x,currPos.y))
         {
             if(adjascent1 != nullptr)
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[dx+currPos.x][currPos.y-1], MoveType::EN_PASSANT};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x][currPos.y-1], MoveType::EN_PASSANT};
             else
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x][currPos.y-1], MoveType::GENERAL};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x+dx][currPos.y-1], MoveType::GENERAL};
             ret.push_back(p_moves[len++]);
         }
     }
@@ -70,9 +70,9 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
         if(!CHECKTEAM(dx+currPos.x,currPos.y+1,currPos.x,currPos.y))
         {
             if(adjascent2 != nullptr)
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[dx+currPos.x][currPos.y+1], MoveType::EN_PASSANT};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x][currPos.y+1], MoveType::EN_PASSANT};
             else
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x][currPos.y+1], MoveType::GENERAL};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x+dx][currPos.y+1], MoveType::GENERAL};
             ret.push_back(p_moves[len++]);
         }
     }
@@ -87,20 +87,19 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
         case 'p':
         case 'P':
         return generatePseudoLegalMovesPawn(piece);
-        break;
+
         // for rook
         case 'r':
         case 'R':
 
-        break;
         //for bishop
         case 'b':
         case 'B':
-        break;
+
         // for Queen
         case 'q':
         case 'Q':
-        break;
+
         // for knight
         case 'n':
         case 'N':
@@ -109,7 +108,6 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
         case 'K':
         default:
         cout << "Invalid Piece Selection Error From LegalMovesGenerator: 1.0";
-        break;
     }
     return pseudoMoveVec;
 }
