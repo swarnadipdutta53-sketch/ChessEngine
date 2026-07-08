@@ -113,7 +113,6 @@ void Board::movepiece(Coords from,Coords to, MoveType t){
     m.to=to;
     m.movedpiece=board[from.x][from.y];
     m.capturedpiece=nullptr;
-    m.capt=false;
    
     switch (t)
     {
@@ -123,7 +122,6 @@ void Board::movepiece(Coords from,Coords to, MoveType t){
             capturedpieces.push_back(board[to.x][to.y]);
             board[to.x][to.y]->alive=false;
             m.capturedpiece=board[to.x][to.y];
-            m.capt=true;
         }
         movehistory.push_back(m);
 
