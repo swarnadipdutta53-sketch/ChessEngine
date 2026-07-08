@@ -44,7 +44,7 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
                                              && getlastmovedpiece() == board[currPos.x][currPos.y+1] && getlastmovedpiece()->hasMoved == 1)
             adjascent2 = board[currPos.x][currPos.y + 1];
     }
-    if(!(piece -> hasMoved) && board[dx*2][currPos.y+0] == nullptr) // double forward
+    if(!(piece -> hasMoved) && board[currPos.x + dx*2][currPos.y+0] == nullptr && board[currPos.x + dx][currPos.y] == 0) // double forward
     {
         p_moves[len] = {{currPos.x, currPos.y}, {2*dx+currPos.x, currPos.y+0}, piece, nullptr, MoveType::GENERAL};
         ret.push_back(p_moves[len++]);
@@ -59,9 +59,9 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
         if(!CHECKTEAM(dx+currPos.x,currPos.y-1,currPos.x,currPos.y))
         {
             if(adjascent1 != nullptr)
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[dx+currPos.x][currPos.y-1], MoveType::GENERAL};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[dx+currPos.x][currPos.y-1], MoveType::EN_PASSANT};
             else
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x][currPos.y-1], MoveType::EN_PASSANT};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x][currPos.y-1], MoveType::GENERAL};
             ret.push_back(p_moves[len++]);
         }
     }
@@ -70,9 +70,9 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
         if(!CHECKTEAM(dx+currPos.x,currPos.y+1,currPos.x,currPos.y))
         {
             if(adjascent2 != nullptr)
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[dx+currPos.x][currPos.y+1], MoveType::GENERAL};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[dx+currPos.x][currPos.y+1], MoveType::EN_PASSANT};
             else
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x][currPos.y+1], MoveType::EN_PASSANT};
+                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x][currPos.y+1], MoveType::GENERAL};
             ret.push_back(p_moves[len++]);
         }
     }
