@@ -2,14 +2,13 @@
 #define BOARD_H
 
 #include<string>
-#include "Coords.h"
 #include<vector>
 using namespace std;
-typedef struct square
+typedef struct Coords
 {
-        int row;
-        int col;
-}square;
+    int x;
+    int y;
+}Coords;
 
 typedef struct Coords
 {
@@ -36,8 +35,8 @@ enum class MoveType
 
 typedef struct moves
 {
-        square from;
-        square to;
+        Coords from;
+        Coords to;
 
         Pieces* movedpiece;
         Pieces* capturedpiece;
@@ -71,11 +70,11 @@ public:
         
         void initialize();
         void printBoard(bool);
-        bool parser(string,square&,square&);
-        void movepiece(square,square,MoveType);
-        char getTeam(square);
+        bool parser(string,Coords&,Coords&);
+        void movepiece(Coords,Coords,MoveType);
+        char getTeam(Coords);
         
-        bool isEmpty(square);
+        bool isEmpty(Coords);
         Pieces* getpiece(int,int);
         string printcaptW();
         string printcaptB();
@@ -89,8 +88,8 @@ public:
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
         vector<moves> generatePseudoLegalMoves(Pieces*); 
-        bool isattacked(square,char);
-        bool canattack(square,Pieces*);
+        bool isattacked(Coords,char);
+        bool canattack(Coords,Pieces*);
 };
 
 #endif
