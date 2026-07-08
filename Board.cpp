@@ -254,10 +254,8 @@ int main(){
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
         else{
             bool val=false;
-            int count=0;
             vector<moves> m=b.generatePseudoLegalMoves(b.getpiece(from.x,from.y));
             for(auto l:m){
-                count++;
                      if(l.from.x==from.x&&l.from.y==from.y&&l.to.x==to.x&&l.to.y==to.y){
                      b.movepiece(l);
                     whiteturn=!whiteturn;
@@ -266,7 +264,6 @@ int main(){
                 }     
             }    
             if(!val){cout<<"That Piece cant move like that\n";}    
-            cout<<count;
         }
         b.printBoard(whiteturn);
     }
