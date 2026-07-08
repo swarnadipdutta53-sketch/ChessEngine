@@ -86,7 +86,7 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
         // for pawn
         case 'p':
         case 'P':
-        generatePseudoLegalMovesPawn(piece);
+        return generatePseudoLegalMovesPawn(piece);
         break;
         // for rook
         case 'r':
