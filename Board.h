@@ -83,6 +83,7 @@ public:
 
         vector<moves> generatePseudoLegalMovesRook(Pieces*);
         vector<moves> generatePseudoLegalMovesPawn(Pieces*);
+        vector<moves> generatePseudoLegalMovesBishop(Pieces*);
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
         vector<moves> generatePseudoLegalMoves(Pieces*); 
