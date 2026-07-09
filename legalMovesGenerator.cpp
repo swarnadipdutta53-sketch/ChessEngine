@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <iostream>
+#define CHECKPIECE(x1,y1,x2,y2) (board[x1][y1] == board[x2][y2])
 #define CHECKTEAM(x1,y1,x2,y2) ((board[x1][y1] -> team) == (board[x2][y2] -> team)) // only used for (x1, y1)  != (x2, y2)
 #define CHECKPIECETYPE(x1,y1,t) ((board[x1][y1] -> type) == t)
 #define CHECKPAWN(x1,y1) (CHECKPIECETYPE(x1,y1, 'P') || CHECKPIECETYPE(x1, y1, 'p'))
@@ -22,7 +23,63 @@ generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> c
 */
 vector<moves> Board::generatePseudoLegalMovesRook(Pieces* piece)
 {
-    return{};
+    Coords currPos = {piece -> coords.x, piece -> coords.y};
+    Pieces* pieceX, *pieceY;
+    vector<moves> tempX, tempY;
+    bool crossFlagX = false, crossFlagY = false, terminateX = false, terminateY = false;
+    for(int i = 0; i < 8; i++)
+    {
+        pieceX = board[i][currPos.y];
+        pieceY = board[currPos.x][i];
+        if(terminateX && terminateY) // ending early for better average case time complexity
+            break;
+        if(board[currPos.x][i] == piece) 
+            crossFlagY = true;
+        if(board[i][currPos.y] == piece)
+            crossFlagX = true;
+        if(!terminateX && pieceX != piece)
+        {
+            if(pieceX != nullptr)
+            {  
+                if(!crossFlagX)
+                {
+                    tempX.clear();
+                    if(!CHECKTEAM(i, currPos.y, currPos.x, currPos.y))
+                        tempX.push_back({{currPos.x, currPos.y}, {i, currPos.y}, piece, pieceX, MoveType::GENERAL});
+                }
+                else
+                {
+                    if(!CHECKTEAM(i, currPos.y, currPos.x, currPos.y))
+                        tempX.push_back({{currPos.x, currPos.y}, {i, currPos.y}, piece, pieceX, MoveType::GENERAL});
+                    terminateX = true;
+                }
+            }
+            else
+                tempX.push_back({{currPos.x, currPos.y}, {i, currPos.y}, piece, pieceX, MoveType::GENERAL});
+        }
+        if(!terminateY && pieceY != piece)
+        {
+            if(pieceY != nullptr)
+            {
+                if(!crossFlagY)
+                {
+                    tempY.clear();
+                    if(!CHECKTEAM(currPos.x, i, currPos.x, currPos.y))
+                    tempY.push_back({{currPos.x, currPos.y}, {currPos.x, i}, piece, pieceY, MoveType::GENERAL});
+                }
+                else
+                {
+                    if(!CHECKTEAM(currPos.x, i, currPos.x, currPos.y))
+                        tempY.push_back({{currPos.x, currPos.y}, {currPos.x, i}, piece, pieceY, MoveType::GENERAL});
+                    terminateY = true;
+                }
+            }
+            else
+                tempY.push_back({{currPos.x, currPos.y}, {currPos.x, i}, piece, pieceY, MoveType::GENERAL});
+        }
+    }
+    tempX.insert(tempX.end(), tempY.begin(), tempY.end());
+    return tempX;
 }
 vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
 {
@@ -88,6 +145,7 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
     }
     return ret;
 }
+
 vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
 {
     vector<moves> pseudoMoveVec;
@@ -101,7 +159,7 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
         // for rook
         case 'r':
         case 'R':
-
+        return generatePseudoLegalMovesRook(piece);
         //for bishop
         case 'b':
         case 'B':
