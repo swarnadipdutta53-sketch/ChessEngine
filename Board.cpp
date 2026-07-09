@@ -108,47 +108,52 @@ bool Board::parser(string inp,Coords &from,Coords& to){
 }
 
 void Board::movepiece(moves l){
-    
+    int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y;
+    board[tr][tc]=board[fr][fc];
+    board[fr][fc]=nullptr;
+    board[tr][tc]->coords={tr,tc};
+    board[tr][tc]->hasMoved++;
+
     switch (l.movetype)
     {
     case MoveType::GENERAL:
-        if(!isEmpty(l.to)){
-            capturedpieces.push_back(board[l.to.x][l.to.y]);
-            board[l.to.x][l.to.y]->alive=false;
+        if(l.capturedpiece!=nullptr){
+            l.capturedpiece->alive=false;
+            capturedpieces.push_back(l.capturedpiece);
         }
-        movehistory.push_back(l);
-
-        board[l.to.x][l.to.y]=board[l.from.x][l.from.y];
-        board[l.from.x][l.from.y]=nullptr;
-
-        board[l.to.x][l.to.y]->coords={l.to.x,l.to.y};
-        board[l.to.x][l.to.y]->hasMoved++;
         break;
-
+    
     case MoveType::EN_PASSANT:
-        board[l.to.x][l.to.y]=board[l.from.x][l.from.y];
-        board[l.from.x][l.from.y]=nullptr;
-
-        board[l.to.x][l.to.y]->coords={l.to.x,l.to.y};
-        board[l.to.x][l.to.y]->hasMoved++;
-
-        if(l.movedpiece->team=='w'){
-            // cout<<board[to.x+1][to.y]->type<<" of team "<<board[to.x+1][to.y]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[l.to.x+1][l.to.y]);
-            board[l.to.x+1][l.to.y]->alive=false;
-            board[l.to.x+1][l.to.y]=nullptr;
+        if(l.movedpiece->team=='w'){board[tr+1][tc]=nullptr;}
+        else {board[tr-1][tc]=nullptr;}
+        l.capturedpiece->alive=false;
+        capturedpieces.push_back(l.capturedpiece);
+        break;
+    case MoveType::CASTLING:
+    
+        break;
+    
+    case MoveType::PROMOTION:
+        if(l.capturedpiece!=nullptr){
+            l.capturedpiece->alive=false;
+            capturedpieces.push_back(l.capturedpiece);
         }
-        else{
-            // cout<<board[l.to.x-1][l.to.y]->type<<" of team "<<board[to.x-1][to.y]->team<<" has been captured!!\n";
-            capturedpieces.push_back(board[l.to.x-1][l.to.y]);
-            board[l.to.x-1][l.to.y]->alive=false;
-            board[l.to.x-1][l.to.y]=nullptr;
+        char ch;
+        prom: 
+        cout<<"Enter the promotion type\n";
+        cin>>ch; ch=toupper(ch);
+        switch(ch){
+            case 'Q': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::QUEEN; break;
+            case 'R': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::ROOK; break;
+            case 'N': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::KNIGHT; break;
+            case 'B': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::BISHOP; break;
+            default : cout<<"Invalid promotion type\n"; goto prom;
         }
-        movehistory.push_back(l);
         break;
     default:
         break;
     }
+    movehistory.push_back(l);
 }
 
 bool Board::isEmpty(Coords sq){
@@ -210,6 +215,7 @@ bool Board::undoMove(){
         board[r][c]->hasMoved--;
 
         if(movehistory.back().capturedpiece!=nullptr){
+            capturedpieces.back()->alive=true;
             board[capturedpieces.back()->coords.x][capturedpieces.back()->coords.y]=capturedpieces.back();
             capturedpieces.pop_back();
             if(movehistory.back().movetype==MoveType::EN_PASSANT){board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;}
