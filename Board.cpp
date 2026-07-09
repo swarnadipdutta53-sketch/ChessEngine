@@ -93,8 +93,9 @@ void Board::makeMove(moves l){
     board[fr][fc]=nullptr;
     board[tr][tc]->coords={tr,tc};
     board[tr][tc]->hasMoved++;
+    string s;
 
-    switch (l.movetype)
+    switch(l.movetype)
     {
     case MoveType::GENERAL:
         if(l.capturedpiece!=nullptr){
@@ -119,15 +120,14 @@ void Board::makeMove(moves l){
             l.capturedpiece->alive=false;
             capturedpieces.push_back(l.capturedpiece);
         }
-        char ch;
         prom: 
         cout<<"Enter the promotion type\n";
-        cin>>ch; ch=toupper(ch);
-        switch(ch){
-            case 'Q': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::QUEEN; break;
-            case 'R': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::ROOK; break;
-            case 'N': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::KNIGHT; break;
-            case 'B': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(ch) : ch; l.promotiontype=PromotionType::BISHOP; break;
+        getline(cin,s); s=toupper(s[0]);
+        switch(s[0]){
+            case 'Q': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::QUEEN; break;
+            case 'R': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::ROOK; break;
+            case 'N': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::KNIGHT; break;
+            case 'B': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::BISHOP; break;
             default : cout<<"Invalid promotion type\n"; goto prom;
         }
         break;
@@ -160,4 +160,3 @@ bool Board::undoMove(){
     }
    return true;
 }
-

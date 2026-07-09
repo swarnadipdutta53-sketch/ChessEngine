@@ -14,11 +14,14 @@ int main(){
         getline(cin,inp);
         system("cls");
         if(inp=="0")exit(0);
-        // if(inp=="1")b.printcapt();
         if(inp=="2"){
             if(b.undoMove())whiteturn=!whiteturn;
             else cout<<"No moves yet\n";
+            b.printBoard(whiteturn);
+            continue;
         }
+
+
         if(!parser(inp,from,to)){cout<<"Invalid input\n";}
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
         else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}

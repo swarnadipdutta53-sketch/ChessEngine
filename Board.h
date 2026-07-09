@@ -70,9 +70,6 @@ public:
         void makeMove(moves);
         bool undoMove();
         
-
-        bool parser(string,Coords&,Coords&);
-        
         
         bool isEmpty(Coords);
         Pieces* getpiece(int,int);
