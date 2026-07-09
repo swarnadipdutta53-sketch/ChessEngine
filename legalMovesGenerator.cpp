@@ -1,8 +1,10 @@
 #include "Board.h"
 #include <iostream>
-#define CHECKTEAM(x1,y1,x2,y2) board[x1][y1] -> team == board[x2][y2] -> team // only used for (x1, y1)  != (x2, y2)
-#define CHECKPIECETYPE(x1,y1,t) board[x1][y1] -> type == t
+#define CHECKTEAM(x1,y1,x2,y2) ((board[x1][y1] -> team) == (board[x2][y2] -> team)) // only used for (x1, y1)  != (x2, y2)
+#define CHECKPIECETYPE(x1,y1,t) ((board[x1][y1] -> type) == t)
 #define CHECKPAWN(x1,y1) (CHECKPIECETYPE(x1,y1, 'P') || CHECKPIECETYPE(x1, y1, 'p'))
+#define CHECKBOUND(x,y) ((x >= 0)  && (x < 8) && (y >= 0) && (y < 8))
+#define CHECKPROMOTION(x) ((x==7) || (x==0))
 /*
 typedef struct moves
 {
@@ -25,55 +27,63 @@ vector<moves> Board::generatePseudoLegalMovesRook(Pieces* piece)
 vector<moves> Board::generatePseudoLegalMovesPawn(Pieces* piece)
 {
     vector<moves> ret;
-    Pieces* adjascent1 = nullptr, *adjascent2 = nullptr;
-    int dx;
-    int len = 0; // dy = 0(forward) , 1 , -1
-    moves p_moves[4];
     Coords currPos = {piece -> coords.x, piece -> coords.y};
-    dx = (piece -> team == 'p') ? -1 : 1;
-    // checking if adjacent pawn is enabling enpassant, if yes then assigning it to the adjascent
-    if(board[currPos.x][currPos.y-1] != nullptr) // left side
+    bool adjacent[2] = {false,false};
+    int dx = (piece -> type == 'p') ? -1 : 1;   // dy = 0(forward) , 1 , -1
+    // en-passant
+    // checking if adjacent pawn is enabling enpassant, if yes then assigning it to the adjacent
+    int i = 0;
+    for(int dy : {-1,1}) // checking adjascency
     {
-        if(CHECKPAWN(currPos.x, currPos.y-1) && !CHECKTEAM(currPos.x, currPos.y, currPos.x, currPos.y - 1)
-                                             && getlastmovedpiece() == board[currPos.x][currPos.y-1] && getlastmovedpiece()->hasMoved == 1)
-            adjascent1 = board[currPos.x][currPos.y - 1];
-    }
-    if(board[currPos.x][currPos.y+1] != nullptr) // right side
-    {
-        if(CHECKPAWN(currPos.x, currPos.y+1) && !CHECKTEAM(currPos.x, currPos.y, currPos.x, currPos.y + 1)
-                                             && getlastmovedpiece() == board[currPos.x][currPos.y+1] && getlastmovedpiece()->hasMoved == 1)
-            adjascent2 = board[currPos.x][currPos.y + 1];
-    }
-    if(!(piece -> hasMoved) && board[currPos.x + dx*2][currPos.y+0] == nullptr && board[currPos.x + dx][currPos.y] == nullptr) // double forward
-    {
-        p_moves[len] = {{currPos.x, currPos.y}, {2*dx+currPos.x, currPos.y+0}, piece, nullptr, MoveType::GENERAL};
-        ret.push_back(p_moves[len++]);
-    }
-    if(board[dx+currPos.x][currPos.y+0] == nullptr) // single forward
-    {
-        p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x, currPos.y+0}, piece, nullptr, MoveType::GENERAL};
-        ret.push_back(p_moves[len++]);
-    }
-    if(board[dx+currPos.x][currPos.y-1] != nullptr) // left diagonal capture (w.r.t white)
-    {
-        if(!CHECKTEAM(dx+currPos.x,currPos.y-1,currPos.x,currPos.y))
+        if(CHECKBOUND(currPos.x, currPos.y+dy))
         {
-            if(adjascent1 != nullptr)
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x][currPos.y-1], MoveType::EN_PASSANT};
+            if(board[currPos.x][currPos.y+dy] != nullptr)
+            {
+                if(CHECKPAWN(currPos.x, currPos.y+dy) && !CHECKTEAM(currPos.x, currPos.y, currPos.x, currPos.y + dy)
+                                                    && getlastmovedpiece() == board[currPos.x][currPos.y+dy] && (abs(movehistory.back().to.x - movehistory.back().from.x) == 2))
+                    adjacent[i] = true;
+            }
+        }
+        i++;
+    }
+    if(adjacent[0]) // left side enpassant
+        ret.push_back({{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x][currPos.y-1], MoveType::EN_PASSANT});
+    if(adjacent[1]) // right side enpassant
+        ret.push_back({{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x][currPos.y+1], MoveType::EN_PASSANT});
+
+    if(CHECKBOUND(currPos.x + 2*dx, currPos.y) && CHECKBOUND(currPos.x + dx, currPos.y)) // double forward
+    {
+        if(!(piece -> hasMoved) && board[currPos.x + dx*2][currPos.y+0] == nullptr && board[currPos.x + dx][currPos.y] == nullptr) 
+            ret.push_back({{currPos.x, currPos.y}, {2*dx+currPos.x, currPos.y+0}, piece, board[currPos.x + dx*2][currPos.y], MoveType::GENERAL});
+    }
+    
+    if(CHECKBOUND(currPos.x + dx, currPos.y)) // single forward
+    {
+        if(board[dx+currPos.x][currPos.y] == nullptr) 
+        {
+             //promotion hanlde
+            if(CHECKPROMOTION(currPos.x + dx))
+                ret.push_back({{currPos.x, currPos.y}, {currPos.x + dx, currPos.y}, piece, board[currPos.x + dx][currPos.y], MoveType::PROMOTION});
             else
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y -1}, piece, board[currPos.x+dx][currPos.y-1], MoveType::GENERAL};
-            ret.push_back(p_moves[len++]);
+                ret.push_back({{currPos.x, currPos.y}, {dx+currPos.x, currPos.y}, piece, board[currPos.x + dx][currPos.y], MoveType::GENERAL});
         }
     }
-    if(board[dx+currPos.x][currPos.y+1] != nullptr) // right diagonal capture (same)
+
+    for(int dy : {-1,1})
     {
-        if(!CHECKTEAM(dx+currPos.x,currPos.y+1,currPos.x,currPos.y))
+        if(CHECKBOUND(currPos.x + dx, currPos.y+dy))
         {
-            if(adjascent2 != nullptr)
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x][currPos.y+1], MoveType::EN_PASSANT};
-            else
-                p_moves[len] = {{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +1}, piece, board[currPos.x+dx][currPos.y+1], MoveType::GENERAL};
-            ret.push_back(p_moves[len++]);
+            if(board[dx+currPos.x][currPos.y+dy] != nullptr) // left diagonal capture (w.r.t white)
+            {
+                if(!CHECKTEAM(dx+currPos.x,currPos.y+dy,currPos.x,currPos.y))
+                {
+                    if(CHECKPROMOTION(currPos.x + dx)) //promotion handle
+                        ret.push_back({{currPos.x, currPos.y}, {currPos.x + dx, currPos.y +dy}, piece, board[currPos.x + dx][currPos.y+dy], MoveType::PROMOTION});
+                    else
+                        ret.push_back({{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +dy}, piece, board[currPos.x+dx][currPos.y+dy], MoveType::GENERAL});
+                    
+                }
+            }
         }
     }
     return ret;
