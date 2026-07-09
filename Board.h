@@ -28,14 +28,23 @@ enum class MoveType
      PROMOTION, // not valid
 };
 
+enum class PromotionType{
+     QUEEN,
+     ROOK,
+     KNIGHT,
+     BISHOP,
+     NONE,
+};
+
 typedef struct moves
 {
         Coords from;
         Coords to;
 
         Pieces* movedpiece;
-        Pieces* capturedpiece;
+        Pieces* capturedpiece=nullptr;
         MoveType movetype;
+        PromotionType promotiontype=PromotionType::NONE;
 }moves;
 
 
