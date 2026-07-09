@@ -40,10 +40,12 @@ typedef struct moves
 {
         Coords from;
         Coords to;
-
+        
         Pieces* movedpiece;
         Pieces* capturedpiece=nullptr;
-        MoveType movetype;
+        MoveType movetype=MoveType::GENERAL;
+
+        Pieces* auxiliarypiece=nullptr;
         PromotionType promotiontype=PromotionType::NONE;
 }moves;
 
@@ -64,18 +66,23 @@ private:
 public:
         
         void initialize();
-        void printBoard(bool);
+        void printBoard(bool);  //all defined in Board.cpp
+        void makeMove(moves);
+        bool undoMove();
+        
+
         bool parser(string,Coords&,Coords&);
-        void movepiece(moves);
-        char getTeam(Coords);
+        
         
         bool isEmpty(Coords);
         Pieces* getpiece(int,int);
+        Pieces* getlastmovedpiece();
+        Pieces* getking(char);                 //all defined in Helper.cpp
+        char getTeam(Coords);
         string printcaptW();
         string printcaptB();
-        bool undoMove();
         string getlastmove();
-        Pieces* getlastmovedpiece();
+        
 
         vector<moves> generatePseudoLegalMovesRook(Pieces*);
         vector<moves> generatePseudoLegalMovesPawn(Pieces*);
@@ -84,7 +91,7 @@ public:
         vector<moves> generatePseudoLegalMoves(Pieces*); 
         bool isattacked(Coords,char);
         bool canattack(Coords,Pieces*);
-        Pieces* getking(char);
+        
 };
 
 #endif
