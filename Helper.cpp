@@ -1,0 +1,62 @@
+#include "Board.h"
+
+//Contains all helper and getter functions
+
+bool Board::isEmpty(Coords sq){
+    if(board[sq.x][sq.y]==nullptr)return true;
+    return false;
+}
+
+Pieces* Board::getpiece(int r,int c){
+    return board[r][c];
+}
+
+Pieces* Board::getlastmovedpiece(){
+    if(movehistory.empty())return nullptr;
+    return movehistory.back().movedpiece;
+}
+
+Pieces* Board::getking(char t){
+    if(t=='w')return Whiteking;
+    return Blackking;
+}
+
+char Board::getTeam(Coords sq){
+    if(board[sq.x][sq.y]==nullptr)return 'E';
+    return board[sq.x][sq.y]->team;  
+}
+
+string Board::printcaptW(){
+    string s=" ";
+    for(Pieces* p:capturedpieces){
+        if(p->team=='w'){
+            s+=p->type;
+            s+=' ';
+        }
+    }
+     if(s==" ")return "None";
+     return s;
+}
+
+string Board::printcaptB(){
+    string s=" ";
+    for(Pieces* p:capturedpieces){
+        if(p->team=='b'){
+            s+=p->type;
+            s+=' ';
+        }
+    }
+    if(s==" ")return "None";
+    return s;
+}
+
+string Board::getlastmove(){
+    string s="";
+    if(movehistory.empty())return "None";
+    s+=char('a'+movehistory.back().from.y);
+    s+=char('8'-movehistory.back().from.x);
+    s+=" --> ";
+    s+=char('a'+movehistory.back().to.y);
+    s+=char('8'-movehistory.back().to.x);
+    return s;
+}

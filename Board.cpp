@@ -65,6 +65,7 @@ void Board::initialize(){
     board[3][6]=nullptr; board[5][6]=nullptr; 
     board[3][7]=nullptr; board[5][7]=nullptr; 
 }
+
 void Board::printBoard(bool t){
     cout<<"\n    a b c d e f g h \n";
     cout<<"  +-----------------+\n";
@@ -86,28 +87,7 @@ void Board::printBoard(bool t){
     cout<<"    a b c d e f g h \n";
 }
 
-
-bool Board::parser(string inp,Coords &from,Coords& to){
-        if(inp.length()!=5)return false;
-        inp[0]=tolower(inp[0]);
-        inp[3]=tolower(inp[3]);
-        if(inp[2]!=' ')return false;
-        if(inp[0]<'a'||inp[0]>'h')return false;
-        if(inp[3]<'a'||inp[3]>'h')return false;
-        if(inp[1]<'1'||inp[1]>'8')return false;
-        if(inp[4]<'1'||inp[4]>'8')return false;
-
-        from.y=inp[0]-'a';
-        from.x='8'-inp[1];
-
-        to.y=inp[3]-'a';
-        to.x='8'-inp[4];
-
-
-        return true;
-}
-
-void Board::movepiece(moves l){
+void Board::makeMove(moves l){
     int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y;
     board[tr][tc]=board[fr][fc];
     board[fr][fc]=nullptr;
@@ -129,6 +109,7 @@ void Board::movepiece(moves l){
         l.capturedpiece->alive=false;
         capturedpieces.push_back(l.capturedpiece);
         break;
+
     case MoveType::CASTLING:
     
         break;
@@ -150,127 +131,33 @@ void Board::movepiece(moves l){
             default : cout<<"Invalid promotion type\n"; goto prom;
         }
         break;
-    default:
+
+    default: cout<<"Code should not reach here\n";
         break;
     }
     movehistory.push_back(l);
 }
 
-bool Board::isEmpty(Coords sq){
-    if(board[sq.x][sq.y]==nullptr)return true;
-    return false;
-}
-
-Pieces* Board::getpiece(int r,int c){
-    return board[r][c];
-}
-
-Pieces* Board::getlastmovedpiece(){
-    if(movehistory.empty())return nullptr;
-    return movehistory.back().movedpiece;
-}
-
-Pieces* Board::getking(char t){
-    if(t=='w')return Whiteking;
-    return Blackking;
-}
-
-char Board::getTeam(Coords sq){
-    if(board[sq.x][sq.y]==nullptr)return 'E';
-    return board[sq.x][sq.y]->team;  
-}
-
-string Board::printcaptW(){
-    string s=" ";
-    for(Pieces* p:capturedpieces){
-        if(p->team=='w'){
-            s+=p->type;
-            s+=' ';
-        }
-    }
-     if(s==" ")return "None";
-     return s;
-}
-
-string Board::printcaptB(){
-    string s=" ";
-    for(Pieces* p:capturedpieces){
-        if(p->team=='b'){
-            s+=p->type;
-            s+=' ';
-        }
-    }
-    if(s==" ")return "None";
-    return s;
-}
-
 bool Board::undoMove(){
     if(movehistory.empty())return false;
     else{
-        int r,c;
-        r=movehistory.back().from.x;
-        c=movehistory.back().from.y;
-        board[r][c]=board[movehistory.back().to.x][movehistory.back().to.y];
-        board[r][c]->coords={r,c};
-        board[r][c]->hasMoved--;
+       const moves &m=movehistory.back();
+        int fr=m.from.x,fc=m.from.y;
+        int tr=m.to.x,tc=m.to.y;
+        board[fr][fc]=board[tr][tc];
+        board[fr][fc]->hasMoved--;
+        board[fr][fc]->coords={fr,fc};
+        board[tr][tc]=nullptr;
 
-        if(movehistory.back().capturedpiece!=nullptr){
+        if(m.capturedpiece!=nullptr){
             capturedpieces.back()->alive=true;
             board[capturedpieces.back()->coords.x][capturedpieces.back()->coords.y]=capturedpieces.back();
             capturedpieces.pop_back();
-            if(movehistory.back().movetype==MoveType::EN_PASSANT){board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;}
-       }
-       else board[movehistory.back().to.x][movehistory.back().to.y]=nullptr;
-       movehistory.pop_back();
+        }
+        if(m.movetype==MoveType::PROMOTION){board[fr][fc]->type=(board[fr][fc]->team=='w')? 'p':'P';}
+
+        movehistory.pop_back();
     }
    return true;
 }
 
-string Board::getlastmove(){
-    string s="";
-    if(movehistory.empty())return "None";
-    s+=char('a'+movehistory.back().from.y);
-    s+=char('8'-movehistory.back().from.x);
-    s+=" --> ";
-    s+=char('a'+movehistory.back().to.y);
-    s+=char('8'-movehistory.back().to.x);
-    return s;
-}
-
-int main(){
-    Board b;
-    b.initialize();
-    b.printBoard(true);
-    
-    Coords from,to;
-    bool p,whiteturn=true;
-    string inp;
-    while(true){
-        getline(cin,inp);
-        system("cls");
-        if(inp=="0")exit(0);
-        // if(inp=="1")b.printcapt();
-        if(inp=="2"){
-            if(b.undoMove())whiteturn=!whiteturn;
-            else cout<<"No moves yet\n";
-        }
-        if(!b.parser(inp,from,to)){cout<<"Invalid input\n";}
-        else if(b.isEmpty(from)){ cout << "No piece selected\n";}
-        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
-        else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
-        else{
-            bool val=false;
-            vector<moves> m=b.generatePseudoLegalMoves(b.getpiece(from.x,from.y));
-            for(auto l:m){
-                     if(l.from.x==from.x&&l.from.y==from.y&&l.to.x==to.x&&l.to.y==to.y){
-                     b.movepiece(l);
-                    whiteturn=!whiteturn;
-                    val=true;
-                     break;
-                }     
-            }    
-            if(!val){cout<<"That Piece cant move like that\n";}    
-        }
-        b.printBoard(whiteturn);
-    }
-}
