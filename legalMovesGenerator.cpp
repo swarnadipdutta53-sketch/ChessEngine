@@ -26,7 +26,7 @@ vector<moves> Board::generatePseudoLegalMovesRook(Pieces* piece)
     Coords currPos = {piece -> coords.x, piece -> coords.y};
     Pieces* pieceX, *pieceY;
     vector<moves> tempX, tempY;
-    bool crossFlagX = false, crossFlagY = false, terminateX = false, terminateY = false;
+    bool crossFlagX = false, crossFlagY = false, terminateX = false, terminateY = false; // crossFlags are used to know if the piece has cross itself
     for(int i = 0; i < 8; i++)
     {
         pieceX = board[i][currPos.y];
