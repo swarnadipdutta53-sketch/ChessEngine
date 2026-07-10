@@ -80,7 +80,8 @@ public:
         string printcaptB();
         string getlastmove();
         
-
+        vector<moves> generatePseudoLegalMovesKing(Pieces*);
+        vector<moves> generatePseudoLegalMovesKnight(Pieces*);
         vector<moves> generatePseudoLegalMovesRook(Pieces*);
         vector<moves> generatePseudoLegalMovesPawn(Pieces*);
         vector<moves> generatePseudoLegalMovesBishop(Pieces*);
