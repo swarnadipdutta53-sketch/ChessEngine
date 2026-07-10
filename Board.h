@@ -92,5 +92,4 @@ public:
         bool canattack(Coords,Pieces*);
         
 };
-
-#endif
+#endif;

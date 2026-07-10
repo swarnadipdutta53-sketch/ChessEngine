@@ -223,7 +223,7 @@
 
     vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
     {
-        vector<moves> pseudoMoveVec, retB,retR;
+        vector<moves> retB,retR;
         switch(piece -> type)
         {
             // for pawn
@@ -256,6 +256,6 @@
             return generatePseudoLegalMovesKing(piece);
             default:
             cout << "Invalid Piece Selection Error From LegalMovesGenerator: 1.0";
+            return {};
         }
-        return pseudoMoveVec;
     }
