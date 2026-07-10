@@ -79,6 +79,9 @@ public:
         string printcaptW();
         string printcaptB();
         string getlastmove();
+        const vector<Pieces*>& getWhitePieces() const;
+        const vector<Pieces*>& getBlackPieces() const;
+
         
 
         vector<moves> generatePseudoLegalMovesRook(Pieces*);

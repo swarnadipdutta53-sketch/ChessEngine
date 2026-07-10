@@ -1,6 +1,7 @@
 #include <iostream>
 #include "board.h"
 #include "BoardIO.h"
+// #include "Evaluator.h"
 
 int main(){
     Board b;
@@ -39,6 +40,7 @@ int main(){
             }    
             if(!val){cout<<"That Piece cant move like that\n";}    
         }
+        // cout<<"The evaluation in favor of white is: "<<Evaluator::evaluate(b)<<"\n";
         b.printBoard(whiteturn);
     }
 }
