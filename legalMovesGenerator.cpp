@@ -262,7 +262,6 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces *piece)
 }
 bool Board::isAttacked(Pieces *p)
 {
-    Pieces *king;
     if (p->team == 'b')
     {
         for (Pieces *index : whitepieces)
@@ -276,6 +275,26 @@ bool Board::isAttacked(Pieces *p)
         for (Pieces *index : blackpieces)
         {
             if (index->alive && canAttack(p->coords, index))
+                return true;
+        }
+    }
+    return false;
+}
+bool Board::isCellAttacked(Coords c, char team)
+{
+    if (team == 'b')
+    {
+        for (Pieces *index : whitepieces)
+        {
+            if (index->alive && canAttack(c, index))
+                return true;
+        }
+    }
+    else
+    {
+        for (Pieces *index : blackpieces)
+        {
+            if (index->alive && canAttack(c, index))
                 return true;
         }
     }
@@ -303,6 +322,28 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
     vector<moves> retlegal = generatePseudoLegalMoves(piece);
     for (auto it = retlegal.begin(); it != retlegal.end();)
     {
+        if (it->movetype == MoveType::CASTLING)
+        {
+            bool flagRem = false;
+            int step = (it->to.y > piece->coords.y) ? 1 : -1;
+            int yi = it->from.y;
+            while (true)
+            {
+                if (isCellAttacked({piece->coords.x, yi}, piece->team))
+                {
+                    flagRem = true;
+                    break;
+                }
+                if (yi == it->to.y)
+                    break;
+                yi += step;
+            }
+            if (flagRem)
+                it = retlegal.erase(it);
+            else
+                ++it;
+            continue;
+        }
         makeMove(*it);
         if (isAttacked(getking(piece->team)))
             it = retlegal.erase(it);

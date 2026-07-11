@@ -94,6 +94,7 @@ public:
         vector<moves> generatePseudoLegalMoves(Pieces*); 
         bool isAttacked(Pieces*);
         bool canAttack(Coords,Pieces*);
+        bool isCellAttacked(Coords, char);
         
 };
 // move validations (only pseudolegal)
