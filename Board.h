@@ -3,6 +3,7 @@
 
 #include<string>
 #include<vector>
+#include "moveValidations.h"
 using namespace std;
 
 typedef struct Coords
@@ -25,7 +26,8 @@ enum class MoveType
      EN_PASSANT, // enpassant
      CASTLING, // castling
      GENERAL, // general valid
-     PROMOTION, // not valid
+     PROMOTION, // promotion
+     INVALID // not valid
 };
 
 enum class PromotionType{
@@ -91,8 +93,8 @@ public:
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
         vector<moves> generatePseudoLegalMoves(Pieces*); 
-        bool isattacked(Coords,char);
-        bool canattack(Coords,Pieces*);
+        bool isAttacked(Pieces*);
+        bool canAttack(Coords,Pieces*);
         
 };
 #endif
