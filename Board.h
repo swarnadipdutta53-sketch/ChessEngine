@@ -3,6 +3,7 @@
 
 #include<string>
 #include<vector>
+#include "moveValidations.h"
 using namespace std;
 
 typedef struct Coords
@@ -92,8 +93,8 @@ public:
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
         vector<moves> generatePseudoLegalMoves(Pieces*); 
-        bool isattacked(Coords,char);
-        bool canattack(Coords,Pieces*);
+        bool isAttacked(Pieces*);
+        bool canAttack(Coords,Pieces*);
         
 };
 #endif
