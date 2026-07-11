@@ -23,6 +23,7 @@ private:
         inline static constexpr int MAX_PHASE=24;
         inline static constexpr int ENDGAME_THRESHOLD=24;
 
+        static const int PassedPawnBonus[8];
         static const int PawnTable[8][8];
         static const int KnightTable[8][8];
         static const int BishopTable[8][8];
@@ -34,6 +35,8 @@ private:
         static int calcPhase(const Board&);
         static int evaluatePST(const Board&,int);
         static int evaluateMaterial(const Board&);
+        static int evaluatePawnStructure(const Board&);
+        static bool scanfront(vector<Coords>&,int,int,char);
 public:
         static int evaluate(const Board&);
 

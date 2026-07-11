@@ -1,5 +1,7 @@
 #include "Evaluator.h"
 
+const int Evaluator::PassedPawnBonus[8]={0,0,10,20,35,60,100,0};
+
 const int Evaluator::PawnTable[8][8]={
    {  0,  0,  0,  0,  0,  0,  0,  0},
     { 50, 50, 50, 50, 50, 50, 50, 50},
@@ -29,7 +31,7 @@ const int Evaluator::BishopTable[8][8]={
     {-10,  5,  5, 10, 10,  5,  5,-10},
     {-10,  0,  5, 10, 10,  5,  0,-10},
     {-10,  0,  0,  0,  0,  0,  0,-10},
-    {-20,-10,-10,-10,-10, 10,-10,-20},
+    {-20,-10,-10,-10,-10, -10,-10,-20},
 };
 const int Evaluator::RookTable[8][8]={
     {  0,  0,  0,  5,  5,  0,  0,  0},
@@ -149,8 +151,70 @@ int Evaluator::evaluatePST(const Board& b,int phase){
     return total;
 }
 
+bool Evaluator::scanfront(vector<Coords>&index,int row,int col,char team){
+        if(team=='w'){
+            for(auto l:index){
+                if(l.y==col&&l.x<=row)return false;
+            }
+            return true;
+        }
+        else{
+            for(auto l:index){
+                if(l.y==col&&l.x>=row)return false;
+            }
+            return true;
+        }
+}
+
+int Evaluator::evaluatePawnStructure(const Board& b){
+    //doubled pawns and passed pawns
+
+    vector<Coords> wp,bp;
+    int total=0,cntW[8]={},cntB[8]={},prev,next;
+    for(Pieces* p:b.getWhitePieces()){
+            if(p->alive&&p->type=='p'){cntW[p->coords.y]++; wp.push_back({p->coords.x,p->coords.y});}
+    }
+    
+    for(Pieces* p:b.getBlackPieces()){
+            if(p->alive&&p->type=='P'){cntB[p->coords.y]++; bp.push_back({p->coords.x,p->coords.y});}
+    }
+
+    for(int i=0;i<8;i++){
+        if(cntW[i]>1)total-=20*(cntW[i]-1);
+        if(cntW[i]>0){
+            prev=i-1; next=i+1;
+            if((prev<0||cntW[prev]==0)&&(next>7||cntW[next]==0))total-=20*cntW[i];
+        }
+        if(cntB[i]>1)total+=20*(cntB[i]-1);
+        if(cntB[i]>0){
+            prev=i-1; next=i+1;
+            if((prev<0||cntB[prev]==0)&&(next>7||cntB[next]==0))total+=20*cntB[i];
+        }
+    }
+
+    //Passed Pawns 
+    for(Coords coords:wp){
+        bool p=true,c=true,n=true;
+        if(coords.y-1>=0)p=scanfront(bp,coords.x,coords.y-1,'w');
+        if(coords.y+1<8)n=scanfront(bp,coords.x,coords.y+1,'w');
+        c=scanfront(bp,coords.x,coords.y,'w');
+
+        if(p&&c&&n){total+=PassedPawnBonus[7-coords.x];}
+    }
+    for(Coords coords:bp){
+        bool p=true,c=true,n=true;
+        if(coords.y-1>=0)p=scanfront(wp,coords.x,coords.y-1,'b');
+        if(coords.y+1<8)n=scanfront(wp,coords.x,coords.y+1,'b');
+        c=scanfront(wp,coords.x,coords.y,'b');
+
+        if(p&&c&&n){total-=PassedPawnBonus[coords.x];}
+    }
+    
+    return total;
+}
+
 int Evaluator::evaluate(const Board& b){
     int phase=calcPhase(b);
-    return evaluateMaterial(b)+evaluatePST(b,phase);
+    return evaluateMaterial(b)+evaluatePST(b,phase)+evaluatePawnStructure(b);
 
 } 
