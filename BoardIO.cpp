@@ -1,5 +1,4 @@
 #include "BoardIO.h"
-#include <cctype>
 #include<iostream>
 // bool parser(string inp,Coords &from,Coords& to){
 //         if(inp.length()!=5)return false;
@@ -24,6 +23,10 @@ bool parser(string inp,Coords &from,Coords& to){
         char ch;
         int tempOrds;
         int scanX = 0, scanY = -1; // X is coords from and Y is coords to
+        from.x = -1;
+        from.y = -1;
+        to.x = -1;
+        to.y = -1;
         for(auto len = inp.begin(); len != inp.end(); ++len)
         {
                 if(scanY == 0)
@@ -33,7 +36,7 @@ bool parser(string inp,Coords &from,Coords& to){
                 if(ch == ' ')
                         continue;
                 if(ch >= '1' && ch <= '8')
-                        tempOrds = ch - '0';
+                        tempOrds = ch - '1';
                 else if(ch >= 'a' && ch <= 'h')
                         tempOrds = ch - 'a';
                 else
@@ -65,5 +68,8 @@ bool parser(string inp,Coords &from,Coords& to){
                 else
                         return false; // invalid as more than 2 inputs for Y
         }
-        return true;
+        if(from.x != -1 && from.y != -1 &&
+        to.x != -1 && to.y != -1)
+                return true;
+        return false;
 }
