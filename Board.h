@@ -3,7 +3,6 @@
 
 #include<string>
 #include<vector>
-#include "moveValidations.h"
 using namespace std;
 
 typedef struct Coords
@@ -84,7 +83,7 @@ public:
         const vector<Pieces*>& getWhitePieces() const;
         const vector<Pieces*>& getBlackPieces() const;
 
-        
+        // move generation (pseudolegal + legal)
         vector<moves> generatePseudoLegalMovesKing(Pieces*);
         vector<moves> generatePseudoLegalMovesKnight(Pieces*);
         vector<moves> generatePseudoLegalMovesRook(Pieces*);
@@ -97,4 +96,10 @@ public:
         bool canAttack(Coords,Pieces*);
         
 };
+// move validations (only pseudolegal)
+MoveType moveValidation(Pieces, Coords, Board&);
+MoveType moveValidationRook(int, int, Coords, Board&);
+MoveType moveValidationBishop(int, int, Coords, Board&);
+MoveType moveValidationKnight(int, int, Coords, Board&, Pieces);
+MoveType moveValidationKing(int, int, Coords, Board&);
 #endif

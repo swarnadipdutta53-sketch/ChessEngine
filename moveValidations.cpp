@@ -1,6 +1,4 @@
 //TODO: THREAT CHECKS
-
-#include "moveValidations.h"
 #include "Board.h"
 #include "stdiodef.h"
 

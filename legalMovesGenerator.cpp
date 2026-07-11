@@ -292,7 +292,7 @@ bool Board::canAttack(Coords c, Pieces *piece)
         return (c.x == piece->coords.x - 1 &&
                 abs(c.y - piece->coords.y) == 1);
     default:
-        if (moveValidation(piece, c, &board) != MoveType::INVALID)
+        if (moveValidation(*piece, c, *this) != MoveType::INVALID)
             return true;
         else
             return false;
