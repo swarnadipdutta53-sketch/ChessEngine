@@ -317,33 +317,30 @@ bool Board::canAttack(Coords c, Pieces *piece)
             return false;
     }
 }
+/*
+BACKUP:
 vector<moves> Board::generateLegalMoves(Pieces *piece)
 {
     vector<moves> retlegal = generatePseudoLegalMoves(piece);
     for (auto it = retlegal.begin(); it != retlegal.end();)
     {
-        if (it->movetype == MoveType::CASTLING)
-        {
-            bool flagRem = false;
-            int step = (it->to.y > piece->coords.y) ? 1 : -1;
-            int yi = it->from.y;
-            while (true)
-            {
-                if (isCellAttacked({piece->coords.x, yi}, piece->team))
-                {
-                    flagRem = true;
-                    break;
-                }
-                if (yi == it->to.y)
-                    break;
-                yi += step;
-            }
-            if (flagRem)
-                it = retlegal.erase(it);
-            else
-                ++it;
-            continue;
-        }
+        makeMove(*it);
+        if (isAttacked(getking(piece->team)))
+            it = retlegal.erase(it);
+        else
+            ++it;
+        undoMove();
+    }
+    return retlegal;
+}
+*/
+vector<moves> Board::generateLegalMoves(Pieces *piece)
+{
+    vector<moves> retlegal = generatePseudoLegalMoves(piece);
+    for (auto it = retlegal.begin(); it != retlegal.end();)
+    {
+        // special case for castling
+        
         makeMove(*it);
         if (isAttacked(getking(piece->team)))
             it = retlegal.erase(it);
