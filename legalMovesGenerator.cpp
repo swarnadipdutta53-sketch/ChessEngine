@@ -6,6 +6,7 @@
     #define CHECKPAWN(x1,y1) (CHECKPIECETYPE(x1,y1, 'P') || CHECKPIECETYPE(x1, y1, 'p'))
     #define CHECKBOUND(x,y) ((x >= 0)  && (x < 8) && (y >= 0) && (y < 8))
     #define CHECKPROMOTION(x) ((x==7) || (x==0))
+    #define GETTEAM(x1,y1) (board[x1][y1] -> team)
     /*
     typedef struct moves
     {
@@ -220,7 +221,6 @@
         }
         return ret;
     }
-
     vector<moves> Board::generatePseudoLegalMoves(Pieces* piece)
     {
         vector<moves> retB,retR;
@@ -258,4 +258,16 @@
             cout << "Invalid Piece Selection Error From LegalMovesGenerator: 1.0";
             return {};
         }
+    }
+    bool isAttacked(char p)
+    {
+        
+    }
+    bool canAttack(Pieces* piece)
+    {
+
+    }
+    vector<moves> Board::generateLegalMoves(Pieces* piece)
+    {
+
     }
