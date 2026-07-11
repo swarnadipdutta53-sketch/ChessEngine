@@ -8,18 +8,6 @@
 #define CHECKPROMOTION(x) ((x == 7) || (x == 0))
 #define GETTEAM(x1, y1) (board[x1][y1]->team)
 /*
-typedef struct moves
-{
-        square from;
-        square to;
-
-        Pieces* movedpiece;
-        Pieces* capturedpiece;
-
-        MoveType t;
-}moves;
-*/
-/*
 generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> checkCanAttacked() for each opponent piece() -> if no then push move, if no dont push
 */
 vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
@@ -317,23 +305,6 @@ bool Board::canAttack(Coords c, Pieces *piece)
             return false;
     }
 }
-/*
-BACKUP:
-vector<moves> Board::generateLegalMoves(Pieces *piece)
-{
-    vector<moves> retlegal = generatePseudoLegalMoves(piece);
-    for (auto it = retlegal.begin(); it != retlegal.end();)
-    {
-        makeMove(*it);
-        if (isAttacked(getking(piece->team)))
-            it = retlegal.erase(it);
-        else
-            ++it;
-        undoMove();
-    }
-    return retlegal;
-}
-*/
 vector<moves> Board::generateLegalMoves(Pieces *piece)
 {
     vector<moves> retlegal = generatePseudoLegalMoves(piece);
