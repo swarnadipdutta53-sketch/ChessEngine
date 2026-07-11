@@ -95,6 +95,8 @@ public:
         bool isAttacked(Pieces*);
         bool canAttack(Coords,Pieces*);
         
+
+        void overWrite();
 };
 // move validations (only pseudolegal)
 MoveType moveValidation(Pieces, Coords, Board&);

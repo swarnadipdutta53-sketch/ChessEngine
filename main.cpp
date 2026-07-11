@@ -4,8 +4,11 @@
 // #include "Evaluator.h"
 
 int main(){
-    Board b;
+    Board b; string a;
     b.initialize();
+    cout<<"press 0 for debug mode 1 for normal mode\n";
+    getline(cin,a);
+    if(a[0]=='0')b.overWrite();
     b.printBoard(true);
     
     Coords from,to;
