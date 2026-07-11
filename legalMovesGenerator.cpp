@@ -340,13 +340,35 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
     for (auto it = retlegal.begin(); it != retlegal.end();)
     {
         // special case for castling
-        
-        makeMove(*it);
-        if (isAttacked(getking(piece->team)))
-            it = retlegal.erase(it);
-        else
-            ++it;
-        undoMove();
+        if(it ->movetype == MoveType::CASTLING)
+        {
+            bool remflag = false;
+            int step = (it ->to.y < it -> from.y) ? -1 : 1;
+            int yi = it -> from.y;
+            while(CHECKBOUND(it->from.x,yi))
+            {
+                if(isCellAttacked({it->from.x,yi}, piece->team))
+                {
+                    it = retlegal.erase(it);
+                    remflag = true;
+                    break;
+                }
+                yi += step;
+            }
+            if(!remflag)
+                it++;
+            else
+                continue;
+        }
+        else // general case
+        {
+            makeMove(*it);
+            if (isAttacked(getking(piece->team)))
+                it = retlegal.erase(it);
+            else
+                ++it;
+            undoMove();
+        }
     }
     return retlegal;
 }
