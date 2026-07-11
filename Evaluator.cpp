@@ -167,7 +167,7 @@ bool Evaluator::scanfront(vector<Coords>&index,int row,int col,char team){
 }
 
 int Evaluator::evaluatePawnStructure(const Board& b){
-    //doubled pawns and passed pawns
+    //doubled pawns and isolated pawns
 
     vector<Coords> wp,bp;
     int total=0,cntW[8]={},cntB[8]={},prev,next;
