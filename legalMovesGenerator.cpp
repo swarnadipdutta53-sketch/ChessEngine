@@ -8,18 +8,6 @@
 #define CHECKPROMOTION(x) ((x == 7) || (x == 0))
 #define GETTEAM(x1, y1) (board[x1][y1]->team)
 /*
-typedef struct moves
-{
-        square from;
-        square to;
-
-        Pieces* movedpiece;
-        Pieces* capturedpiece;
-
-        MoveType t;
-}moves;
-*/
-/*
 generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> checkCanAttacked() for each opponent piece() -> if no then push move, if no dont push
 */
 vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
@@ -262,7 +250,6 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces *piece)
 }
 bool Board::isAttacked(Pieces *p)
 {
-    Pieces *king;
     if (p->team == 'b')
     {
         for (Pieces *index : whitepieces)
@@ -276,6 +263,26 @@ bool Board::isAttacked(Pieces *p)
         for (Pieces *index : blackpieces)
         {
             if (index->alive && canAttack(p->coords, index))
+                return true;
+        }
+    }
+    return false;
+}
+bool Board::isCellAttacked(Coords c, char team)
+{
+    if (team == 'b')
+    {
+        for (Pieces *index : whitepieces)
+        {
+            if (index->alive && canAttack(c, index))
+                return true;
+        }
+    }
+    else
+    {
+        for (Pieces *index : blackpieces)
+        {
+            if (index->alive && canAttack(c, index))
                 return true;
         }
     }
@@ -303,12 +310,36 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
     vector<moves> retlegal = generatePseudoLegalMoves(piece);
     for (auto it = retlegal.begin(); it != retlegal.end();)
     {
-        makeMove(*it);
-        if (isAttacked(getking(piece->team)))
-            it = retlegal.erase(it);
-        else
-            ++it;
-        undoMove();
+        // special case for castling
+        if(it ->movetype == MoveType::CASTLING)
+        {
+            bool remflag = false;
+            int step = (it ->to.y < it -> from.y) ? -1 : 1;
+            int yi = it -> from.y;
+            while(CHECKBOUND(it->from.x,yi))
+            {
+                if(isCellAttacked({it->from.x,yi}, piece->team))
+                {
+                    it = retlegal.erase(it);
+                    remflag = true;
+                    break;
+                }
+                yi += step;
+            }
+            if(!remflag)
+                it++;
+            else
+                continue;
+        }
+        else // general case
+        {
+            makeMove(*it);
+            if (isAttacked(getking(piece->team)))
+                it = retlegal.erase(it);
+            else
+                ++it;
+            undoMove();
+        }
     }
     return retlegal;
 }
