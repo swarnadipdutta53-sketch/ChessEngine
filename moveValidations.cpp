@@ -1,6 +1,5 @@
 //TODO: THREAT CHECKS
-
-#include "moveValidations.h"
+#include "Board.h"
 #include "stdiodef.h"
 
 MoveType moveValidationRook(int row, int column, Coords c2, Board& obj)
