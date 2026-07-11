@@ -66,6 +66,25 @@ void Board::initialize(){
     board[3][7]=nullptr; board[5][7]=nullptr; 
 }
 
+void Board::overWrite(){
+    board[0][0]=&pieces[0]; board[7][0]=&pieces[16]; 
+    board[0][1]=nullptr;    board[7][1]=nullptr; 
+    board[0][2]=nullptr;    board[7][2]=nullptr; 
+    board[0][3]=&pieces[3]; board[7][3]=&pieces[19]; 
+    board[0][4]=&pieces[4]; board[7][4]=&pieces[20]; 
+    board[0][5]=nullptr;    board[7][5]=nullptr; 
+    board[0][6]=nullptr;    board[7][6]=nullptr;   
+    board[0][7]=&pieces[7]; board[7][7]=&pieces[23]; 
+    board[1][0]=nullptr;    board[6][0]=nullptr; 
+    board[1][1]=nullptr;    board[6][1]=nullptr; 
+    board[1][2]=nullptr;    board[6][2]=nullptr; 
+    board[1][3]=nullptr;    board[6][3]=nullptr; 
+    board[1][4]=nullptr;    board[6][4]=nullptr; 
+    board[1][5]=nullptr;    board[6][5]=nullptr; 
+    board[1][6]=nullptr;    board[6][6]=nullptr; 
+    board[1][7]=nullptr;    board[6][7]=nullptr; 
+}
+
 void Board::printBoard(bool t){
     cout<<"\n    a b c d e f g h \n";
     cout<<"  +-----------------+\n";
@@ -143,7 +162,7 @@ void Board::makeMove(moves l){
 bool Board::undoMove(){
     if(movehistory.empty())return false;
     else{
-       const moves &m=movehistory.back();
+        moves m=movehistory.back();
         int fr=m.from.x,fc=m.from.y;
         int tr=m.to.x,tc=m.to.y;
         board[fr][fc]=board[tr][tc];

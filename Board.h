@@ -96,6 +96,8 @@ public:
         bool canAttack(Coords,Pieces*);
         bool isCellAttacked(Coords, char);
         
+
+        void overWrite();
 };
 // move validations (only pseudolegal)
 MoveType moveValidation(Pieces, Coords, Board&);
