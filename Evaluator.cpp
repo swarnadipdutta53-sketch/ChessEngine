@@ -106,9 +106,10 @@ int Evaluator::calcPhase(const Board& b){
 
 
 int Evaluator::evaluateMaterial(const Board& b){
-    int total=0;
-    for(Pieces* p:b.getWhitePieces()){if(p->alive)total+=piecevalue[p->type];}
-    for(Pieces* p:b.getBlackPieces()){if(p->alive)total+=piecevalue[p->type];}
+    int total=0,whitebishops=0,blackbishops=0;
+    for(Pieces* p:b.getWhitePieces()){if(p->alive){total+=piecevalue[p->type]; if(p->type=='b')whitebishops++;}}
+    for(Pieces* p:b.getBlackPieces()){if(p->alive){total+=piecevalue[p->type]; if(p->type=='B')blackbishops++;}}
+    if(whitebishops==2)total+=40; if(blackbishops==2)total-=40;
     return total;
 }
 
