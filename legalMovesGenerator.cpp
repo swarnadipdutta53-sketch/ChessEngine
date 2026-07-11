@@ -214,7 +214,6 @@
                             ret.push_back({{currPos.x, currPos.y}, {currPos.x + dx, currPos.y +dy}, piece, board[currPos.x + dx][currPos.y+dy], MoveType::PROMOTION});
                         else
                             ret.push_back({{currPos.x, currPos.y}, {dx+currPos.x,currPos.y +dy}, piece, board[currPos.x+dx][currPos.y+dy], MoveType::GENERAL});
-                        
                     }
                 }
             }

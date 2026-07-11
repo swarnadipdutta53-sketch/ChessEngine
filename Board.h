@@ -25,7 +25,8 @@ enum class MoveType
      EN_PASSANT, // enpassant
      CASTLING, // castling
      GENERAL, // general valid
-     PROMOTION, // not valid
+     PROMOTION, // promotion
+     INVALID // not valid
 };
 
 enum class PromotionType{
