@@ -20,15 +20,19 @@ private:
         
         return values;
    }();
+        inline static constexpr int MAX_PHASE=24;
+        inline static constexpr int ENDGAME_THRESHOLD=24;
+
         static const int PawnTable[8][8];
         static const int KnightTable[8][8];
         static const int BishopTable[8][8];
         static const int RookTable[8][8];
         static const int QueenTable[8][8];
-        static const int KingTable[8][8];
+        static const int MiddleGameKingTable[8][8];
+        static const int EndGameKingTable[8][8];
 
-
-        static int evaluatePST(const Board&);
+        static int calcPhase(const Board&);
+        static int evaluatePST(const Board&,int);
         static int evaluateMaterial(const Board&);
 public:
         static int evaluate(const Board&);

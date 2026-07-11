@@ -88,7 +88,7 @@ void Board::printBoard(bool t){
 }
 
 void Board::makeMove(moves l){
-    int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y;
+    int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y,ar,ac;
     board[tr][tc]=board[fr][fc];
     board[fr][fc]=nullptr;
     board[tr][tc]->coords={tr,tc};
@@ -112,8 +112,9 @@ void Board::makeMove(moves l){
         break;
 
     case MoveType::CASTLING:
-        if(tc==6){board[fr][fc+1]=l.auxiliarypiece; l.auxiliarypiece->hasMoved++; l.auxiliarypiece->coords={fr,fc+1};}
-        else{board[fr][fc-1]=l.auxiliarypiece; l.auxiliarypiece->hasMoved++; l.auxiliarypiece->coords={fr,fc-1};}
+        ar=l.auxiliarypiece->coords.x,ac=l.auxiliarypiece->coords.y;
+        if(tc==6){board[fr][fc+1]=l.auxiliarypiece; l.auxiliarypiece->hasMoved++; board[ar][ac]=nullptr; l.auxiliarypiece->coords={fr,fc+1};}
+        else{board[fr][fc-1]=l.auxiliarypiece; l.auxiliarypiece->hasMoved++; board[ar][ac]=nullptr; l.auxiliarypiece->coords={fr,fc-1};}
         break;
 
     case MoveType::PROMOTION:
