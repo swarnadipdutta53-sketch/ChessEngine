@@ -112,9 +112,10 @@ void Board::makeMove(moves l){
         break;
 
     case MoveType::CASTLING:
-    
+        if(tc==6){board[fr][fc+1]=l.auxiliarypiece; l.auxiliarypiece->hasMoved++; l.auxiliarypiece->coords={fr,fc+1};}
+        else{board[fr][fc-1]=l.auxiliarypiece; l.auxiliarypiece->hasMoved++; l.auxiliarypiece->coords={fr,fc-1};}
         break;
-    
+
     case MoveType::PROMOTION:
         if(l.capturedpiece!=nullptr){
             l.capturedpiece->alive=false;
@@ -154,8 +155,20 @@ bool Board::undoMove(){
             board[capturedpieces.back()->coords.x][capturedpieces.back()->coords.y]=capturedpieces.back();
             capturedpieces.pop_back();
         }
+        
         if(m.movetype==MoveType::PROMOTION){board[fr][fc]->type=(board[fr][fc]->team=='w')? 'p':'P';}
-
+        
+        if(m.movetype==MoveType::CASTLING){
+            
+            if(tc==6){
+                board[tr][tc+1]=board[fr][fc+1]; board[tr][tc+1]->hasMoved--; 
+                board[tr][tc+1]->coords={tr,tc+1}; board[fr][fc+1]=nullptr;
+            }
+            else{
+                board[tr][tc-2]=board[fr][fc-1]; board[tr][tc-2]->hasMoved--; 
+                board[tr][tc-2]->coords={tr,tc-2}; board[fr][fc-1]=nullptr;
+            }
+        }
         movehistory.pop_back();
     }
    return true;

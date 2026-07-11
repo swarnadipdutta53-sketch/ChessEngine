@@ -60,3 +60,10 @@ string Board::getlastmove(){
     s+=char('8'-movehistory.back().to.x);
     return s;
 }
+
+const vector<Pieces*>& Board::getWhitePieces() const{
+    return whitepieces;
+}
+const vector<Pieces*>& Board::getBlackPieces() const{
+    return blackpieces;
+}

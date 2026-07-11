@@ -80,6 +80,9 @@ public:
         string printcaptW();
         string printcaptB();
         string getlastmove();
+        const vector<Pieces*>& getWhitePieces() const;
+        const vector<Pieces*>& getBlackPieces() const;
+
         
         vector<moves> generatePseudoLegalMovesKing(Pieces*);
         vector<moves> generatePseudoLegalMovesKnight(Pieces*);
@@ -93,4 +96,4 @@ public:
         bool canattack(Coords,Pieces*);
         
 };
-#endif;
+#endif
