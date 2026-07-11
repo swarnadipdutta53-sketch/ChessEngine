@@ -23,10 +23,7 @@ bool parser(string inp,Coords &from,Coords& to){
         char ch;
         int tempOrds;
         int scanX = 0, scanY = -1; // X is coords from and Y is coords to
-        from.x = -1;
-        from.y = -1;
-        to.x = -1;
-        to.y = -1;
+        from = {-1,-1}; to = {-1,-1};
         for(auto len = inp.begin(); len != inp.end(); ++len)
         {
                 if(scanY == 0)
@@ -45,11 +42,11 @@ bool parser(string inp,Coords &from,Coords& to){
                 if(scanX < 2 && scanX >= 0) // when X scanning is active
                 {
                         if(scanX == 0 && ch >= 'a' && ch <= 'h')
-                                from.x = tempOrds;
+                                from.y = tempOrds;
                         else if(scanX == 1 && ch >= '1' && ch <= '8')
                         {
                                 scanY = 0;
-                                from.y = tempOrds;
+                                from.x = tempOrds;
                         }
                         else 
                                 return false; // invalid
@@ -58,9 +55,9 @@ bool parser(string inp,Coords &from,Coords& to){
                 else if(scanY >= 0 && scanY < 2) // when Y scanning is active
                 {
                         if(scanY == 0 && ch >= 'a' && ch <= 'h')
-                                to.x = tempOrds;
-                        else if(scanY == 1 && ch >= '1' && ch <= '8')
                                 to.y = tempOrds;
+                        else if(scanY == 1 && ch >= '1' && ch <= '8')
+                                to.x = tempOrds;
                         else 
                                 return false; // invalid
                         scanY++;
