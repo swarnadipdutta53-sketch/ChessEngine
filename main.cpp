@@ -21,7 +21,7 @@ int main(){
             b.printBoard(whiteturn);
             continue;
         }
-
+        vector<moves> m;
 
         if(!parser(inp,from,to)){cout<<"Invalid input\n";}
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
@@ -29,7 +29,7 @@ int main(){
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
         else{
             bool val=false;
-            vector<moves> m=b.generatePseudoLegalMoves(b.getpiece(from.x,from.y));
+            m=b.generatePseudoLegalMoves(b.getpiece(from.x,from.y));
             for(const moves& l:m){
                      if(l.from.x==from.x&&l.from.y==from.y&&l.to.x==to.x&&l.to.y==to.y){
                      b.makeMove(l);
@@ -41,6 +41,7 @@ int main(){
             if(!val){cout<<"That Piece cant move like that\n";}    
         }
         // cout<<"The evaluation in favor of white is: "<<Evaluator::evaluate(b)<<"\n";
+        if(!m.empty()){for(const moves&l:m){cout<<l.from.x<<l.from.y<<" to "<<l.to.x<<l.to.y<<" ";}}
         b.printBoard(whiteturn);
     }
 }
