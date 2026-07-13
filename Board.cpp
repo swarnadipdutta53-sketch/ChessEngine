@@ -97,18 +97,36 @@ void Board::printBoard(bool t){
 
 void Board::makeMove(moves l){
     int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y,ar,ac;
+    cout << "1";
+    
+    cout << "from = (" << fr << "," << fc << ")\n";
+cout << "to   = (" << tr << "," << tc << ")\n";
+
+cout << "board[from] = " << board[fr][fc] << '\n';
+cout << "board[to]   = " << board[tr][tc] << '\n';
+
+cout << "move piece  = " << l.movedpiece << '\n';
+
     board[tr][tc]=board[fr][fc];
+    cout << "2";
     board[fr][fc]=nullptr;
+    cout << "3";
     board[tr][tc]->coords={tr,tc};
+    cout << "4";
     board[tr][tc]->hasMoved++;
+    cout << "5";
     string s;
 
     switch(l.movetype)
     {
     case MoveType::GENERAL:
+        cout << "6";
         if(l.capturedpiece!=nullptr){
+            cout << "7";
             l.capturedpiece->alive=false;
+            cout << "8";
             capturedpieces.push_back(l.capturedpiece);
+            cout << "9";
         }
         break;
     
@@ -145,6 +163,7 @@ void Board::makeMove(moves l){
     default: cout<<"Code should not reach here\n";
         break;
     }
+    cout << "10\n";
     movehistory.push_back(l);
 }
 
