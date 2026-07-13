@@ -8,7 +8,7 @@
 #define CHECKPROMOTION(x) ((x == 7) || (x == 0))
 #define GETTEAM(x1, y1) (board[x1][y1]->team)
 /*
-generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> checkCanAttacked() for each opponent piece() -> if no then push move, if no dont push
+    generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> checkCanAttacked() for each opponent piece() -> if no then push move, if no dont push
 */
 vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
 {
