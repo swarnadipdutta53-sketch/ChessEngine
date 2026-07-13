@@ -28,7 +28,7 @@ int main(){
 
         if(!parser(inp,from,to)){cout<<"Invalid input\n";}
         else if(b.isEmpty(from)){ cout << "No piece selected\n";}
-        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n";}
+        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n"; cout<<from.x<<from.y;}
         else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
         else{
             bool val=false;
