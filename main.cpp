@@ -74,7 +74,6 @@ int main()
             if (!movePlayed){
                 cout << "That piece can't move there\n";
             }
-
             else
             {
                 char team = (whiteTurn)? 'w':'b';
@@ -95,7 +94,6 @@ int main()
                 }
             }
         }
-
         cout << "Evaluation in favor of white: "
              //<< Evaluator::evaluate(b)
              << "\n";
