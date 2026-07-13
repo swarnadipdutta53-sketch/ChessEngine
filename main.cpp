@@ -3,48 +3,107 @@
 #include "BoardIO.h"
 #include "Evaluator.h"
 
-int main(){
-    Board b; string a;
+int main()
+{
+    Board b;
+    string mode;
+
     b.initialize();
-    cout<<"press 0 for debug mode 1 for normal mode\n";
-    getline(cin,a);
-    if(a[0]=='0')b.overWrite();
-    b.printBoard(true);
-    
-    Coords from,to;
-    bool p,whiteturn=true;
-    string inp;
-    while(true){
-        getline(cin,inp);
+
+    cout << "Press 0 for debug mode, 1 for normal mode\n";
+    getline(cin, mode);
+
+    if (!mode.empty() && mode[0] == '0')
+        b.overWrite();
+
+    bool whiteTurn = true;
+    string input;
+
+    b.printBoard(whiteTurn);
+
+    while (true)
+    {
+        getline(cin, input);
         system("cls");
-        if(inp=="0")exit(0);
-        if(inp=="2"){
-            if(b.undoMove())whiteturn=!whiteturn;
-            else cout<<"No moves yet\n";
-            b.printBoard(whiteturn);
+
+        if (input == "0") break;
+
+        if (input == "2"){
+
+            if (b.undoMove())whiteTurn = !whiteTurn;
+            else cout << "No moves yet\n";
+
+            cout << "Evaluation: "<< Evaluator::evaluate(b)<< "\n";
+            b.printBoard(whiteTurn);
             continue;
         }
-        vector<moves> m;
 
-        if(!parser(inp,from,to)){cout<<"Invalid input\n";}
-        else if(b.isEmpty(from)){ cout << "No piece selected\n";}
-        else if(whiteturn && b.getTeam(from) != 'w'){cout << "It's White's turn\n"; cout<<from.x<<from.y;}
-        else if(!whiteturn && b.getTeam(from) != 'b'){cout << "It's Black's turn\n";}
-        else{
-            bool val=false;
-            m=b.generateLegalMoves(b.getpiece(from.x,from.y));
-            for(const moves& l:m){
-                     if(l.from.x==from.x&&l.from.y==from.y&&l.to.x==to.x&&l.to.y==to.y){
-                     b.makeMove(l);
-                    whiteturn=!whiteturn;
-                    val=true;
-                     break;
-                }     
-            }    
-            if(!val){cout<<"That Piece cant move like that\n";}    
+        Coords from, to;
+
+        if (!parser(input, from, to)) cout << "Invalid input\n";
+
+        else if (b.isEmpty(from)) cout << "No piece selected\n";
+
+        else if (whiteTurn && b.getTeam(from) != 'w') cout << "It's White's turn\n";
+
+        else if (!whiteTurn && b.getTeam(from) != 'b') cout << "It's Black's turn\n";
+
+        else
+        {
+            bool movePlayed = false;
+
+            vector<moves> legalMoves = b.generateLegalMoves(b.getpiece(from.x, from.y));
+
+            for (const moves& move : legalMoves)
+            {
+                if (move.from.x == from.x &&
+                    move.from.y == from.y &&
+                    move.to.x == to.x &&
+                    move.to.y == to.y){
+
+                    b.makeMove(move);
+
+                    whiteTurn = !whiteTurn;
+                    movePlayed = true;
+
+                    break;
+                }
+            }
+
+
+            if (!movePlayed){
+                cout << "That piece can't move there\n";
+            }
+
+            else
+            {
+                char team = (whiteTurn)? 'w':'b';
+                auto teamlegalmoves = b.generateAllLegalMoves(team);
+                bool NoMoves = legalMoves.empty();
+                bool KingInCheck = b.isAttacked(b.getking(team));
+
+                if(KingInCheck&&NoMoves){
+                    cout<<"Checkmate by "<<(whiteTurn? "Black\n" : "White\n");
+                    break;
+                }
+                else if(NoMoves){
+                    cout<<"Stalemate by "<<(whiteTurn? "Black\n" : "White\n");
+                    break;
+                }
+                else if(KingInCheck){
+                    cout << (whiteTurn ? "White" : "Black") << " King in check\n";
+                }
+            }
         }
-        cout<<"The evaluation in favor of white is: "<<Evaluator::evaluate(b)<<"\n";
-        // if(!m.empty()){for(const moves&l:m){cout<<l.from.x<<l.from.y<<" to "<<l.to.x<<l.to.y<<" ";}}
-        b.printBoard(whiteturn);
+
+        cout << "Evaluation in favor of white: "
+             << Evaluator::evaluate(b)
+             << "\n";
+
+
+        b.printBoard(whiteTurn);
     }
+
+
+    return 0;
 }

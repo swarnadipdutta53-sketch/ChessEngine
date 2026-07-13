@@ -25,13 +25,8 @@ vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
         yi = currPos.y + dir.y;
         if (CHECKBOUND(xi, yi))
         {
-            if (board[xi][yi] != nullptr)
-            {
-                if (!CHECKTEAM(currPos.x, currPos.y, xi, yi))
-                    ret.push_back({{currPos.x, currPos.y}, {xi, yi}, piece, board[xi][yi], MoveType::GENERAL});
-            }
-            else
-                ret.push_back({{currPos.x, currPos.y}, {xi, yi}, piece, board[xi][yi], MoveType::GENERAL});
+            if (board[xi][yi] != nullptr) {if (!CHECKTEAM(currPos.x, currPos.y, xi, yi)) ret.push_back({{currPos.x, currPos.y}, {xi, yi}, piece, board[xi][yi], MoveType::GENERAL});}
+            else ret.push_back({{currPos.x, currPos.y}, {xi, yi}, piece, board[xi][yi], MoveType::GENERAL});
         }
     }
     // castle case
@@ -57,7 +52,7 @@ vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
                             }
                             yi += dir.y;
                         }
-                        if (castFlag)
+                        if(castFlag)
                             ret.push_back({{currPos.x, currPos.y}, {currPos.x, currPos.y + 2 * dir.y}, piece, nullptr, MoveType::CASTLING, board[currPos.x][currPos.y + dir.x]});
                     }
                 }
@@ -216,93 +211,48 @@ vector<moves> Board::generatePseudoLegalMoves(Pieces *piece)
     switch (piece->type)
     {
     // for pawn
-    case 'p':
-    case 'P':
+    case 'p': case 'P':
         return generatePseudoLegalMovesPawn(piece);
-
     // for rook
-    case 'r':
-    case 'R':
+    case 'r': case 'R':
         return generatePseudoLegalMovesRook(piece);
     // for bishop
-    case 'b':
-    case 'B':
+    case 'b': case 'B':
         return generatePseudoLegalMovesBishop(piece);
     // for Queen
-    case 'q':
-    case 'Q':
+    case 'q': case 'Q':
         retB = generatePseudoLegalMovesBishop(piece);
         retR = generatePseudoLegalMovesRook(piece);
         retB.insert(retB.end(), retR.begin(), retR.end());
         return retB;
     // for knight
-    case 'n':
-    case 'N':
-        return generatePseudoLegalMovesKnight(piece);
+    case 'n': case 'N': return generatePseudoLegalMovesKnight(piece);
     // for king
-    case 'k':
-    case 'K':
-        return generatePseudoLegalMovesKing(piece);
-    default:
-        cout << "Invalid Piece Selection Error From LegalMovesGenerator: 1.0";
-        return {};
+    case 'k': case 'K': return generatePseudoLegalMovesKing(piece);
+    default: cout << "Invalid Piece Selection Error From LegalMovesGenerator: 1.0"; return {};
     }
 }
 bool Board::isAttacked(Pieces *p)
 {
-    if (p->team == 'b')
-    {
-        for (Pieces *index : whitepieces)
-        {
-            if (index->alive && canAttack(p->coords, index))
-                return true;
-        }
-    }
-    else
-    {
-        for (Pieces *index : blackpieces)
-        {
-            if (index->alive && canAttack(p->coords, index))
-                return true;
-        }
-    }
+    if (p->team == 'b') for(Pieces *index : whitepieces){if(index->alive && canAttack(p->coords, index)) return true;}
+    else for(Pieces *index : blackpieces){if(index->alive && canAttack(p->coords, index)) return true;}
     return false;
 }
 bool Board::isCellAttacked(Coords c, char team)
 {
-    if (team == 'b')
-    {
-        for (Pieces *index : whitepieces)
-        {
-            if (index->alive && canAttack(c, index))
-                return true;
-        }
-    }
-    else
-    {
-        for (Pieces *index : blackpieces)
-        {
-            if (index->alive && canAttack(c, index))
-                return true;
-        }
-    }
+    if(team == 'b') for(Pieces *index : whitepieces) {if (index->alive && canAttack(c, index)) return true;}
+    else for(Pieces *index : blackpieces) {if (index->alive && canAttack(c, index)) return true;}
     return false;
 }
 bool Board::canAttack(Coords c, Pieces *piece)
 {
     switch (piece->type)
     {
-    case 'P':
-        return (c.x == piece->coords.x + 1 &&
-                abs(c.y - piece->coords.y) == 1);
-    case 'p':
-        return (c.x == piece->coords.x - 1 &&
-                abs(c.y - piece->coords.y) == 1);
+    case 'P': return(c.x == piece->coords.x + 1 && abs(c.y - piece->coords.y) == 1);
+    case 'p': return(c.x == piece->coords.x - 1 && abs(c.y - piece->coords.y) == 1);
     default:
-        if (moveValidation(*piece, c, *this) != MoveType::INVALID)
-            return true;
-        else
-            return false;
+        if(moveValidation(*piece, c, *this) != MoveType::INVALID) return true;
+        else return false;
     }
 }
 vector<moves> Board::generateLegalMoves(Pieces *piece)
@@ -314,8 +264,7 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
         if(it ->movetype == MoveType::CASTLING)
         {
             bool remflag = false;
-            int step = (it ->to.y < it -> from.y) ? -1 : 1;
-            int yi = it -> from.y;
+            int step = (it ->to.y < it -> from.y) ? -1 : 1, yi = it -> from.y;
             while(CHECKBOUND(it->from.x,yi))
             {
                 if(isCellAttacked({it->from.x,yi}, piece->team))
@@ -326,18 +275,14 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
                 }
                 yi += step;
             }
-            if(!remflag)
-                it++;
-            else
-                continue;
+            if(!remflag) it++;
+            else continue;
         }
         else // general case
         {
             makeMove(*it);
-            if (isAttacked(getking(piece->team)))
-                it = retlegal.erase(it);
-            else
-                ++it;
+            if(isAttacked(getking(piece->team))) it = retlegal.erase(it);
+            else ++it;
             undoMove();
         }
     }
