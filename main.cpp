@@ -60,7 +60,8 @@ int main()
                     move.from.y == from.y &&
                     move.to.x == to.x &&
                     move.to.y == to.y){
-
+                    
+                    cout<<"making move...\n";
                     b.makeMove(move);
 
                     whiteTurn = !whiteTurn;
@@ -79,7 +80,7 @@ int main()
             {
                 char team = (whiteTurn)? 'w':'b';
                 auto teamlegalmoves = b.generateAllLegalMoves(team);
-                bool NoMoves = legalMoves.empty();
+                bool NoMoves = teamlegalmoves.empty();
                 bool KingInCheck = b.isAttacked(b.getking(team));
 
                 if(KingInCheck&&NoMoves){
