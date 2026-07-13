@@ -265,7 +265,7 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
         {
             bool remflag = false;
             int step = (it ->to.y < it -> from.y) ? -1 : 1, yi = it -> from.y;
-            while(CHECKBOUND(it->from.x,yi))
+            while(true)//CHECKBOUND(it->from.x,yi))
             {
                 if(isCellAttacked({it->from.x,yi}, piece->team))
                 {
@@ -273,6 +273,8 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
                     remflag = true;
                     break;
                 }
+                if(yi == it->to.y)
+                    break;
                 yi += step;
             }
             if(!remflag) it++;
@@ -281,9 +283,10 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
         else // general case
         {
             makeMove(*it);
-            if(isAttacked(getking(piece->team))) it = retlegal.erase(it);
-            else ++it;
+            bool illegal = isAttacked(getking(piece->team));
             undoMove();
+            if(illegal) it = retlegal.erase(it);
+            else ++it;
         }
     }
     return retlegal;
