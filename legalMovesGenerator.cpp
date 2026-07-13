@@ -288,3 +288,14 @@ vector<moves> Board::generateLegalMoves(Pieces *piece)
     }
     return retlegal;
 }
+vector<moves> Board::generateAllLegalMoves(char team)
+{
+    vector<moves> ret;
+    vector<Pieces*> iterativeVector = (team == 'w')? whitepieces : blackpieces;
+    for(Pieces* piece : iterativeVector)
+    {
+        vector<moves> moveS = generateLegalMoves(piece);
+        ret.insert(ret.end(), moveS.begin(), moveS.end());
+    }
+    return ret; 
+}
