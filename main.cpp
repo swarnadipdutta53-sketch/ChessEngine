@@ -1,7 +1,7 @@
 #include <iostream>
 #include "board.h"
 #include "BoardIO.h"
-#include "Evaluator.h"
+//#include "Evaluator.h"
 
 int main()
 {
@@ -33,7 +33,7 @@ int main()
             if (b.undoMove())whiteTurn = !whiteTurn;
             else cout << "No moves yet\n";
 
-            cout << "Evaluation: "<< Evaluator::evaluate(b)<< "\n";
+            //cout << "Evaluation: "<< Evaluator::evaluate(b)<< "\n";
             b.printBoard(whiteTurn);
             continue;
         }
@@ -75,7 +75,6 @@ int main()
             if (!movePlayed){
                 cout << "That piece can't move there\n";
             }
-
             else
             {
                 char team = (whiteTurn)? 'w':'b';
@@ -96,9 +95,8 @@ int main()
                 }
             }
         }
-
         cout << "Evaluation in favor of white: "
-             << Evaluator::evaluate(b)
+             //<< Evaluator::evaluate(b)
              << "\n";
 
 
