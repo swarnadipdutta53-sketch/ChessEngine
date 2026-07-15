@@ -98,14 +98,7 @@ void Board::printBoard(bool t){
 void Board::makeMove(moves l){
     int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y,ar,ac;
     cout << "1";
-    
-    if (board[fr][fc] != l.movedpiece) {
-    cout << "INVARIANT BROKEN!\n";
-    cout << "Expected: " << l.movedpiece << '\n';
-    cout << "Found:    " << board[fr][fc] << '\n';
-    exit(0);
-}
-
+   
     cout << "from = (" << fr << "," << fc << ")\n";
     cout << "to   = (" << tr << "," << tc << ")\n";
 
@@ -113,6 +106,13 @@ void Board::makeMove(moves l){
     cout << "board[to]   = " << board[tr][tc] << '\n';
 
     cout << "move piece  = " << l.movedpiece << '\n';
+
+     if (board[fr][fc] != l.movedpiece) {
+    cout << "INVARIANT BROKEN!\n";
+    cout << "Expected: " << l.movedpiece << '\n';
+    cout << "Found:    " << board[fr][fc] << '\n';
+    exit(0);
+}
 
     board[tr][tc]=board[fr][fc];
     cout << "2";
