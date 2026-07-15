@@ -99,13 +99,20 @@ void Board::makeMove(moves l){
     int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y,ar,ac;
     cout << "1";
     
+    if (board[fr][fc] != l.movedpiece) {
+    cout << "INVARIANT BROKEN!\n";
+    cout << "Expected: " << l.movedpiece << '\n';
+    cout << "Found:    " << board[fr][fc] << '\n';
+    exit(0);
+}
+
     cout << "from = (" << fr << "," << fc << ")\n";
-cout << "to   = (" << tr << "," << tc << ")\n";
+    cout << "to   = (" << tr << "," << tc << ")\n";
 
-cout << "board[from] = " << board[fr][fc] << '\n';
-cout << "board[to]   = " << board[tr][tc] << '\n';
+    cout << "board[from] = " << board[fr][fc] << '\n';
+    cout << "board[to]   = " << board[tr][tc] << '\n';
 
-cout << "move piece  = " << l.movedpiece << '\n';
+    cout << "move piece  = " << l.movedpiece << '\n';
 
     board[tr][tc]=board[fr][fc];
     cout << "2";
@@ -184,7 +191,7 @@ bool Board::undoMove(){
             capturedpieces.pop_back();
         }
         
-        if(m.movetype==MoveType::PROMOTION){board[fr][fc]->type=(board[fr][fc]->team=='w')? 'p':'P';}
+        if(m.movetype==MoveType::PROMOTION){board[fr][fc]->type=((board[fr][fc]->team=='w')? 'p':'P');}
         
         if(m.movetype==MoveType::CASTLING){
             
