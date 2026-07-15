@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Board.h"
-// #include "moveValidations.h"
 using namespace std;
 void Board::initialize(){
     pieces[0]={{0,0},'R','b',false,true}; pieces[8]={{1,0},'P','b',false,true};
@@ -97,43 +96,44 @@ void Board::printBoard(bool t){
 
 void Board::makeMove(moves l){
     int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y,ar,ac;
-    cout << "1";
+
+//     cout << "1";
    
-    cout << "from = (" << fr << "," << fc << ")\n";
-    cout << "to   = (" << tr << "," << tc << ")\n";
+//     cout << "from = (" << fr << "," << fc << ")\n";
+//     cout << "to   = (" << tr << "," << tc << ")\n";
 
-    cout << "board[from] = " << board[fr][fc] << '\n';
-    cout << "board[to]   = " << board[tr][tc] << '\n';
+//     cout << "board[from] = " << board[fr][fc] << '\n';
+//     cout << "board[to]   = " << board[tr][tc] << '\n';
 
-    cout << "move piece  = " << l.movedpiece << '\n';
+//     cout << "move piece  = " << l.movedpiece << '\n';
 
-     if (board[fr][fc] != l.movedpiece) {
-    cout << "INVARIANT BROKEN!\n";
-    cout << "Expected: " << l.movedpiece << '\n';
-    cout << "Found:    " << board[fr][fc] << '\n';
-    exit(0);
-}
+//      if (board[fr][fc] != l.movedpiece) {
+//     cout << "INVARIANT BROKEN!\n";
+//     cout << "Expected: " << l.movedpiece << '\n';
+//     cout << "Found:    " << board[fr][fc] << '\n';
+//     exit(0);
+// }
 
     board[tr][tc]=board[fr][fc];
-    cout << "2";
+   // cout << "2";
     board[fr][fc]=nullptr;
-    cout << "3";
+   // cout << "3";
     board[tr][tc]->coords={tr,tc};
-    cout << "4";
+   // cout << "4";
     board[tr][tc]->hasMoved++;
-    cout << "5";
+    //cout << "5";
     string s;
 
     switch(l.movetype)
     {
     case MoveType::GENERAL:
-        cout << "6";
+       // cout << "6";
         if(l.capturedpiece!=nullptr){
-            cout << "7";
+           // cout << //"7";
             l.capturedpiece->alive=false;
-            cout << "8";
+           // cout << "8";
             capturedpieces.push_back(l.capturedpiece);
-            cout << "9";
+            // cout << "9";
         }
         break;
     
@@ -170,8 +170,31 @@ void Board::makeMove(moves l){
     default: cout<<"Code should not reach here\n";
         break;
     }
-    cout << "10\n";
+    //cout << "10\n";
     movehistory.push_back(l);
+}
+
+long long Board::perft(int depth, char team)
+{
+    if (depth == 0)
+        return 1;
+
+    long long nodes = 0;
+
+    auto legalMoves = generateAllLegalMoves(team);
+
+    char nextTeam = (team == 'w') ? 'b' : 'w';
+
+    for (const moves &m : legalMoves)
+    {
+        makeMove(m);
+
+        nodes += perft(depth - 1, nextTeam);
+
+        undoMove();
+    }
+
+    return nodes;
 }
 
 bool Board::undoMove(){

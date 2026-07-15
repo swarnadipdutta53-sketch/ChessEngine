@@ -96,7 +96,8 @@ public:
         bool canAttack(Coords,Pieces*);
         bool isCellAttacked(Coords, char);
         
-
+        long long perft(int depth, char team);
+        
         void overWrite();
 };
 // move validations (only pseudolegal)
