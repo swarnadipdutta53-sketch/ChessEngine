@@ -93,9 +93,9 @@ MoveType moveValidationPawn(int row, int column, Coords c2, Board &obj)
     dx = c2.x - row;
     dy = c2.y - column;
     // direction validation
-    if(dx > 0 && obj.getpiece(row, column)-> team == 'p')
+    if(dx > 0 && obj.getpiece(row, column)-> team == 'w')
         return MoveType::INVALID;
-    else if(dx < 0 && obj.getpiece(row, column)-> team == 'P')
+    else if(dx < 0 && obj.getpiece(row, column)-> team == 'b')
         return MoveType::INVALID;
     // double forward
     if(!(obj.getpiece(row, column)->hasMoved) && abs(dx) == 2 && dy == 0 && obj.getpiece(c2.x,c2.y) == nullptr)
@@ -134,7 +134,7 @@ MoveType moveValidationPawn(int row, int column, Coords c2, Board &obj)
     else
     // invalidity
         ret = MoveType::INVALID;
-    if(ret != MoveType::INVALID && ((c2.x == 0 && obj.getpiece(row, column)-> team == 'p') || (c2.x == 7 && obj.getpiece(row, column)-> team == 'P')))
+    if(ret != MoveType::INVALID && ((c2.x == 0 && obj.getpiece(row, column)-> team == 'w') || (c2.x == 7 && obj.getpiece(row, column)-> team == 'b')))
         ret = MoveType::PROMOTION;                        
     return ret;
 }
