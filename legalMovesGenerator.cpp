@@ -10,7 +10,7 @@
 /*
     generateLegal() -> generatePseudoLegal() -> for each move checkIsAttacked() -> checkCanAttacked() for each opponent piece() -> if no then push move, if no dont push
 */
-vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
+vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece) const
 {
     vector<moves> ret;
     Coords directions[] = {{1, 0}, {1, 1}, {1, -1}, {-1, 0}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}};
@@ -61,7 +61,7 @@ vector<moves> Board::generatePseudoLegalMovesKing(Pieces *piece)
     }
     return ret;
 }
-vector<moves> Board::generatePseudoLegalMovesKnight(Pieces *piece)
+vector<moves> Board::generatePseudoLegalMovesKnight(Pieces *piece) const
 {
     vector<moves> ret;
     Coords currPos = {piece->coords.x, piece->coords.y};
@@ -95,7 +95,7 @@ vector<moves> Board::generatePseudoLegalMovesKnight(Pieces *piece)
     }
     return ret;
 }
-vector<moves> Board::generatePseudoLegalMovesRook(Pieces *piece)
+vector<moves> Board::generatePseudoLegalMovesRook(Pieces *piece) const 
 {
     vector<moves> ret;
     Coords currPos = {piece->coords.x, piece->coords.y};
@@ -119,7 +119,7 @@ vector<moves> Board::generatePseudoLegalMovesRook(Pieces *piece)
     }
     return ret;
 }
-vector<moves> Board::generatePseudoLegalMovesBishop(Pieces *piece)
+vector<moves> Board::generatePseudoLegalMovesBishop(Pieces *piece) const
 {
     vector<moves> ret;
     Coords currPos = {piece->coords.x, piece->coords.y};
@@ -143,7 +143,7 @@ vector<moves> Board::generatePseudoLegalMovesBishop(Pieces *piece)
     }
     return ret;
 }
-vector<moves> Board::generatePseudoLegalMovesPawn(Pieces *piece)
+vector<moves> Board::generatePseudoLegalMovesPawn(Pieces *piece) const
 {
     vector<moves> ret;
     Coords currPos = {piece->coords.x, piece->coords.y};
@@ -205,7 +205,7 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces *piece)
     }
     return ret;
 }
-vector<moves> Board::generatePseudoLegalMoves(Pieces *piece)
+vector<moves> Board::generatePseudoLegalMoves(Pieces *piece) const
 {
     vector<moves> retB, retR;
     switch (piece->type)
@@ -305,7 +305,7 @@ vector<moves> Board::generateAllLegalMoves(char team)
     }
     return ret; 
 }
-vector<moves> Board::generateAllPseudoLegalMoves(char team)
+vector<moves> Board::generateAllPseudoLegalMoves(char team) const
 {
     vector<moves> ret;
     vector<Pieces*> iterativeVector = (team == 'w') ? whitepieces : blackpieces;

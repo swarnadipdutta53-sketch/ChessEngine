@@ -80,7 +80,7 @@ public:
         
         bool isEmpty(Coords);
         Pieces* getpiece(int,int);
-        Pieces* getlastmovedpiece();
+        Pieces* getlastmovedpiece() const;
         Pieces* getking(char);                 //all defined in Helper.cpp
         char getTeam(Coords);
         string printcaptW();
@@ -90,15 +90,15 @@ public:
         const vector<Pieces*>& getBlackPieces() const;
 
         // move generation (pseudolegal + legal)
-        vector<moves> generatePseudoLegalMovesKing(Pieces*);
-        vector<moves> generatePseudoLegalMovesKnight(Pieces*);
-        vector<moves> generatePseudoLegalMovesRook(Pieces*);
-        vector<moves> generatePseudoLegalMovesPawn(Pieces*);
-        vector<moves> generatePseudoLegalMovesBishop(Pieces*);
+        vector<moves> generatePseudoLegalMovesKing(Pieces*) const;
+        vector<moves> generatePseudoLegalMovesKnight(Pieces*) const;
+        vector<moves> generatePseudoLegalMovesRook(Pieces*) const;
+        vector<moves> generatePseudoLegalMovesPawn(Pieces*) const;
+        vector<moves> generatePseudoLegalMovesBishop(Pieces*) const;
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
-        vector<moves> generatePseudoLegalMoves(Pieces*); 
-        vector<moves> generateAllPseudoLegalMoves(char);
+        vector<moves> generatePseudoLegalMoves(Pieces*) const; 
+        vector<moves> generateAllPseudoLegalMoves(char) const;
         bool isAttacked(Pieces*);
         bool canAttack(Coords,Pieces*);
         bool isCellAttacked(Coords, char);

@@ -37,10 +37,11 @@ private:
         static int evaluateMaterial(const Board&);
         static int evaluatePawnStructure(const Board&);
         static bool scanfront(vector<Coords>&,int,int,char);
+        static int evaluateMobility(const Board&);
         
 public:
         static int evaluate(const Board&);
-        static int evaluateMobility(Board);
+      
 };
 
 

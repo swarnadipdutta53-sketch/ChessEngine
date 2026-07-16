@@ -101,7 +101,7 @@ int main()
             }
         }
         cout << "Evaluation in favor of white: "
-             << Evaluator::evaluate(b) + Evaluator::evaluateMobility(b)
+             << Evaluator::evaluate(b)
              << "\n";
 
 

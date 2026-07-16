@@ -11,7 +11,7 @@ Pieces* Board::getpiece(int r,int c){
     return board[r][c];
 }
 
-Pieces* Board::getlastmovedpiece(){
+Pieces* Board::getlastmovedpiece() const{
     if(movehistory.empty())return nullptr;
     return movehistory.back().movedpiece;
 }
