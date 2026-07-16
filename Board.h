@@ -92,6 +92,7 @@ public:
         vector<moves> generateLegalMoves(Pieces*); 
         vector<moves> generateAllLegalMoves(char); 
         vector<moves> generatePseudoLegalMoves(Pieces*); 
+        vector<moves> generateAllPseudoLegalMoves(char);
         bool isAttacked(Pieces*);
         bool canAttack(Coords,Pieces*);
         bool isCellAttacked(Coords, char);
