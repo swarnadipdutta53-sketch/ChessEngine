@@ -1,6 +1,6 @@
 #include "Board.h"
 #include "Evaluator.h"
-
+#include "limits.h" 
 class ChessAI
 {
 private:
