@@ -67,7 +67,6 @@ private:
         vector<Pieces*> blackpieces;
 
         bool whiteTurn=true;
-        long long nodes;
 
 public:
         

@@ -12,6 +12,7 @@ moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
     {
         board.makeMove(idx);
         int score = minimax(board, !whiteturn, depth+1);
+        nodes++;
         board.undoMove();
         if((score > bestScore && whiteturn) || (score < bestScore && !whiteturn))
         {
@@ -47,6 +48,7 @@ int ChessAI::minimax(Board &board, bool whiteturn, int depth) //initialize depth
     {
         board.makeMove(idx);
         score = minimax(board, !whiteturn, depth+1);
+        nodes++;
         board.undoMove();
         if (whiteturn)
         {
