@@ -2,12 +2,12 @@
 
 //Contains all helper and getter functions
 
-bool Board::isEmpty(Coords sq){
+bool Board::isEmpty(Coords sq) const{
     if(board[sq.x][sq.y]==nullptr)return true;
     return false;
 }
 
-Pieces* Board::getpiece(int r,int c){
+Pieces* Board::getpiece(int r, int c)const{
     return board[r][c];
 }
 
@@ -21,9 +21,9 @@ Pieces* Board::getking(char t){
     return Blackking;
 }
 
-char Board::getTeam(Coords sq){
+char Board::getTeam(Coords sq) const{
     if(board[sq.x][sq.y]==nullptr)return 'E';
-    return board[sq.x][sq.y]->team;  
+    return board[sq.x][sq.y]->team;
 }
 
 string Board::printcaptW(){

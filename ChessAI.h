@@ -2,8 +2,7 @@
 #define CHESSAI_H
 #include "Board.h"
 #include "Evaluator.h"
-#include "limits.h" 
-#include <chrono>
+
 class ChessAI
 {
 private:

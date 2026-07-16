@@ -80,11 +80,11 @@ public:
         bool setTurn(char);
         void FlipTurn();
         
-        bool isEmpty(Coords);
-        Pieces* getpiece(int,int);
+        bool isEmpty(Coords) const;
+        Pieces* getpiece(int,int) const;
         Pieces* getlastmovedpiece() const;
         Pieces* getking(char);                 //all defined in Helper.cpp
-        char getTeam(Coords);
+        char getTeam(Coords) const;
         string printcaptW();
         string printcaptB();
         string getlastmove();

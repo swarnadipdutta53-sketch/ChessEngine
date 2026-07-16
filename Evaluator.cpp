@@ -76,6 +76,22 @@ const int Evaluator::EndGameKingTable[8][8] = {
     {-50,-30,-30,-30,-30,-30,-30,-50}
 };
 
+const Coords Evaluator::KnightDirections[8]={
+    {-2,-1},{-2,1},{2,-1},{2,1},
+    {-1,-2},{-1,2},{1,-2},{1,2},
+};
+const Coords Evaluator::BishopDirections[4]={
+    {-1,-1},{-1,+1},{+1,-1},{+1,+1},
+};
+const Coords Evaluator::RookDirections[4]={
+    {+0,-1},{-1,+0},{+0,+1},{+1,+0}
+};
+const Coords Evaluator::QueenDirections[8]={
+    {+0,-1},{-1,+0},{+0,+1},{+1,+0},
+    {-1,-1},{-1,+1},{+1,-1},{+1,+1},
+};
+
+
 
 int Evaluator::calcPhase(const Board& b){
     int phase=0;
@@ -215,29 +231,140 @@ int Evaluator::evaluatePawnStructure(const Board& b){
 
 int Evaluator::evaluateMobility(const Board& b){
     int total=0;
-    for(moves m:b.generateAllPseudoLegalMoves('w')){
-        switch(m.movedpiece->type){
-            case 'n': total+=4; break;
-            case 'b': total+=4; break;
-            case 'r': total+=2; break;
-            case 'q': total+=1; break;
+    for(Pieces* p:b.getWhitePieces()){
+        if(!p->alive)continue;
+
+        int count= countPseudoMobility(b,p);
+
+        switch(p->type){
+            case 'n': total+=4*count; break;
+            case 'b': total+=4*count; break;
+            case 'r': total+=2*count; break;
+            case 'q': total+=1*count; break;
             default : break;
         }
     }
-    for(moves m:b.generateAllPseudoLegalMoves('b')){
-        switch(m.movedpiece->type){
-            case 'N': total-=4; break;
-            case 'B': total-=4; break;
-            case 'R': total-=2; break;
-            case 'Q': total-=1; break;
+
+    for(Pieces* p:b.getBlackPieces()){
+        if(!p->alive)continue;
+
+        int count= countPseudoMobility(b,p);
+
+        switch(p->type){
+            case 'N': total-=4*count; break;
+            case 'B': total-=4*count; break;
+            case 'R': total-=2*count; break;
+            case 'Q': total-=1*count; break;
             default : break;
         }
     }
+
     return total;
+}
+
+int Evaluator::countKnightMobility(const Board& b, Pieces* piece){
+    int count = 0;
+
+    for(const Coords& dir : KnightDirections){
+        int x = piece->coords.x + dir.x ;
+        int y = piece->coords.y + dir.y;
+
+        if(x >=0 && x <8 && y >=0 && y <8){
+            Pieces* target = b.getpiece(x,y);
+
+            if(target == nullptr || target->team != piece->team)count++;
+        }
+    }
+
+    return count;
+}
+
+int Evaluator::countBishopMobility(const Board& b, Pieces* p){
+    int count=0;
+
+
+    for(const Coords& dir:BishopDirections){
+        int x=p->coords.x+dir.x;
+        int y=p->coords.y+dir.y;
+        while(x>=0&&x<=7&&y>=0&&y<=7){
+            Pieces* l=b.getpiece(x,y);
+            if(l!=nullptr){
+                if(p->team!=l->team){count++;}
+                break;
+            }
+            count++;
+            x+=dir.x;
+            y+=dir.y;
+        }
+    }
+    return count;
+}
+int Evaluator::countRookMobility(const Board& b, Pieces* p){
+    int count=0;
+
+    for(const Coords& dir:RookDirections){
+        int x=p->coords.x+dir.x;
+        int y=p->coords.y+dir.y;
+        while(x>=0&&x<=7&&y>=0&&y<=7){
+            Pieces* l=b.getpiece(x,y);
+            if(l!=nullptr){
+                if(p->team!=l->team){count++;}
+                break;
+            }
+            count++;
+            x+=dir.x;
+            y+=dir.y;
+        }
+    }
+    return count;
+}
+int Evaluator::countQueenMobility(const Board& b, Pieces* p){
+    int count=0;
+
+    for(const Coords& dir:QueenDirections){
+        int x=p->coords.x+dir.x;
+        int y=p->coords.y+dir.y;
+        while(x>=0&&x<=7&&y>=0&&y<=7){
+            Pieces* l=b.getpiece(x,y);
+            if(l!=nullptr){
+                if(p->team!=l->team){count++;}
+                break;
+            }
+            count++;
+            x+=dir.x;
+            y+=dir.y;
+        }
+    }
+    return count;
+}
+
+int Evaluator::countPseudoMobility(const Board& b, Pieces* p)
+{
+    switch(p->type)
+    {
+        case 'N':
+        case 'n':
+             return countKnightMobility(b,p);
+
+        case 'B':
+        case 'b':
+             return countBishopMobility(b,p);
+
+        case 'R':
+        case 'r':
+             return countRookMobility(b,p);
+
+        case 'Q':
+        case 'q':
+             return countQueenMobility(b,p);
+
+        default:
+            return 0;
+    }
 }
 
 int Evaluator::evaluate(const Board& b){
     int phase=calcPhase(b);
-    return evaluateMaterial(b)+evaluatePST(b,phase)+evaluatePawnStructure(b);
+    return evaluateMaterial(b)+evaluatePST(b,phase)+evaluatePawnStructure(b)+evaluateMobility(b);
 
 } 

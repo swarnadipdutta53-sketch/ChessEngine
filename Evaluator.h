@@ -31,6 +31,10 @@ private:
         static const int QueenTable[8][8];
         static const int MiddleGameKingTable[8][8];
         static const int EndGameKingTable[8][8];
+        static const Coords KnightDirections[8];
+        static const Coords BishopDirections[4];
+        static const Coords RookDirections[4];
+        static const Coords QueenDirections[8];
 
         static int calcPhase(const Board&);
         static int evaluatePST(const Board&,int);
@@ -38,6 +42,11 @@ private:
         static int evaluatePawnStructure(const Board&);
         static bool scanfront(vector<Coords>&,int,int,char);
         static int evaluateMobility(const Board&);
+        static int countPseudoMobility(const Board& b, Pieces* p);
+        static int countKnightMobility(const Board&, Pieces*);
+        static int countBishopMobility(const Board&, Pieces*);
+        static int countRookMobility(const Board&, Pieces*);
+        static int countQueenMobility(const Board&, Pieces*);
         
 public:
         static int evaluate(const Board&);
