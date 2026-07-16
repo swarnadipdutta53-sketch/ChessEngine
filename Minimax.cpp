@@ -1,6 +1,4 @@
-#include "Board.h"
-#include "limits.h"
-#include "Evaluator.h"
+#include "ChessAI.h"
 #define t_MAXDEPTH 4
 #define t_CHECKVAL 10000000
 moves findBestMove(Board &board, bool whiteturn, int depth)
