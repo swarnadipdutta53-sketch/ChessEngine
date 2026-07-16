@@ -2,7 +2,7 @@
 #include "board.h"
 #include "BoardIO.h"
 #include "Evaluator.h"
-#include "ChessAI.h"   // whatever your minimax header is
+#include "ChessAI.h"   
 
 int main()
 {
@@ -90,6 +90,7 @@ int main()
         if (!movePlayed)
         {
             cout << "That piece can't move there\n";
+            b.printBoard();
             continue;
         }
 
@@ -101,9 +102,9 @@ int main()
         cout << "AI thinking...\n";
 
 
-        moves aiMove = ChessAI::findBestMove( b,false,4);
+        moves aiMove = ChessAI::findBestMove(b,false,0);
 
-
+        cout<<"Found move\n";
         b.makeMove(aiMove);
         b.FlipTurn();
 
