@@ -1,3 +1,5 @@
+#ifndef CHESSAI_H
+#define CHESSAI_H
 #include "Board.h"
 #include "Evaluator.h"
 #include "limits.h" 
@@ -6,10 +8,10 @@ class ChessAI
 private:
     
 public: 
-        moves findBestMove(Board&,bool,int);
-        int minimax(Board&,bool,int);
+        static moves findBestMove(Board&,bool,int);
+        static int minimax(Board&,bool,int);
         int quiscence(Board&, int, int);
         
 };
-
+#endif
 

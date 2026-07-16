@@ -1,7 +1,8 @@
 #include "ChessAI.h"
+
 #define t_MAXDEPTH 4
 #define t_CHECKVAL 10000000
-moves findBestMove(Board &board, bool whiteturn, int depth)
+moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
 {
     moves bestMove;
     
@@ -22,7 +23,7 @@ moves findBestMove(Board &board, bool whiteturn, int depth)
     return bestMove;
 }
 
-int minimax(Board &board, bool whiteturn, int depth) //initialize depth as 0
+int ChessAI::minimax(Board &board, bool whiteturn, int depth) //initialize depth as 0
 {
     if(depth == t_MAXDEPTH)
         return Evaluator::evaluate(board);
