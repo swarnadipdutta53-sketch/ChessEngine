@@ -6,7 +6,7 @@
 class ChessAI
 {
 private:
-    
+        
 public: 
         static moves findBestMove(Board&,bool,int);
         static int minimax(Board&,bool,int);

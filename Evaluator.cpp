@@ -238,6 +238,6 @@ int Evaluator::evaluateMobility(const Board& b){
 
 int Evaluator::evaluate(const Board& b){
     int phase=calcPhase(b);
-    return evaluateMaterial(b)+evaluatePST(b,phase)+evaluatePawnStructure(b)+evaluateMobility(b);
+    return evaluateMaterial(b)+evaluatePST(b,phase)+evaluatePawnStructure(b);
 
 } 
