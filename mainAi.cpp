@@ -101,10 +101,11 @@ int main()
 
         cout << "AI thinking...\n";
 
-
+        ChessAI::setnode();
         moves aiMove = ChessAI::findBestMove(b,false,0);
 
         cout<<"Found move\n";
+        ChessAI::getnode();
         b.makeMove(aiMove);
         b.FlipTurn();
 

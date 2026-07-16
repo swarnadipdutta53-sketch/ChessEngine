@@ -1,10 +1,12 @@
 #ifndef BOARD_H
 #define BOARD_H
-
+#include<iostream>
 #include<string>
 #include<vector>
 #include<sstream>
 #include<cctype>
+#include "limits.h" 
+#include <chrono>
 using namespace std;
 
 typedef struct Coords
@@ -67,7 +69,6 @@ private:
         vector<Pieces*> blackpieces;
 
         bool whiteTurn=true;
-        long long nodes;
 
 public:
         

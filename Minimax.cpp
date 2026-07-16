@@ -5,6 +5,8 @@ moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
 {
     moves bestMove;
     
+     auto start = chrono::high_resolution_clock::now();
+
     char turnOf = (whiteturn) ?  'w' : 'b';
     int bestScore = (whiteturn) ? INT_MIN : INT_MAX;
     vector<moves> mv = board.generateAllLegalMoves(turnOf);
@@ -19,6 +21,19 @@ moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
             bestMove = idx;
         }
     }
+
+
+     auto end = chrono::high_resolution_clock::now();
+
+    auto duration =
+        chrono::duration_cast<chrono::milliseconds>(end - start);
+
+        cout<< "Search time: "
+         << duration.count()
+         << " ms\n";
+
+
+
     return bestMove;
 }
 
