@@ -305,3 +305,17 @@ vector<moves> Board::generateAllLegalMoves(char team)
     }
     return ret; 
 }
+vector<moves> Board::generateAllPseudoLegalMoves(char team)
+{
+    vector<moves> ret;
+    vector<Pieces*> iterativeVector = (team == 'w') ? whitepieces : blackpieces;
+    for(Pieces* piece : iterativeVector)
+    {
+        if(piece -> alive)
+        {
+            vector<moves> moveS = generatePseudoLegalMoves(piece);
+            ret.insert(ret.end(), moveS.begin(), moveS.end());
+        }
+    }
+    return ret;
+}
