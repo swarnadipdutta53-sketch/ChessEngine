@@ -73,7 +73,7 @@ void Board::overWrite(){
     for(int j=0;j<8;j++){if(j==0||j==3||j==4||j==7)continue; board[7][j]->alive=false;board[7][j]=nullptr;}
 }
 
-void Board::printBoard(bool t){
+void Board::printBoard(){
     cout<<"\n    a b c d e f g h \n";
     cout<<"  +-----------------+\n";
     for (int i = 0; i < 8; i++)
@@ -86,7 +86,7 @@ void Board::printBoard(bool t){
         cout<<'|';
         if(i==0){cout<<("  White captured :"+printcaptW())<<endl;}
         else if(i==2){cout<<("  Black captured :"+printcaptB())<<endl;}
-        else if(i==4){cout <<"  Turn: "<<(t ? "White" : "Black")<<endl;}
+        else if(i==4){cout <<"  Turn: "<<(whiteTurn ? "White" : "Black")<<endl;}
         else if(i==6){cout<<("  Last Move: "+getlastmove())<<endl;}
         else cout<<endl;
     }

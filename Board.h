@@ -3,6 +3,8 @@
 
 #include<string>
 #include<vector>
+#include<sstream>
+#include<cctype>
 using namespace std;
 
 typedef struct Coords
@@ -64,13 +66,17 @@ private:
         vector<Pieces*> whitepieces;
         vector<Pieces*> blackpieces;
 
+        bool whiteTurn=true;
+
 public:
         
         void initialize();
-        void printBoard(bool);  //all defined in Board.cpp
+        void printBoard();  //all defined in Board.cpp
         void makeMove(moves);
         bool undoMove();
-        
+        bool getTurn();
+        bool setTurn(char);
+        void FlipTurn();
         
         bool isEmpty(Coords);
         Pieces* getpiece(int,int);
@@ -97,8 +103,16 @@ public:
         bool isCellAttacked(Coords, char);
         
         long long perft(int depth, char team);
-        
+
         void overWrite();
+
+
+        bool loadFEN(const string&);
+        void clearBoard();
+        bool loadPieces(string);
+
+
+
 };
 // move validations (only pseudolegal)
 MoveType moveValidation(Pieces, Coords, Board&);

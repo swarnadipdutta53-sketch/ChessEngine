@@ -67,3 +67,15 @@ const vector<Pieces*>& Board::getWhitePieces() const{
 const vector<Pieces*>& Board::getBlackPieces() const{
     return blackpieces;
 }
+bool Board::getTurn(){
+    return whiteTurn;
+}
+bool Board::setTurn(char a){
+    if(a=='w')whiteTurn=true;
+    else if(a=='b')whiteTurn=false;
+    else return false;
+    return true;
+}
+void Board::FlipTurn(){
+    whiteTurn=!whiteTurn;
+}

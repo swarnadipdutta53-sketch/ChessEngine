@@ -213,6 +213,29 @@ int Evaluator::evaluatePawnStructure(const Board& b){
     return total;
 }
 
+int Evaluator::evaluateMobility(Board b){
+    int total=0;
+    for(moves m:b.generateAllLegalMoves('w')){
+        switch(m.movedpiece->type){
+            case 'n': total+=4; break;
+            case 'b': total+=4; break;
+            case 'r': total+=2; break;
+            case 'q': total+=1; break;
+            default : break;
+        }
+    }
+    for(moves m:b.generateAllLegalMoves('b')){
+        switch(m.movedpiece->type){
+            case 'N': total-=4; break;
+            case 'B': total-=4; break;
+            case 'R': total-=2; break;
+            case 'Q': total-=1; break;
+            default : break;
+        }
+    }
+    return total;
+}
+
 int Evaluator::evaluate(const Board& b){
     int phase=calcPhase(b);
     return evaluateMaterial(b)+evaluatePST(b,phase)+evaluatePawnStructure(b);

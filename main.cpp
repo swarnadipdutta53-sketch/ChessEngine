@@ -22,10 +22,9 @@ int main()
     if (!mode.empty() && mode[0] == '0')
         b.overWrite();
 
-    bool whiteTurn = true;
     string input;
 
-    b.printBoard(whiteTurn);
+    b.printBoard();
 
     while (true)
     {
@@ -36,11 +35,11 @@ int main()
 
         if (input == "2"){
 
-            if (b.undoMove())whiteTurn = !whiteTurn;
+            if (b.undoMove())b.FlipTurn(); 
             else cout << "No moves yet\n";
 
             cout << "Evaluation: "<< Evaluator::evaluate(b)<< "\n";
-            b.printBoard(whiteTurn);
+            b.printBoard();
             continue;
         }
 
@@ -50,9 +49,9 @@ int main()
 
         else if (b.isEmpty(from)) cout << "No piece selected\n";
 
-        else if (whiteTurn && b.getTeam(from) != 'w') cout << "It's White's turn\n";
+        else if (b.getTurn() && b.getTeam(from) != 'w') cout << "It's White's turn\n";
 
-        else if (!whiteTurn && b.getTeam(from) != 'b') cout << "It's Black's turn\n";
+        else if (!b.getTurn() && b.getTeam(from) != 'b') cout << "It's Black's turn\n";
 
         else
         {
@@ -70,7 +69,7 @@ int main()
                     cout<<"making move...\n";
                     b.makeMove(move);
 
-                    whiteTurn = !whiteTurn;
+                    b.FlipTurn();
                     movePlayed = true;
 
                     break;
@@ -83,30 +82,30 @@ int main()
             }
             else
             {
-                char team = (whiteTurn)? 'w':'b';
+                char team = (b.getTurn())? 'w':'b';
                 auto teamlegalmoves = b.generateAllLegalMoves(team);
                 bool NoMoves = teamlegalmoves.empty();
                 bool KingInCheck = b.isAttacked(b.getking(team));
 
                 if(KingInCheck&&NoMoves){
-                    cout<<"Checkmate by "<<(whiteTurn? "Black\n" : "White\n");
+                    cout<<"Checkmate by "<<(b.getTurn()? "Black\n" : "White\n");
                     break;
                 }
                 else if(NoMoves){
-                    cout<<"Stalemate by "<<(whiteTurn? "Black\n" : "White\n");
+                    cout<<"Stalemate by "<<(b.getTurn()? "Black\n" : "White\n");
                     break;
                 }
                 else if(KingInCheck){
-                    cout << (whiteTurn ? "White" : "Black") << " King in check\n";
+                    cout << (b.getTurn() ? "White" : "Black") << " King in check\n";
                 }
             }
         }
         cout << "Evaluation in favor of white: "
-             << Evaluator::evaluate(b)
+             << Evaluator::evaluate(b) + Evaluator::evaluateMobility(b)
              << "\n";
 
 
-        b.printBoard(whiteTurn);
+        b.printBoard();
     }
 
 
