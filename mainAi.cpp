@@ -50,18 +50,21 @@ int main()
         if (!parser(input, from, to))
         {
             cout << "Invalid input\n";
+            b.printBoard();
             continue;
         }
 
         if (b.isEmpty(from))
         {
             cout << "No piece selected\n";
+            b.printBoard();
             continue;
         }
 
         if (b.getTeam(from) != 'w')
         {
             cout << "It's White's turn\n";
+             b.printBoard();
             continue;
         }
 
@@ -72,13 +75,27 @@ int main()
             b.generateLegalMoves(b.getpiece(from.x, from.y));
 
 
-        for (const moves& move : legalMoves)
+        for ( moves& move : legalMoves)
         {
             if (move.from.x == from.x &&
                 move.from.y == from.y &&
                 move.to.x == to.x &&
                 move.to.y == to.y)
             {
+                if(move.movetype==MoveType::PROMOTION){
+                    char promt;
+                    prom:
+                    cout<<"Enter promotion type for pawn: "<<endl;
+                    cin>>promt;
+                    promt=toupper(promt);
+                    switch(promt){
+                        case 'Q': move.promotiontype=PromotionType::QUEEN;break;
+                        case 'R': move.promotiontype=PromotionType::ROOK;break;
+                        case 'B': move.promotiontype=PromotionType::BISHOP;break;
+                        case 'N': move.promotiontype=PromotionType::KNIGHT;break;
+                        default: cout<<"Wrong promotion type"<<endl; goto prom;
+                    }
+                }
                 b.makeMove(move);
                 b.FlipTurn();
                 movePlayed = true;

@@ -30,7 +30,8 @@ enum class MoveType
      CASTLING, // castling
      GENERAL, // general valid
      PROMOTION, // promotion
-     INVALID // not valid
+     INVALID, // not valid
+     PawnDouble,
 };
 
 enum class PromotionType{
@@ -52,6 +53,9 @@ typedef struct moves
 
         Pieces* auxiliarypiece=nullptr;
         PromotionType promotiontype=PromotionType::NONE;
+
+        uint8_t PrevCastlingRights;
+        Coords PrevEn_Square;
 }moves;
 
 
@@ -62,6 +66,12 @@ private:
         Pieces* board[8][8];
         Pieces* Whiteking;
         Pieces* Blackking;
+        Coords En_PassantTargetSquare;
+        uint8_t CastlingRights;
+        const uint8_t WK = 1;
+        const uint8_t WQ = 2;
+        const uint8_t BK = 4;
+        const uint8_t BQ = 8;
 
         vector<Pieces*> capturedpieces;
         vector<moves> movehistory;
