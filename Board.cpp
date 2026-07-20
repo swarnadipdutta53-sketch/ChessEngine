@@ -95,6 +95,9 @@ void Board::printBoard(){
     }
     cout<<"  +-----------------+\n";
     cout<<"    a b c d e f g h \n";
+    cout<<"\n\n Castlingrights: "<< static_cast<int>(CastlingRights);
+    cout<<"\nEn pass: "<<En_PassantTargetSquare.x<<" "<<En_PassantTargetSquare.y<<endl;
+    cout<<"\nZobrist hash: "<<static_cast<int>(Zobrist::computeHash(*this));
 }
 
 void Board::makeMove(moves l){

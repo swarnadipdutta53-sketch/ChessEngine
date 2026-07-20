@@ -10,7 +10,7 @@ int main()
     string mode;
 
     b.initialize();
-
+    Zobrist::initialize();
     cout << "Press 0 for debug mode, 1 for normal mode\n";
     getline(cin, mode);
 
