@@ -35,9 +35,7 @@ int main()
 
         if (input == "2")
         {
-            if (b.undoMove())
-                b.FlipTurn();
-            else
+            if (!b.undoMove())
                 cout << "No moves yet\n";
 
             b.printBoard();
@@ -97,7 +95,6 @@ int main()
                     }
                 }
                 b.makeMove(move);
-                b.FlipTurn();
                 movePlayed = true;
                 break;
             }
@@ -124,7 +121,6 @@ int main()
         cout<<"Found move\n";
         ChessAI::getnode();
         b.makeMove(aiMove);
-        b.FlipTurn();
 
 
         cout << "AI played\n";

@@ -191,7 +191,7 @@ void Board::makeMove(moves l){
     default: cout<<"Code should not reach here\n";
         break;
     }
-   
+    FlipTurn();
     movehistory.push_back(l);
 }
 
@@ -252,5 +252,6 @@ bool Board::undoMove(){
         En_PassantTargetSquare=m.PrevEn_Square;
         movehistory.pop_back();
     }
+    FlipTurn();
    return true;
 }
