@@ -30,7 +30,8 @@ enum class MoveType
      CASTLING, // castling
      GENERAL, // general valid
      PROMOTION, // promotion
-     INVALID // not valid
+     INVALID, // not valid
+     PawnDouble
 };
 
 enum class PromotionType{

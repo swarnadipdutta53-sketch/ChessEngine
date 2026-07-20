@@ -172,7 +172,7 @@ vector<moves> Board::generatePseudoLegalMovesPawn(Pieces *piece) const
     if (CHECKBOUND(currPos.x + 2 * dx, currPos.y) && CHECKBOUND(currPos.x + dx, currPos.y)) // double forward
     {
         if (!(piece->hasMoved) && board[currPos.x + dx * 2][currPos.y + 0] == nullptr && board[currPos.x + dx][currPos.y] == nullptr)
-            ret.push_back({{currPos.x, currPos.y}, {2 * dx + currPos.x, currPos.y + 0}, piece, board[currPos.x + dx * 2][currPos.y], MoveType::GENERAL});
+            ret.push_back({{currPos.x, currPos.y}, {2 * dx + currPos.x, currPos.y + 0}, piece, board[currPos.x + dx * 2][currPos.y], MoveType::PawnDouble});
     }
 
     if (CHECKBOUND(currPos.x + dx, currPos.y)) // single forward
