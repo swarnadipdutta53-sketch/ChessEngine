@@ -54,7 +54,6 @@ int ChessAI::minimax(Board &board, bool whiteturn, int depth) //initialize depth
         else // stalemate case
             return 0;
     }
-
     for(moves idx : mv)
     {
         board.makeMove(idx);

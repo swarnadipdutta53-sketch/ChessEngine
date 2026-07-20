@@ -7,7 +7,7 @@ class ChessAI
 {
 private:
         static long long nodes;
-public: 
+public:
         static moves findBestMove(Board&,bool,int);
         static int minimax(Board&,bool,int);
         int quiscence(Board&, int, int);
