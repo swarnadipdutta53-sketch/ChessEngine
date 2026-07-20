@@ -38,7 +38,7 @@ namespace Zobrist{
         }
 
         hash^=Castle[b.getCastle()];
-        if(b.getEn_file()!=-1) hash^=En_pass[b.getEn_file()];
+        // if(b.getEn_file()!=-1) hash^=En_pass[b.getEn_file()];
         if(b.getTurn())hash^=Turn;
 
         return hash;

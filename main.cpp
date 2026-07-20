@@ -9,9 +9,7 @@ int main()
     string mode;
 
     b.initialize();
-    cout<<"Before";
     Zobrist::initialize();
-    cout<<"after";
     // cout << b.perft(1, 'w') << endl;
     // cout << b.perft(2, 'w') << endl;
     // cout << b.perft(3, 'w') << endl;
@@ -37,8 +35,8 @@ int main()
 
         if (input == "2"){
 
-            if (b.undoMove())b.FlipTurn(); 
-            else cout << "No moves yet\n";
+            if (!b.undoMove()) 
+             cout << "No moves yet\n";
 
             cout << "Evaluation: "<< Evaluator::evaluate(b)<< "\n";
             b.printBoard();
@@ -70,8 +68,6 @@ int main()
                     
                     cout<<"making move...\n";
                     b.makeMove(move);
-
-                    b.FlipTurn();
                     movePlayed = true;
 
                     break;
