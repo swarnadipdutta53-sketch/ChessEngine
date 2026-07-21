@@ -3,6 +3,6 @@
 
 #include "Board.h"
 
-bool parser(string,Coords&,Coord&);
+bool parser(string,Coords&,Coords&);
 
 #endif
