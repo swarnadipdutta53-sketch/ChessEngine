@@ -7,6 +7,7 @@
 #include<cctype>
 #include "limits.h" 
 #include <chrono>
+#include "Zobrist.h"
 using namespace std;
 
 typedef struct Coords
@@ -31,7 +32,7 @@ enum class MoveType
      GENERAL, // general valid
      PROMOTION, // promotion
      INVALID, // not valid
-     PawnDouble
+     PawnDouble,
 };
 
 enum class PromotionType{
@@ -53,6 +54,9 @@ typedef struct moves
 
         Pieces* auxiliarypiece=nullptr;
         PromotionType promotiontype=PromotionType::NONE;
+
+        uint8_t PrevCastlingRights;
+        Coords PrevEn_Square;
 }moves;
 
 
@@ -63,6 +67,12 @@ private:
         Pieces* board[8][8];
         Pieces* Whiteking;
         Pieces* Blackking;
+        Coords En_PassantTargetSquare;
+        uint8_t CastlingRights;
+        const uint8_t WK = 1;
+        const uint8_t WQ = 2;
+        const uint8_t BK = 4;
+        const uint8_t BQ = 8;
 
         vector<Pieces*> capturedpieces;
         vector<moves> movehistory;
@@ -77,7 +87,7 @@ public:
         void printBoard();  //all defined in Board.cpp
         void makeMove(moves);
         bool undoMove();
-        bool getTurn();
+        bool getTurn() const;
         bool setTurn(char);
         void FlipTurn();
         
@@ -115,8 +125,8 @@ public:
         void clearBoard();
         bool loadPieces(string);
 
-
-
+        int getCastle() const;
+        int getEn_file() const;
 };
 // move validations (only pseudolegal)
 MoveType moveValidation(Pieces, Coords, Board&);
@@ -124,4 +134,28 @@ MoveType moveValidationRook(int, int, Coords, Board&);
 MoveType moveValidationBishop(int, int, Coords, Board&);
 MoveType moveValidationKnight(int, int, Coords, Board&, Pieces);
 MoveType moveValidationKing(int, int, Coords, Board&);
+
+inline int pieceIndex(char c){
+        switch(c){
+                case 'p': return 0;
+                case 'r': return 1;
+                case 'n': return 2;
+                case 'b': return 3;
+                case 'q': return 4;
+                case 'k': return 5;
+
+                case 'P': return 6;
+                case 'R': return 7;
+                case 'N': return 8;
+                case 'B': return 9;
+                case 'Q': return 10;
+                case 'K': return 11;
+        }
+        return -1;
+}
+
+inline int squareIndex(Coords c){
+        return (c.x * 8)+c.y;
+}
+
 #endif

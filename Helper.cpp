@@ -67,7 +67,7 @@ const vector<Pieces*>& Board::getWhitePieces() const{
 const vector<Pieces*>& Board::getBlackPieces() const{
     return blackpieces;
 }
-bool Board::getTurn(){
+bool Board::getTurn() const{
     return whiteTurn;
 }
 bool Board::setTurn(char a){
@@ -78,4 +78,10 @@ bool Board::setTurn(char a){
 }
 void Board::FlipTurn(){
     whiteTurn=!whiteTurn;
+}
+int Board::getCastle() const{
+    return static_cast<int>(CastlingRights);
+}
+int Board::getEn_file()const{
+    return En_PassantTargetSquare.y;
 }

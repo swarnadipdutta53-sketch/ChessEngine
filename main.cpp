@@ -9,12 +9,14 @@ int main()
     string mode;
 
     b.initialize();
-
-    cout << b.perft(1, 'w') << endl;
-    cout << b.perft(2, 'w') << endl;
-    cout << b.perft(3, 'w') << endl;
-    cout << b.perft(4, 'w') << endl;
-    cout << b.perft(5, 'w') << endl;
+    cout<<"Before";
+    Zobrist::initialize();
+    cout<<"after";
+    // cout << b.perft(1, 'w') << endl;
+    // cout << b.perft(2, 'w') << endl;
+    // cout << b.perft(3, 'w') << endl;
+    // cout << b.perft(4, 'w') << endl;
+    // cout << b.perft(5, 'w') << endl;
 
     cout << "Press 0 for debug mode, 1 for normal mode\n";
     getline(cin, mode);

@@ -63,6 +63,9 @@ void Board::initialize(){
     board[3][5]=nullptr; board[5][5]=nullptr; 
     board[3][6]=nullptr; board[5][6]=nullptr; 
     board[3][7]=nullptr; board[5][7]=nullptr; 
+
+    CastlingRights=WK|WQ|BK|BQ;
+    En_PassantTargetSquare={-1,-1};
 }
 
 void Board::overWrite(){
@@ -92,48 +95,47 @@ void Board::printBoard(){
     }
     cout<<"  +-----------------+\n";
     cout<<"    a b c d e f g h \n";
+    cout<<"\n\n Castlingrights: "<< static_cast<int>(CastlingRights);
+    cout<<"\nEn pass: "<<En_PassantTargetSquare.x<<" "<<En_PassantTargetSquare.y<<endl;
+    cout<<"\nZobrist hash: "<<static_cast<int>(Zobrist::computeHash(*this));
 }
 
 void Board::makeMove(moves l){
+    l.PrevCastlingRights=CastlingRights;
+    l.PrevEn_Square=En_PassantTargetSquare;
+
+    En_PassantTargetSquare={-1,-1};
     int fr=l.from.x,fc=l.from.y,tr=l.to.x,tc=l.to.y,ar,ac;
+    char ps=board[fr][fc]->type;
 
-//     cout << "1";
-   
-//     cout << "from = (" << fr << "," << fc << ")\n";
-//     cout << "to   = (" << tr << "," << tc << ")\n";
-
-//     cout << "board[from] = " << board[fr][fc] << '\n';
-//     cout << "board[to]   = " << board[tr][tc] << '\n';
-
-//     cout << "move piece  = " << l.movedpiece << '\n';
-
-//      if (board[fr][fc] != l.movedpiece) {
-//     cout << "INVARIANT BROKEN!\n";
-//     cout << "Expected: " << l.movedpiece << '\n';
-//     cout << "Found:    " << board[fr][fc] << '\n';
-//     exit(0);
-// }
+    if(ps=='K'||ps=='k'){CastlingRights &= (ps=='k'? ~(WK|WQ):~(BK|BQ));}
+    if(ps=='r'||ps=='R'){
+        if(fr==0&&fc==7){CastlingRights &= ~BK;}
+        else if(fr==7&&fc==7){CastlingRights &= ~WK;}
+        else if(fr==0&&fc==0){CastlingRights &= ~BQ;}
+        else if(fr==7&&fc==0){CastlingRights &= ~WQ;}
+    }
+    if(!(l.capturedpiece==nullptr)&&(l.capturedpiece->type=='r'||'R')&&(!l.capturedpiece->hasMoved)){
+        int u=l.capturedpiece->coords.x;
+        int v=l.capturedpiece->coords.y;
+        if(u==0&&v==7){CastlingRights &= ~BK;}
+        else if(u==7&&v==7){CastlingRights &= ~WK;}
+        else if(u==0&&v==0){CastlingRights &= ~BQ;}
+        else if(u==7&&v==0){CastlingRights &= ~WQ;}
+    }
 
     board[tr][tc]=board[fr][fc];
-   // cout << "2";
     board[fr][fc]=nullptr;
-   // cout << "3";
     board[tr][tc]->coords={tr,tc};
-   // cout << "4";
     board[tr][tc]->hasMoved++;
-    //cout << "5";
     string s;
 
     switch(l.movetype)
     {
     case MoveType::GENERAL:
-       // cout << "6";
         if(l.capturedpiece!=nullptr){
-           // cout << //"7";
             l.capturedpiece->alive=false;
-           // cout << "8";
             capturedpieces.push_back(l.capturedpiece);
-            // cout << "9";
         }
         break;
     
@@ -143,6 +145,7 @@ void Board::makeMove(moves l){
         l.capturedpiece->alive=false;
         capturedpieces.push_back(l.capturedpiece);
         break;
+
 
     case MoveType::CASTLING:
         ar=l.auxiliarypiece->coords.x,ac=l.auxiliarypiece->coords.y;
@@ -155,22 +158,40 @@ void Board::makeMove(moves l){
             l.capturedpiece->alive=false;
             capturedpieces.push_back(l.capturedpiece);
         }
-        prom: 
-        cout<<"Enter the promotion type\n";
-        getline(cin,s); s=toupper(s[0]);
-        switch(s[0]){
-            case 'Q': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::QUEEN; break;
-            case 'R': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::ROOK; break;
-            case 'N': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::KNIGHT; break;
-            case 'B': l.movedpiece->type=(l.movedpiece->team == 'w') ? tolower(s[0]) : s[0]; l.promotiontype=PromotionType::BISHOP; break;
-            default : cout<<"Invalid promotion type\n"; goto prom;
+
+        switch(l.promotiontype){
+
+            case PromotionType::QUEEN:
+
+                l.movedpiece->type = (l.movedpiece->team=='w') ? 'q' : 'Q';
+                break;
+
+            case PromotionType::ROOK:
+
+                l.movedpiece->type = (l.movedpiece->team=='w') ? 'r' : 'R';
+                break;
+
+            case PromotionType::BISHOP:
+                l.movedpiece->type = (l.movedpiece->team=='w') ? 'q' : 'Q';
+                break;
+
+            case PromotionType::KNIGHT:
+                l.movedpiece->type = (l.movedpiece->team=='w') ? 'q' : 'Q';
+                break;
+
+            default:
+                cout << "Promotion type not set!\n";
         }
         break;
 
+    case MoveType::PawnDouble:
+        En_PassantTargetSquare={(ps=='p'?fr-1:fr+1),fc};
+        break;
+        
     default: cout<<"Code should not reach here\n";
         break;
     }
-    //cout << "10\n";
+    FlipTurn();
     movehistory.push_back(l);
 }
 
@@ -227,7 +248,10 @@ bool Board::undoMove(){
                 board[tr][tc-2]->coords={tr,tc-2}; board[fr][fc-1]=nullptr;
             }
         }
+        CastlingRights=m.PrevCastlingRights;
+        En_PassantTargetSquare=m.PrevEn_Square;
         movehistory.pop_back();
     }
+    FlipTurn();
    return true;
 }
