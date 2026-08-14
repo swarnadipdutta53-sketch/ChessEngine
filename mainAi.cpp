@@ -11,15 +11,42 @@ int main()
 
     b.initialize();
     Zobrist::initialize();
-    cout << "Press 0 for debug mode, 1 for normal mode\n";
+    // cout << b.perft(1, 'w') << endl;
+    // cout << b.perft(2, 'w') << endl;
+    // cout << b.perft(3, 'w') << endl;
+    // cout << b.perft(4, 'w') << endl;
+    // cout << b.perft(5, 'w') << endl;
+    // cout << b.perft(6, 'w') << endl;
+
+
+    cout << "Press 0 for debug mode, 1 for normal mode, 3 for fen loader\n";
     getline(cin, mode);
 
-    if (!mode.empty() && mode[0] == '0')
-        b.overWrite();
+    if (!mode.empty() && mode[0] == '0') b.overWrite();
+    if (!mode.empty() && mode[0] == '3'){
+        string x; cout<<"enter fen pos :"; getline(cin, x); 
+        if(!(b.loadFEN(x))){
+            cout<<"Invalid Fen \n";
+            b.initialize();
+        }
+    }
 
     string input;
+    b.printBoard();
+
+    if (!b.getTurn()){
+    cout << "AI thinking...\n";
+
+    ChessAI::setnode();
+    moves aiMove = ChessAI::findBestMove(b, false, 0);
+    ChessAI::getnode();
+
+    b.makeMove(aiMove);
+
+    cout << "AI played\n";
 
     b.printBoard();
+    }
 
     while (true)
     {

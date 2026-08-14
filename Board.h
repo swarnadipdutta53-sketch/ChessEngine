@@ -8,6 +8,8 @@
 #include "limits.h" 
 #include <chrono>
 #include "Zobrist.h"
+
+
 using namespace std;
 
 typedef struct Coords
@@ -124,6 +126,8 @@ public:
         bool loadFEN(const string&);
         void clearBoard();
         bool loadPieces(string);
+        bool loadCastling(string);
+        bool loadEnPassant(string);
 
         int getCastle() const;
         int getEn_file() const;

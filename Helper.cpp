@@ -74,7 +74,9 @@ bool Board::setTurn(char a){
     if(a=='w')whiteTurn=true;
     else if(a=='b')whiteTurn=false;
     else return false;
+    cout<<"Changed Turn to "<<a<<endl;
     return true;
+   
 }
 void Board::FlipTurn(){
     whiteTurn=!whiteTurn;

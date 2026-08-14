@@ -2,7 +2,9 @@
 #define t_MAXDEPTH 4
 #define t_CHECKVAL 10000000
 moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
-{   auto start = chrono::high_resolution_clock::now();
+{   
+    nodes=0;
+    auto start = chrono::high_resolution_clock::now();
 
     moves bestMove;
     
@@ -13,7 +15,6 @@ moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
     {
         board.makeMove(idx);
         int score = minimax(board, !whiteturn, depth+1);
-        nodes++;
         board.undoMove();
         if((score > bestScore && whiteturn) || (score < bestScore && !whiteturn))
         {
@@ -24,18 +25,20 @@ moves ChessAI::findBestMove(Board &board, bool whiteturn, int depth)
 
     auto end = chrono::high_resolution_clock::now();
 
-    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+    double seconds = std::chrono::duration<double>(end - start).count();
 
-      cout << "Search time: "
-         << duration.count()
-         << " ms\n";
-
+    cout << "Search time : " << seconds << " s\n";
+    cout << "Nodes       : " << nodes << '\n';
+    cout << "NPS         : "
+         << static_cast<long long>(nodes / seconds)
+         << '\n';
 
     return bestMove;
 }
 
 int ChessAI::minimax(Board &board, bool whiteturn, int depth) //initialize depth as 0
 {
+    nodes++;
     if(depth == t_MAXDEPTH)
         return Evaluator::evaluate(board);
     char turnOf = (whiteturn) ?  'w' : 'b';
@@ -58,7 +61,6 @@ int ChessAI::minimax(Board &board, bool whiteturn, int depth) //initialize depth
     {
         board.makeMove(idx);
         score = minimax(board, !whiteturn, depth+1);
-        nodes++;
         board.undoMove();
         if (whiteturn)
         {

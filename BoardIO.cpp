@@ -44,6 +44,7 @@ bool parser(string inp, Coords &from, Coords &to)
 bool Board::loadFEN(const string& fen)
 
 {
+    cout << "LOAD FEN START\n";
 
      clearBoard();
 
@@ -59,8 +60,8 @@ bool Board::loadFEN(const string& fen)
 
     if(!loadPieces(fields[0])) return false;
     if(!setTurn(fields[1][0])) return false;
-    // if(!loadCastling(fields[2])) return false;
-    // if(!loadEnPassant(fields[3])) return false;
+    if(!loadCastling(fields[2])) return false;
+    if(!loadEnPassant(fields[3])) return false;
     // if(!loadHalfMove(fields[4])) return false;
     // if(!loadFullMove(fields[5])) return false;
 
@@ -221,6 +222,35 @@ bool Board::loadPieces(string s){
         else return false;
 
     }
-    if(!c==8||!r==7) return false;
+    if(c!=8 || r!=7) return false;
+    return true;
+}
+
+bool Board::loadCastling(string s){
+    CastlingRights=0;
+    if(s.length()>4)return false;
+    for(const char& c:s){
+        if(c=='-'){CastlingRights=0; return true;}
+        else if(c=='K'){CastlingRights|=WK;}
+        else if(c=='Q'){CastlingRights|=WQ;}
+        else if(c=='k'){CastlingRights|=BK;}
+        else if(c=='q'){CastlingRights|=BQ;}
+        else return false;
+    }
+    return true;
+}
+
+bool Board::loadEnPassant(string s){
+    En_PassantTargetSquare={-1,-1};
+    int len=s.length();
+    if(len>2||len<1)return false;
+    if(len==1){if(s!="-")return false; return true;}
+    else {
+        if(!isalpha(s[0]))return false;
+        En_PassantTargetSquare.y=s[0]-'a';
+
+        if(!isdigit(s[1]))return false;
+        En_PassantTargetSquare.x='8'-s[1];
+    }
     return true;
 }

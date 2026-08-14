@@ -50,7 +50,7 @@ private:
         
 public:
         static int evaluate(const Board&);
-      
+        static int getPieceValue(char);
 };
 
 

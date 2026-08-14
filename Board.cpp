@@ -64,6 +64,8 @@ void Board::initialize(){
     board[3][6]=nullptr; board[5][6]=nullptr; 
     board[3][7]=nullptr; board[5][7]=nullptr; 
 
+    whiteTurn=true;
+
     CastlingRights=WK|WQ|BK|BQ;
     En_PassantTargetSquare={-1,-1};
 }
@@ -97,7 +99,7 @@ void Board::printBoard(){
     cout<<"    a b c d e f g h \n";
     cout<<"\n\n Castlingrights: "<< static_cast<int>(CastlingRights);
     cout<<"\nEn pass: "<<En_PassantTargetSquare.x<<" "<<En_PassantTargetSquare.y<<endl;
-    cout<<"\nZobrist hash: "<<Zobrist::computeHash(*this);
+    cout<<"\nZobrist hash: "<<Zobrist::computeHash(*this)<<endl;
 }
 
 void Board::makeMove(moves l){

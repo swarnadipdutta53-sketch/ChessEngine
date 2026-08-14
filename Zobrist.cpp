@@ -21,7 +21,6 @@ namespace Zobrist{
             if(i<8)En_pass[i]=zob();
             Castle[i]=zob();
         }
-        cout<<"called";
         Turn=zob();
     }
 
@@ -38,7 +37,7 @@ namespace Zobrist{
         }
 
         hash^=Castle[b.getCastle()];
-        // if(b.getEn_file()!=-1) hash^=En_pass[b.getEn_file()];
+        if(b.getEn_file()!=-1) hash^=En_pass[b.getEn_file()];
         if(b.getTurn())hash^=Turn;
 
         return hash;
